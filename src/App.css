@@ -1,0 +1,61 @@
+
+
+
+.kortti {
+  margin-left: 10;
+} 
+
+.kysymysosio{
+  margin-left: 30px;
+  margin-right: 60px;
+}
+
+.poistu{
+  right: 0;
+}
+
+.kysymys{
+  margin-left: 20px;
+}
+
+.kysymysM{
+  margin-left: 20px;
+  width: 80%;
+}
+
+.lisääM {
+  position: left;
+}
+
+.vastausM{
+  width: 60%;
+  min-width: 50px;
+}
+
+.lisääK{
+  position: center;
+}
+
+.tenttiValinta:focus{
+  outline: #4CAF50 solid 2px;
+}
+
+
+
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+    width: 10%;
+    margin-left: 30px;
+  }
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

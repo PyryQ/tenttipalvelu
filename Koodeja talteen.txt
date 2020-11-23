@@ -1,0 +1,134 @@
+// useEffect(()=>{
+  //   ////////////////////////////POST
+  //   const createData = async () => {
+  //     try{
+  //       let result = await axios.post("http://localhost:3001/kyselyt", kyselyt2)
+  //       dispatch({type: "INIT_DATA", data: kyselyt2})
+  //       setData2(kyselyt2)
+  //       setDataAlustettu2(true)
+  //     }
+  //     catch(exception){
+  //       alert("Tietokannan alustaminen epäonnistui (Post)")
+  //     }
+  //   }
+  //   /////////////////////////////GET
+  //   const fetchData = async () => {
+  //     try{
+  //       let result = await axios.get("http://localhost:3001/kyselyt")
+  //       if (result.data.lenght > 0){
+  //         dispatch({type: "INIT_DATA", data: result.data})
+  //         setData2(result.data);
+  //         setDataAlustettu2(true)
+  //       }else{
+  //         throw("Tietokannan alustaminen epäonnistui (Get)") 
+  //       }
+  //     }
+  //     catch(exception){
+  //       createData();
+  //       console.log(exception)
+  //     }
+  //   }
+  //   fetchData();
+  // },[])
+
+  ////////////////////////////////PUT
+  // useEffect(() => {
+  //   const updateData = async () => {
+  //     try{
+  //       //Nyt state päivitetään staten mukaan
+  //       //setData(state)
+  //       let result = await axios.put("http://localhost:3001/kyselyt", state)
+  //     }
+  //     catch(exception){
+  //       console.log("Dataa ei onnistuttu päivittämään.")
+  //     }
+  //   }
+  //   if(dataAlustettu){
+  //     updateData();
+  //   }
+  // },[state])
+
+
+
+
+//data serverin datan muodostamista/testaamista varten
+  //dataa käsitellään kuitenkin kyselyt listan kautta
+  const kyselyt2 = 
+    [{uid: uuid(), nimi: "Numerovisa testi", kysely: [
+      {uid: uuid(), kysymys: "Kuinka monta ihmistä on käynyt kuussa?", vastaukset: [
+        {uid: uuid(), vastaus: "0", valittu: false, oikea: false}, 
+        {uid: uuid(), vastaus: "12", valittu: false, oikea: true}, 
+        {uid: uuid(), vastaus: "15", valittu: false, oikea: false}
+        ]},
+      {uid: uuid(), kysymys: "Kuinka monta sanaa Potter-kirjasarjan suomennoksissa on yhteensä?", vastaukset: [
+        {uid: uuid(), vastaus: "857 911", valittu: false, oikea: true}, 
+        {uid: uuid(), vastaus: "955 543", valittu: false, oikea: false}, 
+        {uid: uuid(), vastaus: "1 100 438", valittu: false, oikea: false}, 
+        {uid: uuid(), vastaus: "1 204 539", valittu: false, oikea: false}
+        ]},
+      {uid: uuid(), kysymys: "Mikä seuraavista luvuista on lähinnä Tanskan asukasmäärää?", vastaukset: [
+        {uid: uuid(), vastaus: "5,2 miljoonaa", valittu: false, oikea: false}, 
+        {uid: uuid(), vastaus: "5,6 miljoonaa", valittu: false, oikea: false}, 
+        {uid: uuid(), vastaus: "5,8 miljoonaa", valittu: false, oikea: true}
+        ]}
+      ]
+    },
+      {uid: uuid(), nimi: "Kirjainvisa", kysely: [
+        {uid: uuid(), kysymys: "Mikä YMCA on suomeksi?", vastaukset: [
+          {uid: uuid(), vastaus: "YMKY", valittu: false, oikea: false}, 
+          {uid: uuid(), vastaus: "NMKY", valittu: false, oikea: true}, 
+          {uid: uuid(), vastaus: "MNKY", valittu: false, oikea: false}
+        ]},
+        {uid: uuid(), kysymys: "Mikä seuraavista on GIF?", vastaukset: [
+          {uid: uuid(), vastaus: "graph iteration format", valittu: false, oikea: false}, 
+          {uid: uuid(), vastaus: "graphics interchange format", valittu: false, oikea: true}, 
+          {uid: uuid(), vastaus: "george iliott format ", valittu: false, oikea: false}
+        ]},
+        {uid: uuid(), kysymys: "Kuka on oikea Ben?", vastaukset: [
+          {uid: uuid(), vastaus: "Ben Zysgowicz", valittu: false, oikea: false}, 
+          {uid: uuid(), vastaus: "Ben Zyscowicz", valittu: false, oikea: true}, 
+          {uid: uuid(), vastaus: "Ben Zyskowicz", valittu: false, oikea: false},
+          {uid: uuid(), vastaus: "Ben Zysćowicz", valittu: false, oikea: false}
+        ]}
+      ]
+    },
+      {uid: uuid(), nimi: "Merkkivisa", kysely: [
+        {uid: uuid(), kysymys: "Mikä seuraavista shakkipelin merkinnöistä tarkoittaa 'arveluttava siirto, mutta ei suoraan osoitettavissa virheeksi'?", vastaukset: [
+            {uid: uuid(), vastaus: "?", valittu: false, oikea: false}, 
+            {uid: uuid(), vastaus: "??", valittu: false, oikea: false}, 
+            {uid: uuid(), vastaus: "?!", valittu: false, oikea: true},
+            {uid: uuid(), vastaus: "!?", valittu: false, oikea: false}
+          ]},
+          {uid: uuid(), kysymys: "Mikä ‽ on englanninkieliseltä nimeltään?", vastaukset: [
+            {uid: uuid(), vastaus: "Interrobang", valittu: false, oikea: true}, 
+            {uid: uuid(), vastaus: "Sulivabang", valittu: false, oikea: false}, 
+            {uid: uuid(), vastaus: "Guessbang", valittu: false, oikea: false}
+          ]},
+          {uid: uuid(), kysymys: "Mitä matemaattinen merkki ∂ tarkoittaa?", vastaukset: [
+            {uid: uuid(), vastaus: "Tyhjä joukko", valittu: false, oikea: false}, 
+            {uid: uuid(), vastaus: "Normaali aliryhmä", valittu: false, oikea: true}, 
+            {uid: uuid(), vastaus: "Gradientti", valittu: false, oikea: false},
+            {uid: uuid(), vastaus: "Osittaisderivaatta", valittu: false, oikea: false}
+        ]}
+      ]
+    }
+  ]
+
+
+
+
+  ////////////Latausnäkymätestailua
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 500)
+  }, [])
+
+  const nowLoading = () => {
+    setLoading(true)
+    setTimeout(() => setLoading(false), 500)
+  }
+
+//ER-malli, assosiatiivinen taulu, tietokantasuunnitelma, segvenssikaava, relaatiomalli
+//dbdiagram.io
+    

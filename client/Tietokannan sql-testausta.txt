@@ -1,0 +1,111 @@
+
+SQL-kyselyjen laatiminen pääkäyttötapauksille ja yksinkertaisen auktorisoinnin (käyttöoikeuksien määrittely) toteuttaminen
+
+///////////////////////////////TENTTI
+//Lisätään uusi tentti
+INSERT INTO "Tentti" (nimi, tenttipisteet, minimipisteet, tentin_aloitusaika, tentin_lopetusaika, pisterajat)
+values ('Testitentti 100', 30, 10, '2021-02-02 18:00:00', '2021-02-02 20:00:00', '0, hylätty, 5, kiitettävä');
+
+
+//Poistetaan tentti
+DELETE FROM "Tentti" WHERE nimi='Testitentti';
+
+// Päivitetään tentti
+UPDATE "Tentti"
+SET nimi = 'Testitentti päivitetty', tenttipisteet= 30, minimipisteet= 10, 
+tentin_aloitusaika='2021-02-02 18:00:00', tentin_lopetusaika='2021-02-02 20:00:00',
+pisterajat='0, hylätty, 5, kiitettävä'
+WHERE nimi = 'Testitentti';
+
+////////////////////////////// KYSYMYS
+//Lisätään uusi kysymys tiettyyn tenttiin
+INSERT INTO "Kysymys" (kysymys, kysymyspisteet, tentti_id)
+VALUES ('Kuinka monta testikysymystä tarvitaan?', 3, 
+(SELECT tentti_id FROM "Tentti" WHERE nimi='Testitentti'));
+
+//Poistetaan kysymys
+DELETE FROM "Kysymys" WHERE nimi='Kuinka monta testikysymystä tarvitaan?';
+
+// Päivitetään kysymys
+UPDATE "Kysymys"
+SET kysymys = 'Kuinka monta testikysymystä tarvitaan (versio 2.0)?', kysymyspisteet = 6
+WHERE kysymys = 'Kuinka monta testikysymystä tarvitaan?';
+
+
+///////////////////////////////////////VASTAUKSET
+//Lisätään uusi vastaus tiettyyn kysymykseen
+INSERT INTO "Vastaus" (vastaus, oikea_vastaus, kysymys_id)
+VALUES ('Testivastaus 1', true, 
+(SELECT kysymys_id FROM "Kysymys" WHERE kysymys='Testikysymys 1'));
+
+//Poistetaan vastaus
+DELETE FROM "Vastaus" WHERE vastaus='Testivastaus 1';
+
+// Päivitetään vastaus
+UPDATE "Vastaus"
+SET vastaus = 'Testivastaus (versio 2.0)?', oikea_vastaus = true
+WHERE vastaus = 'Testivastaus 1';
+
+//////////////////////////////////////KÄYTTÄJÄ
+//Lisätään uusi käyttäjä
+INSERT INTO "Käyttäjä" (etunimi, sukunimi, sähköposti, rooli, salasana)
+values ('Alfreds', 'Futterkiste', 'testi@testi.fi', 'admin', 'salasana1234')
+
+//Poistetaan käyttäjä
+DELETE FROM "Käyttäjä" WHERE sähköposti='testi@testi.fi';
+
+//Päivitetään käyttäjän nimi
+UPDATE "Käyttäjä"
+SET etunimi = 'Alfredson', sukunimi='Futterkiste'
+WHERE sähköposti = 'testi@testi.fi';
+
+//Päivitetään salasana
+UPDATE "Käyttäjä"
+SET salasana='salasana12345'
+WHERE sähköposti = 'testi@testi.fi';
+
+//Päivitetään sähköposti
+UPDATE "Käyttäjä"
+SET sähköposti='testaus@testi.fi'
+WHERE sähköposti = 'testi@testi.fi';
+
+////////////////////////////////////KÄYTTÄJÄN VASTAUS
+INSERT INTO "KäyttäjänVastaus" (käyttäjän_valinta, vastaus_oikein, käyttäjä_id, vastaus_id)
+VALUES (true, true, 
+(SELECT käyttäjä_id FROM "Käyttäjä" WHERE sähköposti='testi@testi.fi'),
+(SELECT vastaus_id FROM "Vastaus" WHERE vastaus='Testivastaus 1'));
+
+//Poistetaan käyttäjän vastaus
+DELETE FROM "KäyttäjänVastaus" WHERE vastaus='Testivastaus 1';
+
+//Päivitetään käyttäjän vastaus
+UPDATE "KäyttäjänVastaus"
+SET käyttäjän_valinta = false, vastaus_oikein = true
+WHERE sähköposti = 'testi@testi.fi' AND vastaus='Testivastaus 1';
+
+                                                                                                                
+
+// Roolin haku
+SELECT rooli FROM "Käyttäjä" WHERE sähköposti='testi@testi.fi'
+
+//Roolin tarkistus, jos tarkistuksen lisäisi ehtolauseeksi
+IF (rooli FROM "Käyttäjä" WHERE sähköposti='testi@testi.fi' = 'admin')
+
+
+
+/////////////Aihe myöhempää mahdollista käyttöä varten
+INSERT INTO "Aihe" (aihe)
+values ('Matematiikka');
+
+//Poistetaan aihe
+DELETE FROM "Aihe" WHERE nimi='Matematiikka';
+
+// Päivitetään aihe
+UPDATE "Aihe"
+SET aihe = 'Trigonometria'
+WHERE aihe = 'Matematiikka';
+
+
+
+
+

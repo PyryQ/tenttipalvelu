@@ -197,6 +197,26 @@ app.delete('/poistavastaus/:vastaus', (req, res, next) => {
   })
 })
 
+app.delete('/poistakayttajantentti/:tentti_nimi/:sahkoposti', (req, res, next) => {
+  db.query("DELETE FROM kayttajantentti WHERE tentti_id_fk = (SELECT tentti_id FROM tentti WHERE nimi=$1) AND käyttäjä_id_fk = (SELECT käyttäjä_id FROM käyttäjä WHERE sähköposti=$2);", 
+  [req.params.tentti_nimi, req.params.sahkoposti], (err, result) => {
+    if (err) {
+      return next(err)
+    }
+    res.send(result)
+  })
+})
+
+app.delete('/poistakayttajanvastaus/:vastaus/:sahkoposti', (req, res, next) => {
+  db.query("DELETE FROM vastaus WHERE vastaus_id_fk = (SELECT vastaus_id FROM vastaus WHERE vastaus=$1) AND käyttäjä_id_fk = (SELECT käyttäjä_id FROM käyttäjä WHERE sähköposti=$2);", 
+  [req.params.vastaus, req.params.sahkoposti], (err, result) => {
+    if (err) {
+      return next(err)
+    }
+    res.send(result)
+  })
+})
+
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)

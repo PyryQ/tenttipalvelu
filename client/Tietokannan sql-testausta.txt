@@ -3,8 +3,7 @@ SQL-kyselyjen laatiminen pääkäyttötapauksille ja yksinkertaisen auktorisoinnin (
 
 ///////////////////////////////TENTTI
 //Lisätään uusi tentti
-INSERT INTO "Tentti" (nimi, tenttipisteet, minimipisteet, tentin_aloitusaika, tentin_lopetusaika, pisterajat)
-values ('Testitentti 100', 30, 10, '2021-02-02 18:00:00', '2021-02-02 20:00:00', '0, hylätty, 5, kiitettävä');
+INSERT INTO tentti (nimi, tenttipisteet, minimipisteet, tentin_aloitusaika, tentin_lopetusaika, pisterajat) values ('Testitentti 1000', 30, 10, '2021-02-02 18:00:00', '2021-02-02 20:00:00', '0, hylätty, 5, kiitettävä');
 
 
 //Poistetaan tentti
@@ -19,9 +18,7 @@ WHERE nimi = 'Testitentti';
 
 ////////////////////////////// KYSYMYS
 //Lisätään uusi kysymys tiettyyn tenttiin
-INSERT INTO "Kysymys" (kysymys, kysymyspisteet, tentti_id_fk)
-VALUES ('Kuinka monta testikysymystä tarvitaan?', 3, 
-(SELECT tentti_id FROM "Tentti" WHERE nimi='Testitentti'));
+INSERT INTO "Kysymys" (kysymys, kysymyspisteet, tentti_id_fk) VALUES ('Kuinka monta testikysymystä tarvitaan?', 3, (SELECT tentti_id FROM "Tentti" WHERE nimi='Testitentti'));
 
 //Poistetaan kysymys
 DELETE FROM "Kysymys" WHERE nimi='Kuinka monta testikysymystä tarvitaan?';
@@ -38,6 +35,9 @@ INSERT INTO "Vastaus" (vastaus, oikea_vastaus, kysymys_id_fk)
 VALUES ('Testivastaus 1', true, 
 (SELECT kysymys_id FROM "Kysymys" WHERE kysymys='Testikysymys 1'));
 
+Postmantesti:
+http://localhost:4000/lisaavastaus/Testvastaus postissa/false/Testikysymys 1
+
 //Poistetaan vastaus
 DELETE FROM "Vastaus" WHERE vastaus='Testivastaus 1';
 
@@ -48,8 +48,9 @@ WHERE vastaus = 'Testivastaus 1';
 
 //////////////////////////////////////KÄYTTÄJÄ
 //Lisätään uusi käyttäjä
-INSERT INTO "Käyttäjä" (etunimi, sukunimi, sähköposti, rooli, salasana)
-values ('Alfreds', 'Futterkiste', 'testi@testi.fi', 'admin', 'salasana1234')
+INSERT INTO "Käyttäjä" (etunimi, sukunimi, sähköposti, rooli, salasana) values ('Alfreds', 'Futterkiste', 'testi@testi.fi', 'admin', 'salasana1234')
+
+
 
 //Poistetaan käyttäjä
 DELETE FROM "Käyttäjä" WHERE sähköposti='testi@testi.fi';

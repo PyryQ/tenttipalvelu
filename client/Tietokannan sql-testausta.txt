@@ -19,7 +19,7 @@ WHERE nimi = 'Testitentti';
 
 ////////////////////////////// KYSYMYS
 //Lisätään uusi kysymys tiettyyn tenttiin
-INSERT INTO "Kysymys" (kysymys, kysymyspisteet, tentti_id)
+INSERT INTO "Kysymys" (kysymys, kysymyspisteet, tentti_id_fk)
 VALUES ('Kuinka monta testikysymystä tarvitaan?', 3, 
 (SELECT tentti_id FROM "Tentti" WHERE nimi='Testitentti'));
 
@@ -34,7 +34,7 @@ WHERE kysymys = 'Kuinka monta testikysymystä tarvitaan?';
 
 ///////////////////////////////////////VASTAUKSET
 //Lisätään uusi vastaus tiettyyn kysymykseen
-INSERT INTO "Vastaus" (vastaus, oikea_vastaus, kysymys_id)
+INSERT INTO "Vastaus" (vastaus, oikea_vastaus, kysymys_id_fk)
 VALUES ('Testivastaus 1', true, 
 (SELECT kysymys_id FROM "Kysymys" WHERE kysymys='Testikysymys 1'));
 
@@ -70,7 +70,7 @@ SET sähköposti='testaus@testi.fi'
 WHERE sähköposti = 'testi@testi.fi';
 
 ////////////////////////////////////KÄYTTÄJÄN VASTAUS
-INSERT INTO "KäyttäjänVastaus" (käyttäjän_valinta, vastaus_oikein, käyttäjä_id, vastaus_id)
+INSERT INTO "KäyttäjänVastaus" (käyttäjän_valinta, vastaus_oikein, käyttäjä_id_fk, vastaus_id_fk)
 VALUES (true, true, 
 (SELECT käyttäjä_id FROM "Käyttäjä" WHERE sähköposti='testi@testi.fi'),
 (SELECT vastaus_id FROM "Vastaus" WHERE vastaus='Testivastaus 1'));

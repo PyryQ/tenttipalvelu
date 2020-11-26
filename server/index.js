@@ -1,14 +1,21 @@
 const express = require('express')
+var cors = require("cors")
+var bodyParser = require("body-parser")
+
 const app = express()
+module.exports = app
+
 const port = 4000
 
-// notice here I'm requiring my database adapter file
-// and not requiring node-postgres directly
+app.use(bodyParser.json())
+app.use(cors())
+
 const db = require('./db')
 
 
-////// TENTTIEN MUOKKAUS
-app.get('/:id', (req, res, next) => {
+////// GET
+//Hae tentti id_n mukaan
+app.get('/tentti/:id', (req, res, next) => {
   db.query('SELECT * FROM tentti WHERE tentti_id = $1', [req.params.id], (err, result) => {
     if (err) {
       return next(err)
@@ -16,16 +23,59 @@ app.get('/:id', (req, res, next) => {
     res.send(result.rows[0])
   })
 })
-// ... many other routes in this file
 
-app.post('/tentit/:id/kysymys', (req, res, next) => {
-  db.query('SELECT * FROM tentti WHERE tentti_id = $1', [req.params.id], (err, result) => {
+app.get('/tentti', (req, res, next) => {
+  db.query('SELECT * FROM tentti', (err, result) => {
     if (err) {
       return next(err)
     }
-    res.send(result.rows[0])
+    res.send(result.rows)
   })
 })
+
+
+
+
+//Kaikki kysymykset
+app.get('/kysymys', (req, res, next) => {
+  db.query('SELECT * FROM kysymys', (err, result) => {
+    if (err) {
+      return next(err)
+    }
+    res.send(result.rows)
+  })
+})
+
+//Kaikki käyttäjät
+app.get('/kayttaja', (req, res, next) => {
+  db.query('SELECT * FROM käyttäjä', (err, result) => {
+    if (err) {
+      return next(err)
+    }
+    res.send(result.rows)
+  })
+})
+
+
+///////////////POST
+app.post('/lisaatentti/:nimi/:tp/:minimipisteet/:ta/:tl/:pr', (req, res, next) => {
+  db.query("INSERT INTO tentti (nimi, tenttipisteet, minimipisteet, tentin_aloitusaika, tentin_lopetusaika, pisterajat) values ($1, $2, $3, $4, $5, '0, hylätty, 5, kiitettävä');", 
+  [req.params.nimi, req.params.tp, req.params.ta, req.params.tl, req.params.pr], (err, result) => {
+    if (err) {
+      return next(err)
+    }
+    res.send(result.rows)
+  })
+})
+
+
+
+
+
+//testiping
+app.get('/ping', (request, response) => {
+  response.send('pong');
+});
 
 app.post('/', (req, res) => {
   res.send('Hello World! POST')

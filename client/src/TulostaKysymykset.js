@@ -52,7 +52,7 @@ export default function TulostaKysymykset(props) {
       console.log(tarkistus.length)
       if (tarkistus.length !== 0){
       for (var i = 0; i < tarkistus.length; i++){
-        if (tarkistus[i].oikea !== tarkistus[i].valittu){
+        if (tarkistus[i].oikea_vastaus !== tarkistus[i].valittu){
           return (<CloseIcon/>);
         }
       }
@@ -90,7 +90,7 @@ export default function TulostaKysymykset(props) {
       <div key={indexV}>
         <label><Checkbox disabled key={itemV + "" + indexV} checked={itemV.valittu}id={indexV}/>
 
-        <GreenCheckbox disabled className="vastaukset" checked={itemV.oikea}/>
+        <GreenCheckbox disabled className="vastaukset" checked={itemV.oikea_vastaus}/>
         {itemV.vastaus}</label>
       </div>)
   }

@@ -30,7 +30,7 @@ export default function TulostaKysymykset1(props) {
   let vainKysymys = props.vainKysymys;
   console.log(props.vainKysymys)
   
-  //Valitaan datasta oikea kysely käsiteltäväksi
+  //Valitaan datasta oikea_vastaus kysely käsiteltäväksi
 
   let palautettu = props.palautettu;
 
@@ -40,7 +40,7 @@ export default function TulostaKysymykset1(props) {
     let tarkistus = kysymys.vastaukset
     console.log(tarkistus)
     for (var i = 0; i < pituus; i++){
-      if (tarkistus[i].oikea !== tarkistus[i].valittu){
+      if (tarkistus[i].oikea_vastaus !== tarkistus[i].valittu){
         return (<CloseIcon/>);
       }
     }
@@ -68,7 +68,7 @@ export default function TulostaKysymykset1(props) {
         <label><Checkbox disabled key={alkio + "" + vastausIndex} checked={alkio.valittu}
         id={vastausIndex} onChange={(e) => props.muutaVastaus(e, kysymysIndex, vastausIndex)}/>
 
-        <GreenCheckbox disabled className="vastaukset" checked={alkio.oikea}/>
+        <GreenCheckbox disabled className="vastaukset" checked={alkio.oikea_vastaus}/>
         {alkio.vastaus}</label>
       </div>)
 

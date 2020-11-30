@@ -41,57 +41,57 @@ function App() {
   const kyselyt = [
     {uid: uuid(), nimi: "Numerovisa", kysely: [
       {uid: uuid(), kysymys: "Kuinka monta ihmistä on käynyt kuussa?", vastaukset: [
-        {uid: uuid(), vastaus: "0", valittu: false, oikea: false}, 
-        {uid: uuid(), vastaus: "12", valittu: false, oikea: true}, 
-        {uid: uuid(), vastaus: "15", valittu: false, oikea: false}
+        {uid: uuid(), vastaus: "0", valittu: false, oikea_vastaus: false}, 
+        {uid: uuid(), vastaus: "12", valittu: false, oikea_vastaus: true}, 
+        {uid: uuid(), vastaus: "15", valittu: false, oikea_vastaus: false}
         ]},
       {uid: uuid(), kysymys: "Kuinka monta sanaa Potter-kirjasarjan suomennoksissa on yhteensä?", vastaukset: [
-        {uid: uuid(), vastaus: "857 911", valittu: false, oikea: true}, 
-        {uid: uuid(), vastaus: "955 543", valittu: false, oikea: false}, 
-        {uid: uuid(), vastaus: "1 100 438", valittu: false, oikea: false}, 
-        {uid: uuid(), vastaus: "1 204 539", valittu: false, oikea: false}
+        {uid: uuid(), vastaus: "857 911", valittu: false, oikea_vastaus: true}, 
+        {uid: uuid(), vastaus: "955 543", valittu: false, oikea_vastaus: false}, 
+        {uid: uuid(), vastaus: "1 100 438", valittu: false, oikea_vastaus: false}, 
+        {uid: uuid(), vastaus: "1 204 539", valittu: false, oikea_vastaus: false}
         ]},
       {uid: uuid(), kysymys: "Mikä seuraavista luvuista on lähinnä Tanskan asukasmäärää?", vastaukset: [
-        {uid: uuid(), vastaus: "5,2 miljoonaa", valittu: false, oikea: false}, 
-        {uid: uuid(), vastaus: "5,6 miljoonaa", valittu: false, oikea: false}, 
-        {uid: uuid(), vastaus: "5,8 miljoonaa", valittu: false, oikea: true}
+        {uid: uuid(), vastaus: "5,2 miljoonaa", valittu: false, oikea_vastaus: false}, 
+        {uid: uuid(), vastaus: "5,6 miljoonaa", valittu: false, oikea_vastaus: false}, 
+        {uid: uuid(), vastaus: "5,8 miljoonaa", valittu: false, oikea_vastaus: true}
         ]}]
     },
     {uid: uuid(), nimi: "Kirjainvisa", kysely: [
       {uid: uuid(), kysymys: "Mikä YMCA on suomeksi?", vastaukset: [
-          {uid: uuid(), vastaus: "YMKY", valittu: false, oikea: false}, 
-          {uid: uuid(), vastaus: "NMKY", valittu: false, oikea: true}, 
-          {uid: uuid(), vastaus: "MNKY", valittu: false, oikea: false}
+          {uid: uuid(), vastaus: "YMKY", valittu: false, oikea_vastaus: false}, 
+          {uid: uuid(), vastaus: "NMKY", valittu: false, oikea_vastaus: true}, 
+          {uid: uuid(), vastaus: "MNKY", valittu: false, oikea_vastaus: false}
         ]},
         {uid: uuid(), kysymys: "Mikä seuraavista on GIF?", vastaukset: [
-          {uid: uuid(), vastaus: "graph iteration format", valittu: false, oikea: false}, 
-          {uid: uuid(), vastaus: "graphics interchange format", valittu: false, oikea: true}, 
-          {uid: uuid(), vastaus: "george iliott format ", valittu: false, oikea: false}
+          {uid: uuid(), vastaus: "graph iteration format", valittu: false, oikea_vastaus: false}, 
+          {uid: uuid(), vastaus: "graphics interchange format", valittu: false, oikea_vastaus: true}, 
+          {uid: uuid(), vastaus: "george iliott format ", valittu: false, oikea_vastaus: false}
         ]},
-        {uid: uuid(), kysymys: "Kuka on oikea Ben?", vastaukset: [
-          {uid: uuid(), vastaus: "Ben Zysgowicz", valittu: false, oikea: false}, 
-          {uid: uuid(), vastaus: "Ben Zyscowicz", valittu: false, oikea: true}, 
-          {uid: uuid(), vastaus: "Ben Zyskowicz", valittu: false, oikea: false},
-          {uid: uuid(), vastaus: "Ben Zysćowicz", valittu: false, oikea: false}
+        {uid: uuid(), kysymys: "Kuka on oikea_vastaus Ben?", vastaukset: [
+          {uid: uuid(), vastaus: "Ben Zysgowicz", valittu: false, oikea_vastaus: false}, 
+          {uid: uuid(), vastaus: "Ben Zyscowicz", valittu: false, oikea_vastaus: true}, 
+          {uid: uuid(), vastaus: "Ben Zyskowicz", valittu: false, oikea_vastaus: false},
+          {uid: uuid(), vastaus: "Ben Zysćowicz", valittu: false, oikea_vastaus: false}
         ]}]
       },
       {uid: uuid(), nimi: "Merkkivisa", kysely: [
         {uid: uuid(), kysymys: "Mikä seuraavista shakkipelin merkinnöistä tarkoittaa 'arveluttava siirto, mutta ei suoraan osoitettavissa virheeksi'?", vastaukset: [
-            {uid: uuid(), vastaus: "?", valittu: false, oikea: false}, 
-            {uid: uuid(), vastaus: "??", valittu: false, oikea: false}, 
-            {uid: uuid(), vastaus: "?!", valittu: false, oikea: true},
-            {uid: uuid(), vastaus: "!?", valittu: false, oikea: false}
+            {uid: uuid(), vastaus: "?", valittu: false, oikea_vastaus: false}, 
+            {uid: uuid(), vastaus: "??", valittu: false, oikea_vastaus: false}, 
+            {uid: uuid(), vastaus: "?!", valittu: false, oikea_vastaus: true},
+            {uid: uuid(), vastaus: "!?", valittu: false, oikea_vastaus: false}
            ]},
           {uid: uuid(), kysymys: "Mikä ‽ on englanninkieliseltä nimeltään?", vastaukset: [
-            {uid: uuid(), vastaus: "Interrobang", valittu: false, oikea: true}, 
-            {uid: uuid(), vastaus: "Sulivabang", valittu: false, oikea: false}, 
-            {uid: uuid(), vastaus: "Guessbang", valittu: false, oikea: false}
+            {uid: uuid(), vastaus: "Interrobang", valittu: false, oikea_vastaus: true}, 
+            {uid: uuid(), vastaus: "Sulivabang", valittu: false, oikea_vastaus: false}, 
+            {uid: uuid(), vastaus: "Guessbang", valittu: false, oikea_vastaus: false}
           ]},
           {uid: uuid(), kysymys: "Mitä matemaattinen merkki ∂ tarkoittaa?", vastaukset: [
-            {uid: uuid(), vastaus: "Tyhjä joukko", valittu: false, oikea: false}, 
-            {uid: uuid(), vastaus: "Normaali aliryhmä", valittu: false, oikea: true}, 
-            {uid: uuid(), vastaus: "Gradientti", valittu: false, oikea: false},
-            {uid: uuid(), vastaus: "Osittaisderivaatta", valittu: false, oikea: false}
+            {uid: uuid(), vastaus: "Tyhjä joukko", valittu: false, oikea_vastaus: false}, 
+            {uid: uuid(), vastaus: "Normaali aliryhmä", valittu: false, oikea_vastaus: true}, 
+            {uid: uuid(), vastaus: "Gradientti", valittu: false, oikea_vastaus: false},
+            {uid: uuid(), vastaus: "Osittaisderivaatta", valittu: false, oikea_vastaus: false}
           ]}
         ]
       }
@@ -102,20 +102,20 @@ function App() {
   const kyselytServeri = 
     [{uid: uuid(), nimi: "Numerovisa testi", kysely: [
       {uid: uuid(), kysymys: "Kuinka monta ihmistä on käynyt kuussa?", vastaukset: [
-        {uid: uuid(), vastaus: "0", valittu: false, oikea: false}, 
-        {uid: uuid(), vastaus: "12", valittu: false, oikea: true}, 
-        {uid: uuid(), vastaus: "15", valittu: false, oikea: false}
+        {uid: uuid(), vastaus: "0", valittu: false, oikea_vastaus: false}, 
+        {uid: uuid(), vastaus: "12", valittu: false, oikea_vastaus: true}, 
+        {uid: uuid(), vastaus: "15", valittu: false, oikea_vastaus: false}
         ]},
       {uid: uuid(), kysymys: "Kuinka monta sanaa Potter-kirjasarjan suomennoksissa on yhteensä?", vastaukset: [
-        {uid: uuid(), vastaus: "857 911", valittu: false, oikea: true}, 
-        {uid: uuid(), vastaus: "955 543", valittu: false, oikea: false}, 
-        {uid: uuid(), vastaus: "1 100 438", valittu: false, oikea: false}, 
-        {uid: uuid(), vastaus: "1 204 539", valittu: false, oikea: false}
+        {uid: uuid(), vastaus: "857 911", valittu: false, oikea_vastaus: true}, 
+        {uid: uuid(), vastaus: "955 543", valittu: false, oikea_vastaus: false}, 
+        {uid: uuid(), vastaus: "1 100 438", valittu: false, oikea_vastaus: false}, 
+        {uid: uuid(), vastaus: "1 204 539", valittu: false, oikea_vastaus: false}
         ]},
       {uid: uuid(), kysymys: "Mikä seuraavista luvuista on lähinnä Tanskan asukasmäärää?", vastaukset: [
-        {uid: uuid(), vastaus: "5,2 miljoonaa", valittu: false, oikea: false}, 
-        {uid: uuid(), vastaus: "5,6 miljoonaa", valittu: false, oikea: false}, 
-        {uid: uuid(), vastaus: "5,8 miljoonaa", valittu: false, oikea: true}
+        {uid: uuid(), vastaus: "5,2 miljoonaa", valittu: false, oikea_vastaus: false}, 
+        {uid: uuid(), vastaus: "5,6 miljoonaa", valittu: false, oikea_vastaus: false}, 
+        {uid: uuid(), vastaus: "5,8 miljoonaa", valittu: false, oikea_vastaus: true}
         ]}
       ]
     }
@@ -129,15 +129,16 @@ function App() {
     ////////////////////////////POST
     const createData = async () => {
       try{
-        let result = await axios.post("http://localhost:4000/tentit", result.data)
-        if (result.data.length > 0)
-        for (var i = 0; i < result.data.length; i++){
-          let kysymykset = await axios.post("http://localhost:4000/kysymykset/" + result.data[i].tentti)
-        }
-        
-        dispatch({type: "INIT_DATA", data: result.data})
-        setData2(result.data)
-        setDataAlustettu2(true)
+        // let result = await axios.post("http://localhost:4000/tentit", result.data)
+        // console.log(result.data.nimi)
+        // if (result.data.length > 0)
+        // for (var i = 0; i < result.data.length; i++){
+        //   result.data[i].kysely = await axios.post("http://localhost:4000/kysymykset/" + result.data[i].tentti_id)
+        // }
+        // console.log(result.data)
+        // dispatch({type: "INIT_DATA", data: result.data})
+        // setData2(result.data)
+        // setDataAlustettu2(true)
       }
       catch(exception){
         alert("Tietokannan alustaminen epäonnistui (Post)")
@@ -148,10 +149,29 @@ function App() {
       try{
         let result = await axios.get("http://localhost:4000/tentit")
         console.log(result.data)
+
+        //state pohjustetaan
+        dispatch({type: "INIT_DATA", data: result.data})
+
         if (result.data.length > 0){
+          for (var i = 0; i < result.data.length; i++){
+            result.data[i].kysely = []
+            let kysymykset = await axios.get("http://localhost:4000/kysymykset/" + result.data[i].tentti_id)
+            result.data[i].kysely = kysymykset.data
+            console.log(result.data[i].kysely)
+
+            if (result.data[i].kysely.length > 0){
+              for(var j = 0; j < result.data[i].kysely[j].length; j++){
+                result.data[i].kysely[j].vastaukset = []
+                let vastaukset = await axios.get("http://localhost:4000/vastaukset/" + result.data[i].kysely[i].kysymys_id)
+                result.data[i].kysely[j] =vastaukset.data
+              }
+            }
+            setData2(result.data);
+            setDataAlustettu2(true)
+          }
           dispatch({type: "INIT_DATA", data: result.data})
-          // setData2(result.data);
-          // setDataAlustettu2(true)
+          console.log(result.data)
         }else{
           throw("Tietokannan alustaminen epäonnistui (Get)") 
         }
@@ -163,24 +183,6 @@ function App() {
     }
     fetchData();
   },[])
-
-
-  const testitentti = async () => {
-    try{
-      let result = await axios.get("http://localhost:4000/tenttikanta")
-      console.log(result.data)
-      if (result.data.lenght > 0){
-        dispatch({type: "TULOSTA_TESTI", data: result.data})
-      }else{
-        throw("Testitentti epäonnistui") 
-      }
-      console.log(result.rows)
-    }
-    catch(exception){
-      console.log(exception)
-    }
-  }
-  
 
   //////////////////////////////PUT
   useEffect(() => {
@@ -284,10 +286,10 @@ function App() {
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].vastaus = action.data.valittuV
         return syväKopioR
       case 'MUUTA_OIKEA_VASTAUS':
-        syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].oikea = action.data.valittuV
+        syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].oikea_vastaus = action.data.valittuV
         return syväKopioR
       case 'LISÄÄ_VASTAUS':
-        let uusiVastaus = {uid: uuid(), vastaus: "", valittu: false, oikea: false}
+        let uusiVastaus = {uid: uuid(), vastaus: "", valittu: false, oikea_vastaus: false}
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset.push(uusiVastaus)
         return syväKopioR
       case 'POISTA_VASTAUS':
@@ -308,7 +310,7 @@ function App() {
         return syväKopioR
       case 'LISÄÄ_TENTTI':
         let uusiTentti = {uid: uuid(), nimi: "Uusi tentti", kysely: [{
-          uid: uuid(), kysymys: "", vastaukset: [{vastaus: "", valittu: false, oikea: false}]}]
+          uid: uuid(), kysymys: "", vastaukset: [{vastaus: "", valittu: false, oikea_vastaus: false}]}]
         }
         syväKopioR.push(uusiTentti)
         return syväKopioR
@@ -371,11 +373,11 @@ function App() {
         {/*Tarkistetaan, ettei state ole undefined*/}
         {state[tenttiValinta] != undefined ? 
           näkymä == 1 ? <div> {/*Näkymän mukaan tulostetaan*/}
-            <Fade right><TulostaKysymykset
+            {/*<Fade right><TulostaKysymykset
               dispatch={dispatch}
               kysymys={state[tenttiValinta]} 
               palautettu= {palautettu}/>
-            </Fade>
+            </Fade>*/}
             <br/>
             <Button variant={"contained"} color="primary" onClick={() => {setPalautettu(true);}}>Näytä vastaukset</Button>
             </div> : 
@@ -386,8 +388,6 @@ function App() {
               </Fade> : <div>
                 <Fade right>
                 {/*<Kaavio/>*/}
-                <Button variant="contained" color="secondary" onClick={() => testitentti()}>Tentit</Button>
-                <Button variant="contained" color="secondary" onClick={() => testitentti()}>Tenttinimi</Button>
                 <Button variant="contained" color="secondary" onClick={() => console.log(data2)}>Data2</Button>
                 <KaavioVaaka/>
                 <br></br>

@@ -59,9 +59,9 @@ app.get('/kysymykset', (req, res, next) => {
 })
 
 //Kaikki kysymyksen vastaukset
-app.get('/vastaukset/:kysymys', (req, res, next) => {
-  db.query('SELECT * FROM vastaus WHERE kysymys_id_fk = (SELECT kysymys_id FROM kysymys WHERE kysymys = $1)',
-  [req.params.nimi], (err, result) => {
+app.get('/vastaukset/:kysymys_id', (req, res, next) => {
+  db.query('SELECT * FROM vastaus WHERE kysymys_id_fk = $1',
+  [req.params.kysymys_id], (err, result) => {
     if (err) {
       return next(err)
     }

@@ -36,6 +36,9 @@ export default function TulostaKysymykset(props) {
 
   //Alustetaan kysymysten tulostusta varten dataT
   let dataT = props.kysymys
+  if (dataT.kysely == null){
+    dataT.kysely = [];
+  }
   let palautettu = props.palautettu;
 
   const vertaa = (previousProps, nextProps) =>{
@@ -67,17 +70,19 @@ export default function TulostaKysymykset(props) {
 
   //Tulostetaan vaihtoehdot sen mukaan, onko vastaukset palautettu
   const näytäVaihtoehdot = (indexK) => { //Kysymyksen index
-    
+    if (dataT.kysely[indexK].vastaukset == null){
+      dataT.kysely[indexK].vastaukset = [];
+    }
     //Mikäli tuloksia ei ole palautettu, tulostetaan vain yksi checkbox
     if (palautettu === false){
       return dataT.kysely[indexK].vastaukset.map((itemV, indexV) => 
-      <div key={itemV.uid}>
+      <div key={"palautettu" + itemV.uid}>
         {/*<KysymysMemo indexK={indexK} 
         indexV={indexV} 
         itemV={itemV} 
         palautettu={palautettu}
         dispatch={props.dispatch}/>*/}
-        <label><Checkbox disabled={palautettu === true} className="kysymys" key={itemV}
+        <label><Checkbox disabled={palautettu === true} className="kysymys" key={"checkbox" + itemV.uid}
           id={indexV} checked={itemV.valittu} 
           onChange={(e) => props.dispatch({type: 'VASTAUS_VALITTU', data:{valittuV:e.target.checked, indexKy: indexK, indexVa: indexV}})}/>
           {itemV.vastaus}</label>
@@ -87,8 +92,8 @@ export default function TulostaKysymykset(props) {
 
     //Mikäli vastaukset on palautettu, tulostetaan myös vastaukset GreenCheckBoxin avulla
     return dataT.kysely[indexK].vastaukset.map((itemV, indexV) => 
-      <div key={indexV}>
-        <label><Checkbox disabled key={itemV + "" + indexV} checked={itemV.valittu}id={indexV}/>
+      <div key={itemV.uid}>
+        <label><Checkbox disabled key={"checkboxd" + itemV.uid} checked={itemV.valittu}id={indexV}/>
 
         <GreenCheckbox disabled className="vastaukset" checked={itemV.oikea_vastaus}/>
         {itemV.vastaus}</label>

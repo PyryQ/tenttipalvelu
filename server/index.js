@@ -160,7 +160,7 @@ app.post('/lisaakayttja/:en/:sn/:sp/:r/:ss', (req, res, next) => {
     if (err) {
       return next(err)
     }
-    res.send(result)
+    res.send(result) 
   }) 
 })
 //http://localhost:4000/lisaakayttaja/testi/testinen/testaus/kayttaja/salasana12345

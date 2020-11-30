@@ -148,7 +148,6 @@ function App() {
     const fetchData = async () => {
       try{
         let result = await axios.get("http://localhost:4000/tentit")
-        console.log(result.data)
 
         //state pohjustetaan
         dispatch({type: "INIT_DATA", data: result.data})
@@ -158,13 +157,12 @@ function App() {
             result.data[i].kysely = []
             let kysymykset = await axios.get("http://localhost:4000/kysymykset/" + result.data[i].tentti_id)
             result.data[i].kysely = kysymykset.data
-            console.log(result.data[i].kysely)
 
             if (result.data[i].kysely.length > 0){
-              for(var j = 0; j < result.data[i].kysely[j].length; j++){
+              for (var j = 0; j < result.data[i].kysely.length; j++){
                 result.data[i].kysely[j].vastaukset = []
-                let vastaukset = await axios.get("http://localhost:4000/vastaukset/" + result.data[i].kysely[i].kysymys_id)
-                result.data[i].kysely[j] =vastaukset.data
+                let vastaukset = await axios.get("http://localhost:4000/vastaukset/" + result.data[i].kysely[j].kysymys_id)
+                result.data[i].kysely[j].vastaukset = vastaukset.data
               }
             }
             setData2(result.data);
@@ -373,11 +371,11 @@ function App() {
         {/*Tarkistetaan, ettei state ole undefined*/}
         {state[tenttiValinta] != undefined ? 
           näkymä == 1 ? <div> {/*Näkymän mukaan tulostetaan*/}
-            {/*<Fade right><TulostaKysymykset
+            <Fade right><TulostaKysymykset
               dispatch={dispatch}
               kysymys={state[tenttiValinta]} 
               palautettu= {palautettu}/>
-            </Fade>*/}
+            </Fade>
             <br/>
             <Button variant={"contained"} color="primary" onClick={() => {setPalautettu(true);}}>Näytä vastaukset</Button>
             </div> : 

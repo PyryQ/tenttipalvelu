@@ -12,10 +12,10 @@ import Toolbar from '@material-ui/core/Toolbar';
 import './App.css';
 import TulostaKysymykset from './TulostaKysymykset';
 import MuokkaaKysymyksiä from './MuokkaaKysymyksiä';
+import KaavioVaaka from './KaavioVaaka';
 import TulostaKysymyksetUusi from './TulostaKysymyksetUusi'; //aiempi testauskopio
 import Kaavio2 from './Kaavio2';
 import Kaavio from './Kaavio';
-import KaavioVaaka from './KaavioVaaka';
 // Kehitettävää: 
 //aktiivisen tentin buttonille eri väri
 // Kysymyskomponentti?
@@ -118,60 +118,25 @@ function App() {
         {uid: uuid(), vastaus: "5,8 miljoonaa", valittu: false, oikea: true}
         ]}
       ]
-    },
-      {uid: uuid(), nimi: "Kirjainvisa", kysely: [
-        {uid: uuid(), kysymys: "Mikä YMCA on suomeksi?", vastaukset: [
-          {uid: uuid(), vastaus: "YMKY", valittu: false, oikea: false}, 
-          {uid: uuid(), vastaus: "NMKY", valittu: false, oikea: true}, 
-          {uid: uuid(), vastaus: "MNKY", valittu: false, oikea: false}
-        ]},
-        {uid: uuid(), kysymys: "Mikä seuraavista on GIF?", vastaukset: [
-          {uid: uuid(), vastaus: "graph iteration format", valittu: false, oikea: false}, 
-          {uid: uuid(), vastaus: "graphics interchange format", valittu: false, oikea: true}, 
-          {uid: uuid(), vastaus: "george iliott format ", valittu: false, oikea: false}
-        ]},
-        {uid: uuid(), kysymys: "Kuka on oikea Ben?", vastaukset: [
-          {uid: uuid(), vastaus: "Ben Zysgowicz", valittu: false, oikea: false}, 
-          {uid: uuid(), vastaus: "Ben Zyscowicz", valittu: false, oikea: true}, 
-          {uid: uuid(), vastaus: "Ben Zyskowicz", valittu: false, oikea: false},
-          {uid: uuid(), vastaus: "Ben Zysćowicz", valittu: false, oikea: false}
-        ]}
-      ]
-    },
-      {uid: uuid(), nimi: "Merkkivisa", kysely: [
-        {uid: uuid(), kysymys: "Mikä seuraavista shakkipelin merkinnöistä tarkoittaa 'arveluttava siirto, mutta ei suoraan osoitettavissa virheeksi'?", vastaukset: [
-            {uid: uuid(), vastaus: "?", valittu: false, oikea: false}, 
-            {uid: uuid(), vastaus: "??", valittu: false, oikea: false}, 
-            {uid: uuid(), vastaus: "?!", valittu: false, oikea: true},
-            {uid: uuid(), vastaus: "!?", valittu: false, oikea: false}
-          ]},
-          {uid: uuid(), kysymys: "Mikä ‽ on englanninkieliseltä nimeltään?", vastaukset: [
-            {uid: uuid(), vastaus: "Interrobang", valittu: false, oikea: true}, 
-            {uid: uuid(), vastaus: "Sulivabang", valittu: false, oikea: false}, 
-            {uid: uuid(), vastaus: "Guessbang", valittu: false, oikea: false}
-          ]},
-          {uid: uuid(), kysymys: "Mitä matemaattinen merkki ∂ tarkoittaa?", vastaukset: [
-            {uid: uuid(), vastaus: "Tyhjä joukko", valittu: false, oikea: false}, 
-            {uid: uuid(), vastaus: "Normaali aliryhmä", valittu: false, oikea: true}, 
-            {uid: uuid(), vastaus: "Gradientti", valittu: false, oikea: false},
-            {uid: uuid(), vastaus: "Osittaisderivaatta", valittu: false, oikea: false}
-        ]}
-      ]
     }
   ]
 
   // Alustetaan state ja reducer kyselyn avulla
   const [state, dispatch] = useReducer(reducer, kyselyt);
         
-  
   //Post, get ja put serverin datan testaamista varten. Ei käytössä ohjelmassa.
   useEffect(()=>{
     ////////////////////////////POST
     const createData = async () => {
       try{
-        let result = await axios.post("http://localhost:3001/kyselyt", kyselytServeri)
-        dispatch({type: "INIT_DATA", data: kyselytServeri})
-        setData2(kyselytServeri)
+        let result = await axios.post("http://localhost:4000/tentit", result.data)
+        if (result.data.length > 0)
+        for (var i = 0; i < result.data.length; i++){
+          let kysymykset = await axios.post("http://localhost:4000/kysymykset/" + result.data[i].tentti)
+        }
+        
+        dispatch({type: "INIT_DATA", data: result.data})
+        setData2(result.data)
         setDataAlustettu2(true)
       }
       catch(exception){
@@ -181,11 +146,12 @@ function App() {
     /////////////////////////////GET
     const fetchData = async () => {
       try{
-        let result = await axios.get("http://localhost:3001/kyselyt")
-        if (result.data.lenght > 0){
+        let result = await axios.get("http://localhost:4000/tentit")
+        console.log(result.data)
+        if (result.data.length > 0){
           dispatch({type: "INIT_DATA", data: result.data})
-          setData2(result.data);
-          setDataAlustettu2(true)
+          // setData2(result.data);
+          // setDataAlustettu2(true)
         }else{
           throw("Tietokannan alustaminen epäonnistui (Get)") 
         }
@@ -197,6 +163,24 @@ function App() {
     }
     fetchData();
   },[])
+
+
+  const testitentti = async () => {
+    try{
+      let result = await axios.get("http://localhost:4000/tenttikanta")
+      console.log(result.data)
+      if (result.data.lenght > 0){
+        dispatch({type: "TULOSTA_TESTI", data: result.data})
+      }else{
+        throw("Testitentti epäonnistui") 
+      }
+      console.log(result.rows)
+    }
+    catch(exception){
+      console.log(exception)
+    }
+  }
+  
 
   //////////////////////////////PUT
   useEffect(() => {
@@ -289,6 +273,10 @@ function App() {
     switch (action.type) {
       case 'INIT_DATA':
         return action.data;
+      case 'TULOSTA_TESTI':
+        console.log("testi tuli reduceriin")
+        console.log(state)
+        return null
       case 'VASTAUS_VALITTU':
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].valittu = action.data.valittuV
         return syväKopioR
@@ -364,7 +352,7 @@ function App() {
             <Button color="inherit">TIETOA SOVELLUKSESTA</Button>
             <Button variant="contained" color="secondary" onClick={() => setNäkymä(1)}>Näytä kysely</Button>
             <Button variant="contained" color="secondary" onClick={() => setNäkymä(2)}>Näytä kyselyn muokkaus</Button>
-            <Button variant="contained" color="secondary" onClick={() => setNäkymä(3)}>Tulosdemo</Button>
+            <Button variant="contained" color="secondary" onClick={() => setNäkymä(3)}>Demot</Button>
             <div className={classes1.spacer}></div>
             <Button color="inherit">POISTU</Button>
           </Toolbar>
@@ -397,11 +385,13 @@ function App() {
                 kysymys={state[tenttiValinta]}/>
               </Fade> : <div>
                 <Fade right>
-                <Kaavio/>
+                {/*<Kaavio/>*/}
+                <Button variant="contained" color="secondary" onClick={() => testitentti()}>Tentit</Button>
+                <Button variant="contained" color="secondary" onClick={() => testitentti()}>Tenttinimi</Button>
+                <Button variant="contained" color="secondary" onClick={() => console.log(data2)}>Data2</Button>
                 <KaavioVaaka/>
                 <br></br>
-                <br></br>
-                <Kaavio2/>
+
                 </Fade>
               </div>
          : null }

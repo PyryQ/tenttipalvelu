@@ -53,7 +53,7 @@ INSERT INTO "Käyttäjä" (etunimi, sukunimi, sähköposti, rooli, salasana) values (
 
 
 //Poistetaan käyttäjä
-DELETE FROM "Käyttäjä" WHERE sähköposti='testi@testi.fi';
+DELETE FROM "käyttäjä" WHERE sähköposti='testi@testi.fi';
 
 //Päivitetään käyttäjän nimi
 UPDATE "Käyttäjä"
@@ -71,10 +71,7 @@ SET sähköposti='testaus@testi.fi'
 WHERE sähköposti = 'testi@testi.fi';
 
 ////////////////////////////////////KÄYTTÄJÄN VASTAUS
-INSERT INTO "KäyttäjänVastaus" (käyttäjän_valinta, vastaus_oikein, käyttäjä_id_fk, vastaus_id_fk)
-VALUES (true, true, 
-(SELECT käyttäjä_id FROM "Käyttäjä" WHERE sähköposti='testi@testi.fi'),
-(SELECT vastaus_id FROM "Vastaus" WHERE vastaus='Testivastaus 1'));
+INSERT INTO "KäyttäjänVastaus" (käyttäjän_valinta, vastaus_oikein, käyttäjä_id_fk, vastaus_id_fk) VALUES (true, true, (SELECT käyttäjä_id FROM "Käyttäjä" WHERE sähköposti='testi@testi.fi'), (SELECT vastaus_id FROM "Vastaus" WHERE vastaus='Testivastaus 1'));
 
 //Poistetaan käyttäjän vastaus
 DELETE FROM "KäyttäjänVastaus" WHERE vastaus='Testivastaus 1';

@@ -190,7 +190,7 @@ app.put('/paivitatentti/:tentti_id/:uusinimi/:tp/:mp/:ta/:tl/:pr', (req, res, ne
     res.send("Tentin päivitys onnistui")
   })
 })
-//http://localhost:4000/paivitatentti/Merkkitentti/Merkkitentti päivitetty/30/10/2021-03-03 20:00:00/2021-03-03 22:00:00/pisterajat
+
 
 //päivitä kysymys
 app.put('/paivitakysymys/:tentti_id/:uusiKysymys/:pisteet/', (req, res, next) => {

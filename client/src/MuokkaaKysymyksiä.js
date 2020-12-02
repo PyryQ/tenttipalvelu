@@ -19,25 +19,25 @@ export default function MuokkaaKysymyksiä(props) {
     //Mikäli tuloksia ei ole palautettu, tulostetaan vain yksi checkbox
     try {
       return <div> {itemK.vastaukset.map((itemV, indexV) => 
-        <div key={itemV.uid}>
+        <div key={"vastaukset" + itemV.vastaus_id}>
           {/*Checkbox oikean vastauksen asettamiselle*/}
-          <label><Checkbox className="vastausCheckM" key={itemV.uid} checked={itemV.oikea} 
+          <label><Checkbox className="vastausCheckM" key={"muuta_ov" + itemV.vastaus_id} checked={itemV.oikea} 
             onChange={(e) => props.dispatch({type: 'MUUTA_OIKEA_VASTAUS', data:{valittuV: e.target.checked, indexKy: indexK, indexVa: indexV}})}/>
           </label>
           
           {/*Input vastauksen asettamiselle*/}
-          <Input className="vastausM" defaultValue={itemV.vastaus} key={itemV.uid}
+          <Input className="vastausM" defaultValue={itemV.vastaus} key={"muuta_v" + itemV.vastaus_id}
             onChange = {(e) => props.dispatch({type: 'MUUTA_VASTAUSTA', data:{valittuV: e.target.value, indexKy: indexK, indexVa: indexV}})}>
           </Input>
 
           {/*Button vastauksen poistamiselle*/}
-          <Button className="vastausPoisto" key={itemV.uid}
+          <Button className="vastausPoisto" key={"poista_v" + itemV.vastaus_id}
             onClick={() => props.dispatch({type: 'POISTA_VASTAUS', data:{indexKy: indexK, indexVa: indexV}})}>
           <DeleteIcon/></Button>
         </div>)}
 
         {/*Button vastauksen lisäämiselle*/}
-        <Button className="lisääM" key={itemK.uid}
+        <Button className="lisääM" key={"lisää_v" + itemK.vastaus_id}
           onClick={() => props.dispatch({type: 'LISÄÄ_VASTAUS', data:{indexKy: indexK}})}>
         <AddCircleOutlineIcon/></Button>
       </div>
@@ -46,9 +46,9 @@ export default function MuokkaaKysymyksiä(props) {
   }
   
   return (
-    <div className="muokkausosio">
+    <div>
       {/*Input tentin nimen muokkaamiseksi*/}
-      <Input key={dataM.uid} className="kysymysM" defaultValue={dataM.nimi} 
+      <Input key={"tentti_input" + dataM.tentti_id} className="kysymysM" defaultValue={dataM.nimi} 
         onChange={(e) => props.dispatch({type: 'MUOKKAA_TENTTI', data:{tentinNimi: e.target.value}})}>
       </Input>
       <br></br>
@@ -64,8 +64,8 @@ export default function MuokkaaKysymyksiä(props) {
 
       {/*Tulostetaan kysymys, sen poistobutton ja vastausvaihtoehdot*/}
       {dataM.kysely.map((item, indexK) => 
-        <Card className="korttiM" elevation={3}>
-          <div key={item.uid}>
+        <Card className="korttiM" elevation={3} key={"kortti" + item.kysymys_id}>
+          <div>
             <Input className="kysymysM" 
               defaultValue={item.kysymys}
               onChange={(e) => props.dispatch({type: 'MUOKKAA_KYSYMYSTÄ', data:{valittuK: e.target.value, indexKy: indexK}})}>
@@ -79,7 +79,7 @@ export default function MuokkaaKysymyksiä(props) {
         </Card>)}
       <div>
         {/*Button kysymyksen lisäämiseksi*/}
-        <Button className="lisääK" 
+        <Button className="lisääK" key={"lisää_k"}
           onClick={() => props.dispatch({type: 'LISÄÄ_KYSYMYS', data:{}})}>
           <AddCircleOutlineIcon/>{"Lisää kysymys"}
         </Button>

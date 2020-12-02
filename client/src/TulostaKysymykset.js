@@ -36,6 +36,7 @@ export default function TulostaKysymykset(props) {
 
   //Alustetaan kysymysten tulostusta varten dataT
   let dataT = props.kysymys
+  //Tarkistetaan, ettei appia käynnistettäessä kartoiteta tyhjää listaa
   if (dataT.kysely == null){
     dataT.kysely = [];
   }
@@ -70,20 +71,20 @@ export default function TulostaKysymykset(props) {
 
   //Tulostetaan vaihtoehdot sen mukaan, onko vastaukset palautettu
   const näytäVaihtoehdot = (indexK) => { //Kysymyksen index
+    //Tarkistetaan, ettei appia käynnistettäessä kartoiteta tyhjää listaa
     if (dataT.kysely[indexK].vastaukset == null){
       dataT.kysely[indexK].vastaukset = [];
     }
     //Mikäli tuloksia ei ole palautettu, tulostetaan vain yksi checkbox
     if (palautettu === false){
       return dataT.kysely[indexK].vastaukset.map((itemV, indexV) => 
-      <div key={"palautettu" + itemV.uid}>
+      <div key={"eipalautettu" + itemV.vastaus_id}>
         {/*<KysymysMemo indexK={indexK} 
         indexV={indexV} 
         itemV={itemV} 
         palautettu={palautettu}
         dispatch={props.dispatch}/>*/}
-        <label><Checkbox disabled={palautettu === true} className="kysymys" key={"checkbox" + itemV.uid}
-          id={indexV} checked={itemV.valittu} 
+        <label><Checkbox disabled={palautettu === true} className="kysymys" key={"checkbox" +  itemV.vastaus_id} checked={itemV.valittu} 
           onChange={(e) => props.dispatch({type: 'VASTAUS_VALITTU', data:{valittuV:e.target.checked, indexKy: indexK, indexVa: indexV}})}/>
           {itemV.vastaus}</label>
 
@@ -92,8 +93,8 @@ export default function TulostaKysymykset(props) {
 
     //Mikäli vastaukset on palautettu, tulostetaan myös vastaukset GreenCheckBoxin avulla
     return dataT.kysely[indexK].vastaukset.map((itemV, indexV) => 
-      <div key={itemV.uid}>
-        <label><Checkbox disabled key={"checkboxd" + itemV.uid} checked={itemV.valittu}id={indexV}/>
+      <div key={"palautettu" + itemV.vastaus_id}>
+        <label><Checkbox disabled key={"checkboxd" +  itemV.vastaus_id} checked={itemV.valittu}/>
 
         <GreenCheckbox disabled className="vastaukset" checked={itemV.oikea_vastaus}/>
         {itemV.vastaus}</label>
@@ -102,7 +103,7 @@ export default function TulostaKysymykset(props) {
 
   return (dataT.kysely !== undefined ? (
   <div className="tulostusosio">
-      {dataT.kysely.map((item, index) => <Card className="kortti" elevation={3}><div className="kysymys">
+      {dataT.kysely.map((item, index) => <Card key={"kortti" + item.kysymys_id} className="kortti" elevation={3}><div className="kysymys">
       {item.kysymys}{palautettu ? vastaustenTarkistus(index) : null}</div> {näytäVaihtoehdot(index)}
       </Card>)}
     </div>) : null

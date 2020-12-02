@@ -38,7 +38,10 @@ function App() {
   const [näkymä, setNäkymä] = useState(1) //Vastaus- vai muokkausnäkymä
 
   //Alkuperäinen taulukko kyselyistä ja niiden vastauksista
-  const kyselyt = [
+  const kyselyt = []
+
+
+  const kyselytkopio = [
     {uid: uuid(), nimi: "Numerovisa", kysely: [
       {uid: uuid(), kysymys: "Kuinka monta ihmistä on käynyt kuussa?", vastaukset: [
         {uid: uuid(), vastaus: "0", valittu: false, oikea_vastaus: false}, 
@@ -150,16 +153,14 @@ function App() {
         let result = await axios.get("http://localhost:4000/tentit")
 
         //state pohjustetaan
-        dispatch({type: "INIT_DATA", data: result.data})
-
         if (result.data.length > 0){
-          for (var i = 0; i < result.data.length; i++){
+          for (var i = 0; i < result.data.length; i++){ //käydään läpi tentit
             result.data[i].kysely = []
             let kysymykset = await axios.get("http://localhost:4000/kysymykset/" + result.data[i].tentti_id)
             result.data[i].kysely = kysymykset.data
 
             if (result.data[i].kysely.length > 0){
-              for (var j = 0; j < result.data[i].kysely.length; j++){
+              for (var j = 0; j < result.data[i].kysely.length; j++){ // käydään kysymykset
                 result.data[i].kysely[j].vastaukset = []
                 let vastaukset = await axios.get("http://localhost:4000/vastaukset/" + result.data[i].kysely[j].kysymys_id)
                 result.data[i].kysely[j].vastaukset = vastaukset.data
@@ -360,9 +361,9 @@ function App() {
       </div>
       <br></br>
 
-      <div className="kysymysosio">
+      <div>
         {/*Painikkeet kyselyn valintaa varten*/}
-        {state.map((arvo, index) => <BootstrapButton variant="contained" color="primary" 
+        {state.map((arvo, index) => <BootstrapButton key={"kyselypainike" + index} variant="contained" color="primary" 
           disableRipple className={classesButton.margin} 
           onClick={() => {settenttiValinta(index); setPalautettu(false);}}>{arvo.nimi}
         </BootstrapButton>) }

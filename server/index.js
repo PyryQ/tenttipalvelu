@@ -1,16 +1,16 @@
 const express = require('express')
 var cors = require("cors")
 var bodyParser = require("body-parser")
-
 const app = express()
 module.exports = app
+const db = require('./db')
 
 const port = 4000
 
 app.use(bodyParser.json())
 app.use(cors())
 
-const db = require('./db')
+
 
 
 //---------------------------------------------------POST------------------------------------
@@ -215,6 +215,17 @@ app.put('/paivitatentti/:tentti_id/:uusinimi/:tp/:mp/:ta/:tl/:pr', (req, res, ne
   })
 })
 
+//päivitä tentin nimi
+app.put('/paivitatenttiteksti/:tentti_id/:uusinimi', (req, res, next) => {
+  db.query("UPDATE tentti SET nimi = $2 WHERE tentti_id=$1;", 
+  [req.params.tentti_id, req.params.uusinimi], (err, result) => {
+    if (err) {
+      return next(err)
+    }
+    res.send("Tentin päivitys onnistui")
+  })
+})
+
 
 //päivitä kysymys
 app.put('/paivitakysymys/:tentti_id/:uusiKysymys/:pisteet/', (req, res, next) => {
@@ -227,16 +238,40 @@ app.put('/paivitakysymys/:tentti_id/:uusiKysymys/:pisteet/', (req, res, next) =>
   })
 })
 
-//päivitä vastaus
-app.put('/paivitavastaus/:kysymys_id/:vastaus/:oikea_vastaus', (req, res, next) => {
-  db.query("UPDATE vastaus SET vastaus = $2, oikea_vastaus = 3$ WHERE kysymys_id_fk = $1;", 
-  [req.params.tentti_id, req.params.uusiKysymys, req.params.pisteet], (err, result) => { 
+//päivitä kysymyksen teksti
+app.put('/paivitakysymysteksti', (req, res, next) => {
+  db.query("UPDATE kysymys SET kysymys = $2 WHERE kysymys_id = $1;", 
+  [req.body.kysymys_id, req.body.kysymys], (err, result) => { 
     if (err) {
       return next(err)
     }
-    res.send("Vastausksen päivitys onnistui")
+    res.send("Kysymyksen päivitys onnistui")
   })
 })
+
+//päivitä vastaus
+app.put('/paivitavastaus/:vastaus_id/:vastaus/:oikea_vastaus', (req, res, next) => {
+  db.query("UPDATE vastaus SET vastaus = $2, oikea_vastaus = 3$ WHERE vastaus_id = $1;", 
+  [req.params.vastaus_id, req.params.vastaus, req.params.oikea_vastaus], (err, result) => { 
+    if (err) {
+      return next(err)
+    }
+    res.send("Vastauksen päivitys onnistui")
+  })
+})
+
+//päivitä vastausteksti
+app.put('/paivitavastausteksti', (req, res, next) => {
+  db.query("UPDATE vastaus SET vastaus = $2 WHERE vastaus_id = $1;", 
+  [req.body.v_id, req.body.v], (err, result) => { 
+    if (err) {
+      return next(err)
+    }
+    res.send(req.body)
+  })
+})
+
+
 
 //päivitä käyttäjän vastaus
 app.put('/paivitakayttajanvastaus/:k_id/:v_id/:k_valinta/:v_oikein', (req, res, next) => {
@@ -272,8 +307,8 @@ app.delete('/poistatentti/:tentti_id', (req, res, next) => {
   })
 })
 
-app.delete('/poistakysymys/:kysymys_id', (req, res, next) => {
-  db.query("DELETE FROM kysymys WHERE kysymys_id=$1;", [req.params.kysymys_id], (err, result) => {
+app.delete('/poistakysymys', (req, res, next) => {
+  db.query("DELETE FROM kysymys WHERE kysymys_id=$1;", [req.body.k_id], (err, result) => {
     if (err) {
       return next(err)
     }
@@ -281,8 +316,8 @@ app.delete('/poistakysymys/:kysymys_id', (req, res, next) => {
   })
 })
 
-app.delete('/poistavastaus/:vastaus_id', (req, res, next) => {
-  db.query("DELETE FROM vastaus WHERE vastaus_id =$1;", [req.params.vastaus_id], (err, result) => {
+app.delete('/poistavastaus', (req, res, next) => {
+  db.query("DELETE FROM vastaus WHERE vastaus_id =$1;", [req.body.v_id], (err, result) => {
     if (err) {
       return next(err)
     }

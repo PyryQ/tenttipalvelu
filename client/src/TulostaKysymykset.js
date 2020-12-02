@@ -85,7 +85,7 @@ export default function TulostaKysymykset(props) {
         palautettu={palautettu}
         dispatch={props.dispatch}/>*/}
         <label><Checkbox disabled={palautettu === true} className="kysymys" key={"checkbox" +  itemV.vastaus_id} checked={itemV.valittu} 
-          onChange={(e) => props.dispatch({type: 'VASTAUS_VALITTU', data:{valittuV:e.target.checked, indexKy: indexK, indexVa: indexV}})}/>
+          onChange={(e) => props.dispatch({type: 'VASTAUS_VALITTU', data:{valittuV:e.target.checked, indexKy: indexK.kysymys, indexVa: indexV}})}/>
           {itemV.vastaus}</label>
 
       </div>)

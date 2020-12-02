@@ -27,12 +27,12 @@ export default function MuokkaaKysymyksiä(props) {
           
           {/*Input vastauksen asettamiselle*/}
           <Input className="vastausM" defaultValue={itemV.vastaus} key={"muuta_v" + itemV.vastaus_id}
-            onChange = {(e) => props.dispatch({type: 'MUUTA_VASTAUSTA', data:{valittuV: e.target.value, indexKy: indexK, indexVa: indexV}})}>
+            onChange = {(e) => props.dispatch({type: 'MUUTA_VASTAUSTA', data:{vastaus: e.target.value, vastaus_id: itemV.vastaus_id, indexKy: indexK, indexVa: indexV}})}>
           </Input>
 
           {/*Button vastauksen poistamiselle*/}
           <Button className="vastausPoisto" key={"poista_v" + itemV.vastaus_id}
-            onClick={() => props.dispatch({type: 'POISTA_VASTAUS', data:{indexKy: indexK, indexVa: indexV}})}>
+            onClick={() => props.dispatch({type: 'POISTA_VASTAUS', data:{indexKy: indexK, indexVa: indexV, vastaus_id: itemV.vastaus_id}})}>
           <DeleteIcon/></Button>
         </div>)}
 
@@ -49,7 +49,7 @@ export default function MuokkaaKysymyksiä(props) {
     <div>
       {/*Input tentin nimen muokkaamiseksi*/}
       <Input key={"tentti_input" + dataM.tentti_id} className="kysymysM" defaultValue={dataM.nimi} 
-        onChange={(e) => props.dispatch({type: 'MUOKKAA_TENTTI', data:{tentinNimi: e.target.value}})}>
+        onChange={(e) => props.dispatch({type: 'MUOKKAA_TENTTI', data:{nimi: e.target.value, tentti_id: dataM.tentti_id}})}>
       </Input>
       <br></br>
       {/*Button tentin poistamiseksi*/}
@@ -63,18 +63,18 @@ export default function MuokkaaKysymyksiä(props) {
         <AddCircleOutlineIcon/>Lisää uusi tentti</Button>
 
       {/*Tulostetaan kysymys, sen poistobutton ja vastausvaihtoehdot*/}
-      {dataM.kysely.map((item, indexK) => 
-        <Card className="korttiM" elevation={3} key={"kortti" + item.kysymys_id}>
+      {dataM.kysely.map((itemK, indexK) => 
+        <Card className="korttiM" elevation={3} key={"kortti" + itemK.kysymys_id}>
           <div>
             <Input className="kysymysM" 
-              defaultValue={item.kysymys}
-              onChange={(e) => props.dispatch({type: 'MUOKKAA_KYSYMYSTÄ', data:{valittuK: e.target.value, indexKy: indexK}})}>
+              defaultValue={itemK.kysymys}
+              onChange={(e) => props.dispatch({type: 'MUOKKAA_KYSYMYSTÄ', data:{kysymys: e.target.value, kysymys_id: itemK.kysymys_id, indexKy: indexK}})}>
             </Input> 
 
-            <Button className="poistoM" onClick={() => props.dispatch({type: 'POISTA_KYSYMYS', data:{indexKy: indexK}})}>
+            <Button className="poistoM" onClick={() => props.dispatch({type: 'POISTA_KYSYMYS', data:{indexKy: indexK, kysymys_id: itemK.kysymys_id}})}>
               <DeleteIcon/></Button>
             
-            {näytäVaihtoehdot(item, indexK)}
+            {näytäVaihtoehdot(itemK, indexK)}
           </div>
         </Card>)}
       <div>

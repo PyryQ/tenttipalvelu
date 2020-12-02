@@ -13,9 +13,10 @@ import './App.css';
 import TulostaKysymykset from './TulostaKysymykset';
 import MuokkaaKysymyksiä from './MuokkaaKysymyksiä';
 import KaavioVaaka from './KaavioVaaka';
-import TulostaKysymyksetUusi from './TulostaKysymyksetUusi'; //aiempi testauskopio
 import Kaavio2 from './Kaavio2';
 import Kaavio from './Kaavio';
+
+import {paivitaTenttiNimi, paivitaKysymysNimi, paivitaVastausNimi, poistaVastaus, poistaKysymys} from './HttpKutsut';
 // Kehitettävää: 
 //aktiivisen tentin buttonille eri väri
 // Kysymyskomponentti?
@@ -184,19 +185,38 @@ function App() {
   },[])
 
   //////////////////////////////PUT
-  useEffect(() => {
-    const updateData = async () => {
-      try{
-        let result = await axios.put("http://localhost:3001/kyselyt", state)
-      }
-      catch(exception){
-        console.log("Dataa ei onnistuttu päivittämään.")
-      }
-    }
-    if(dataAlustettu){
-      updateData();
-    }
-  },[state])
+  // useEffect(() => {
+  //   const updateData = async () => {
+  //     try{
+  //       let result = await axios.put("http://localhost:3001/kyselyt", state)
+  //     }
+  //     catch(exception){
+  //       console.log("Dataa ei onnistuttu päivittämään.")
+  //     }
+  //   }
+  //   if(dataAlustettu){
+  //     updateData();
+  //   }
+  // },[state])
+
+  // useEffect(() => {
+  //   const updateTentti = async () => {
+  //     try{
+  //       let result = await axios.put("http://localhost:4000/paivitatentti/tentti_id/uusinimi/tp/mp/ta/tl/pr", state)
+  //     }
+  //     catch(exception){
+  //       console.log("Dataa ei onnistuttu päivittämään.")
+  //     }
+  //   }
+  //   if(dataAlustettu){
+  //     updateTentti();
+  //   }
+  // },[state])
+
+
+
+  
+
     
 
   // localStoragen data-avaimena on "data", joka alustetaan tässä
@@ -274,15 +294,12 @@ function App() {
     switch (action.type) {
       case 'INIT_DATA':
         return action.data;
-      case 'TULOSTA_TESTI':
-        console.log("testi tuli reduceriin")
-        console.log(state)
-        return null
       case 'VASTAUS_VALITTU':
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].valittu = action.data.valittuV
         return syväKopioR
       case 'MUUTA_VASTAUSTA':
-        syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].vastaus = action.data.valittuV
+        paivitaVastausNimi(action.data.vastaus_id, action.data.vastaus)
+        syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].vastaus = action.data.vastaus
         return syväKopioR
       case 'MUUTA_OIKEA_VASTAUS':
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].oikea_vastaus = action.data.valittuV
@@ -292,20 +309,24 @@ function App() {
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset.push(uusiVastaus)
         return syväKopioR
       case 'POISTA_VASTAUS':
+        poistaVastaus(action.data.vastaus_id)
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset.splice(action.data.indexVa, 1)
         return syväKopioR
       case 'MUOKKAA_KYSYMYSTÄ':
-        syväKopioR[tenttiValinta].kysely[action.data.indexKy].kysymys = action.data.valittuK
+        paivitaKysymysNimi(action.data.kysymys_id, action.data.kysymys)
+        syväKopioR[tenttiValinta].kysely[action.data.indexKy].kysymys = action.data.kysymys
         return syväKopioR
       case 'LISÄÄ_KYSYMYS':
         let uusiKysymys =  {uid: uuid(), kysymys: "", vastaukset: []}
         syväKopioR[tenttiValinta].kysely.push(uusiKysymys)
         return syväKopioR
       case 'POISTA_KYSYMYS':
+        poistaKysymys(action.data.kysymys_id)
         syväKopioR[tenttiValinta].kysely.splice(action.data.indexKy, 1)
         return syväKopioR
       case 'MUOKKAA_TENTTI':
-        syväKopioR[tenttiValinta].nimi = action.data.tentinNimi
+        paivitaTenttiNimi(action.data.tentti_id, action.data.nimi)
+        syväKopioR[tenttiValinta].nimi = action.data.nimi
         return syväKopioR
       case 'LISÄÄ_TENTTI':
         let uusiTentti = {uid: uuid(), nimi: "Uusi tentti", kysely: [{

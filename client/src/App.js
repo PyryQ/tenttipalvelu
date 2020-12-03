@@ -16,7 +16,7 @@ import KaavioVaaka from './KaavioVaaka';
 import Kaavio2 from './Kaavio2';
 import Kaavio from './Kaavio';
 
-import {paivitaTenttiNimi, paivitaKysymysNimi, paivitaVastausNimi, poistaVastaus, poistaKysymys} from './HttpKutsut';
+import {paivitaTenttiNimi, paivitaKysymysNimi, paivitaVastausNimi, poistaVastaus, poistaKysymys, lisääKysymys, lisääVastaus} from './HttpKutsut';
 // Kehitettävää: 
 //aktiivisen tentin buttonille eri väri
 // Kysymyskomponentti?
@@ -298,34 +298,29 @@ function App() {
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].valittu = action.data.valittuV
         return syväKopioR
       case 'MUUTA_VASTAUSTA':
-        paivitaVastausNimi(action.data.vastaus_id, action.data.vastaus)
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].vastaus = action.data.vastaus
         return syväKopioR
       case 'MUUTA_OIKEA_VASTAUS':
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].oikea_vastaus = action.data.valittuV
         return syväKopioR
       case 'LISÄÄ_VASTAUS':
-        let uusiVastaus = {uid: uuid(), vastaus: "", valittu: false, oikea_vastaus: false}
+        let uusiVastaus = {uid: uuid(), vastaus: "Uusi vastaus", valittu: false, oikea_vastaus: false}
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset.push(uusiVastaus)
         return syväKopioR
       case 'POISTA_VASTAUS':
-        poistaVastaus(action.data.vastaus_id)
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset.splice(action.data.indexVa, 1)
         return syväKopioR
       case 'MUOKKAA_KYSYMYSTÄ':
-        paivitaKysymysNimi(action.data.kysymys_id, action.data.kysymys)
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].kysymys = action.data.kysymys
         return syväKopioR
       case 'LISÄÄ_KYSYMYS':
-        let uusiKysymys =  {uid: uuid(), kysymys: "", vastaukset: []}
+        let uusiKysymys =  {uid: uuid(), kysymys: "Uusi kysymys", vastaukset: []}
         syväKopioR[tenttiValinta].kysely.push(uusiKysymys)
         return syväKopioR
       case 'POISTA_KYSYMYS':
-        poistaKysymys(action.data.kysymys_id)
         syväKopioR[tenttiValinta].kysely.splice(action.data.indexKy, 1)
         return syväKopioR
       case 'MUOKKAA_TENTTI':
-        paivitaTenttiNimi(action.data.tentti_id, action.data.nimi)
         syväKopioR[tenttiValinta].nimi = action.data.nimi
         return syväKopioR
       case 'LISÄÄ_TENTTI':

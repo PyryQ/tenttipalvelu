@@ -29,20 +29,63 @@ export async function paivitaVastausNimi(vastaus_id, vastaus) {
     }
   }
 
-  export async function poistaVastaus(vastaus_id) {
+
+//-----------------------------------DELETE--------------------------------
+
+export async function poistaVastaus(vastaus_id) {
     try{
-      let result = await axios.delete("http://localhost:4000/poistavastaus", {v_id: vastaus_id})
+      let result = await axios.delete("http://localhost:4000/poistavastaus/" + vastaus_id)
     }
     catch(exception){
       console.log("Vastausta ei onnistuttu poistamaan.")
     }
   }
 
-  export async function poistaKysymys(kysymys_id) {
-    try{
-      let result = await axios.delete("http://localhost:4000/poistakysymys",{k_id: kysymys_id})
-    }
-    catch(exception){
-      console.log("Vastausta ei onnistuttu poistamaan.")
-    }
+export async function poistaKysymys(kysymys_id) {
+  try{
+    let result = await axios.delete("http://localhost:4000/poistakysymys/" + kysymys_id)
   }
+  catch(exception){
+    console.log("Vastausta ei onnistuttu poistamaan.")
+  }
+}
+
+export async function poistaVastaus(vastaus_id) {
+  try{
+    let result = await axios.delete("http://localhost:4000/poistavastaus/" + vastaus_id)
+  }
+  catch(exception){
+    console.log("Vastausta ei onnistuttu poistamaan.")
+  }
+}
+
+//------------------------------POST-------------------------
+
+
+export async function lisääTentti() {
+  try{
+    let result = await axios.post("http://localhost:4000/lisaatentti/Uusi tentti")
+  }
+  catch(exception){
+    console.log("Vastausta ei onnistuttu lisäämään.")
+  }
+}
+
+export async function lisääKysymys(tentti_id) {
+  try{
+    let result = await axios.post("http://localhost:4000/lisaakysymys/" + tentti_id + "/Uusi kysymys/3")
+  }
+  catch(exception){
+    console.log("Kysymystä ei onnistuttu lisäämään.")
+  }
+}
+
+export async function lisääVastaus(kysymys_id) {
+  try{
+    let result = await axios.post("http://localhost:4000/lisaavastaus/"+ kysymys_id + "/Uusi vastaus/false")
+  }
+  catch(exception){
+    console.log("Vastausta ei onnistuttu lisäämään.")
+  }
+}
+  

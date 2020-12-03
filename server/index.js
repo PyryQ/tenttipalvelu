@@ -16,9 +16,9 @@ app.use(cors())
 //---------------------------------------------------POST------------------------------------
 
 //Lisää tentti (lisää defaultarvot tietokantaan?)
-app.post('/lisaatentti/:nimi/:tp/:mp/:ta/:tl/:pr', (req, res, next) => {
-  db.query("INSERT INTO tentti (nimi, tenttipisteet, minimipisteet, tentin_aloitusaika, tentin_lopetusaika, pisterajat) values ($1, $2, $3, $4, $5, $6);", 
-  [req.params.nimi, req.params.tp, req.params.mp, req.params.ta, req.params.tl, req.params.pr], (err, result) => {
+app.post('/lisaatentti/:nimi', (req, res, next) => {
+  db.query("INSERT INTO tentti (nimi) values ($1);", 
+  [req.params.nimi], (err, result) => {
     if (err) {
       return next(err)
     }
@@ -29,7 +29,7 @@ app.post('/lisaatentti/:nimi/:tp/:mp/:ta/:tl/:pr', (req, res, next) => {
 //( to_timestamp )
 
 //Lisää kysymys
-app.post('/lisaakysymys/:tentti_id/:kysymys/:pisteet/', (req, res, next) => {
+app.post('/lisaakysymys/:tentti_id/:kysymys/:pisteet', (req, res, next) => {
   db.query("INSERT INTO kysymys (tentti_id_fk, kysymys, kysymyspisteet) VALUES ($1, $2, $3);", 
   [req.params.tentti_id, req.params.kysymys, req.params.pisteet], (err, result) => { 
     if (err) {
@@ -271,6 +271,17 @@ app.put('/paivitavastausteksti', (req, res, next) => {
   })
 })
 
+//päivitä vastausteksti
+app.put('/paivitaoikeavastaus', (req, res, next) => {
+  db.query("UPDATE vastaus SET oikea_vastaus = $2 WHERE vastaus_id = $1;", 
+  [req.body.vastaus_id, req.body.oikea_vastaus], (err, result) => { 
+    if (err) {
+      return next(err)
+    }
+    res.send(req.body)
+  })
+})
+
 
 
 //päivitä käyttäjän vastaus
@@ -307,8 +318,8 @@ app.delete('/poistatentti/:tentti_id', (req, res, next) => {
   })
 })
 
-app.delete('/poistakysymys', (req, res, next) => {
-  db.query("DELETE FROM kysymys WHERE kysymys_id=$1;", [req.body.k_id], (err, result) => {
+app.delete('/poistakysymys/:kysymys_id', (req, res, next) => {
+  db.query("DELETE FROM kysymys WHERE kysymys_id=$1;", [req.params.kysymys_id], (err, result) => {
     if (err) {
       return next(err)
     }
@@ -316,8 +327,8 @@ app.delete('/poistakysymys', (req, res, next) => {
   })
 })
 
-app.delete('/poistavastaus', (req, res, next) => {
-  db.query("DELETE FROM vastaus WHERE vastaus_id =$1;", [req.body.v_id], (err, result) => {
+app.delete('/poistavastaus/:vastaus_id', (req, res, next) => {
+  db.query("DELETE FROM vastaus WHERE vastaus_id =$1;", [req.params.vastaus_id], (err, result) => {
     if (err) {
       return next(err)
     }

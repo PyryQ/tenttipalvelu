@@ -7,6 +7,11 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import { Input } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 
+import {paivitaTenttiNimi, paivitaKysymysNimi, paivitaVastausNimi, poistaVastaus, 
+  poistaKysymys, lisääKysymys, lisääVastaus, lisääTentti} from './HttpKutsut';
+// Kehitettävää: 
+//aktiivisen tentin buttonille eri väri
+
 //Muokkausnäkymä, jossa mahdollista muokata, 
 //lisätä tai poistaa vastauksia, kysymyksiä ja tenttejä
 export default function MuokkaaKysymyksiä(props) {
@@ -27,18 +32,18 @@ export default function MuokkaaKysymyksiä(props) {
           
           {/*Input vastauksen asettamiselle*/}
           <Input className="vastausM" defaultValue={itemV.vastaus} key={"muuta_v" + itemV.vastaus_id}
-            onChange = {(e) => props.dispatch({type: 'MUUTA_VASTAUSTA', data:{vastaus: e.target.value, vastaus_id: itemV.vastaus_id, indexKy: indexK, indexVa: indexV}})}>
+            onChange = {(e) => (paivitaVastausNimi(itemV.vastaus_id, e.target.value), props.dispatch({type: 'MUUTA_VASTAUSTA', data:{vastaus: e.target.value, indexKy: indexK, indexVa: indexV}}))}>
           </Input>
 
           {/*Button vastauksen poistamiselle*/}
           <Button className="vastausPoisto" key={"poista_v" + itemV.vastaus_id}
-            onClick={() => props.dispatch({type: 'POISTA_VASTAUS', data:{indexKy: indexK, indexVa: indexV, vastaus_id: itemV.vastaus_id}})}>
+            onClick={() => (props.dispatch({type: 'POISTA_VASTAUS', data:{indexKy: indexK, indexVa: indexV, vastaus_id: itemV.vastaus_id}}), poistaVastaus(itemV.vastaus_id))}>
           <DeleteIcon/></Button>
         </div>)}
 
         {/*Button vastauksen lisäämiselle*/}
         <Button className="lisääM" key={"lisää_v" + itemK.vastaus_id}
-          onClick={() => props.dispatch({type: 'LISÄÄ_VASTAUS', data:{indexKy: indexK}})}>
+          onClick={() => (props.dispatch({type: 'LISÄÄ_VASTAUS', data:{indexKy: indexK, kysymys_id: itemK.kysymys_id}}), lisääVastaus(itemK.kysymys_id))}>
         <AddCircleOutlineIcon/></Button>
       </div>
     }
@@ -49,7 +54,7 @@ export default function MuokkaaKysymyksiä(props) {
     <div>
       {/*Input tentin nimen muokkaamiseksi*/}
       <Input key={"tentti_input" + dataM.tentti_id} className="kysymysM" defaultValue={dataM.nimi} 
-        onChange={(e) => props.dispatch({type: 'MUOKKAA_TENTTI', data:{nimi: e.target.value, tentti_id: dataM.tentti_id}})}>
+        onChange={(e) => (props.dispatch({type: 'MUOKKAA_TENTTI', data:{nimi: e.target.value}}),paivitaTenttiNimi(dataM.tentti_id, e.target.value))}>
       </Input>
       <br></br>
       {/*Button tentin poistamiseksi*/}
@@ -59,7 +64,7 @@ export default function MuokkaaKysymyksiä(props) {
 
       {/*Button tentin lisäämiseksi*/}
       <Button className="lisääUT" 
-        onClick={() => props.dispatch({type: 'LISÄÄ_TENTTI', data:{}})}>
+        onClick={() => (props.dispatch({type: 'LISÄÄ_TENTTI', data:{}}), lisääTentti())}>
         <AddCircleOutlineIcon/>Lisää uusi tentti</Button>
 
       {/*Tulostetaan kysymys, sen poistobutton ja vastausvaihtoehdot*/}
@@ -68,10 +73,10 @@ export default function MuokkaaKysymyksiä(props) {
           <div>
             <Input className="kysymysM" 
               defaultValue={itemK.kysymys}
-              onChange={(e) => props.dispatch({type: 'MUOKKAA_KYSYMYSTÄ', data:{kysymys: e.target.value, kysymys_id: itemK.kysymys_id, indexKy: indexK}})}>
+              onChange={(e) => (props.dispatch({type: 'MUOKKAA_KYSYMYSTÄ', data:{kysymys: e.target.value, indexKy: indexK}}), paivitaKysymysNimi(itemK.kysymys_id, e.target.value))}>
             </Input> 
 
-            <Button className="poistoM" onClick={() => props.dispatch({type: 'POISTA_KYSYMYS', data:{indexKy: indexK, kysymys_id: itemK.kysymys_id}})}>
+            <Button className="poistoM" onClick={() => (props.dispatch({type: 'POISTA_KYSYMYS', data:{indexKy: indexK}}), poistaKysymys(itemK.kysymys_id))}>
               <DeleteIcon/></Button>
             
             {näytäVaihtoehdot(itemK, indexK)}
@@ -80,7 +85,7 @@ export default function MuokkaaKysymyksiä(props) {
       <div>
         {/*Button kysymyksen lisäämiseksi*/}
         <Button className="lisääK" key={"lisää_k"}
-          onClick={() => props.dispatch({type: 'LISÄÄ_KYSYMYS', data:{}})}>
+          onClick={() => (props.dispatch({type: 'LISÄÄ_KYSYMYS', data:{tentti_id: dataM.tentti_id}}), lisääKysymys(dataM.tentti_id))}>
           <AddCircleOutlineIcon/>{"Lisää kysymys"}
         </Button>
       </div>

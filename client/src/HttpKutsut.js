@@ -29,12 +29,20 @@ export async function paivitaVastausNimi(vastaus_id, vastaus) {
     }
   }
 
+export async function paivitaOikeaVastaus(vastaus_id, onkoOikein) {
+    try{
+      let result = await axios.put("http://localhost:4000/paivitaoikeavastaus", {vastaus_id: vastaus_id, oikein: onkoOikein})
+    }
+    catch(exception){
+      console.log("Vastausta ei onnistuttu päivittämään.")
+    }
+  }
 
 //-----------------------------------DELETE--------------------------------
 
-export async function poistaVastaus(vastaus_id) {
+export async function poistaTentti(tentti_id) {
     try{
-      let result = await axios.delete("http://localhost:4000/poistavastaus/" + vastaus_id)
+      let result = await axios.delete("http://localhost:4000/poistatentti/" + tentti_id)
     }
     catch(exception){
       console.log("Vastausta ei onnistuttu poistamaan.")

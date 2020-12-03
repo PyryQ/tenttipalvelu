@@ -16,7 +16,6 @@ import KaavioVaaka from './KaavioVaaka';
 import Kaavio2 from './Kaavio2';
 import Kaavio from './Kaavio';
 
-import {paivitaTenttiNimi, paivitaKysymysNimi, paivitaVastausNimi, poistaVastaus, poistaKysymys, lisääKysymys, lisääVastaus} from './HttpKutsut';
 // Kehitettävää: 
 //aktiivisen tentin buttonille eri väri
 // Kysymyskomponentti?
@@ -213,9 +212,39 @@ function App() {
   //   }
   // },[state])
 
+  useEffect(() => {
+    const updateData = async () => {
+    try{
+      let result = await axios.get("http://localhost:4000/tentit")
 
+      //state pohjustetaan
+      if (result.data.length > 0){
+        for (var i = 0; i < result.data.length; i++){ //käydään läpi tentit
+          result.data[i].kysely = []
+          let kysymykset = await axios.get("http://localhost:4000/kysymykset/" + result.data[i].tentti_id)
+          result.data[i].kysely = kysymykset.data
 
-  
+          if (result.data[i].kysely.length > 0){
+            for (var j = 0; j < result.data[i].kysely.length; j++){ // käydään kysymykset
+              result.data[i].kysely[j].vastaukset = []
+              let vastaukset = await axios.get("http://localhost:4000/vastaukset/" + result.data[i].kysely[j].kysymys_id)
+              result.data[i].kysely[j].vastaukset = vastaukset.data
+            }
+          }
+          setData2(result.data);
+          setDataAlustettu2(true)
+        }
+        dispatch({type: "INIT_DATA", data: result.data})
+        console.log(result.data)
+      }else{
+        throw("Tietokannan alustaminen epäonnistui (Get)") 
+      }
+      }
+      catch(exception){
+        console.log(exception)
+      }
+    }
+  },[state])
 
     
 
@@ -298,7 +327,7 @@ function App() {
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].valittu = action.data.valittuV
         return syväKopioR
       case 'MUUTA_VASTAUSTA':
-        syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].vastaus = action.data.vastaus
+        //syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].vastaus = action.data.vastaus
         return syväKopioR
       case 'MUUTA_OIKEA_VASTAUS':
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].oikea_vastaus = action.data.valittuV
@@ -387,7 +416,7 @@ function App() {
         
         {/*Tarkistetaan, ettei state ole undefined*/}
         {state[tenttiValinta] != undefined ? 
-          näkymä == 1 ? <div> {/*Näkymän mukaan tulostetaan*/}
+          näkymä === 1 ? <div> {/*Näkymän mukaan tulostetaan*/}
             <Fade right><TulostaKysymykset
               dispatch={dispatch}
               kysymys={state[tenttiValinta]} 
@@ -396,7 +425,7 @@ function App() {
             <br/>
             <Button variant={"contained"} color="primary" onClick={() => {setPalautettu(true);}}>Näytä vastaukset</Button>
             </div> : 
-            näkymä == 2 ?
+            näkymä === 2 ?
               <Fade right><MuokkaaKysymyksiä 
                 dispatch={dispatch}
                 kysymys={state[tenttiValinta]}/>

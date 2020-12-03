@@ -271,10 +271,10 @@ app.put('/paivitavastausteksti', (req, res, next) => {
   })
 })
 
-//päivitä vastausteksti
+//päivitä oikea vastaus
 app.put('/paivitaoikeavastaus', (req, res, next) => {
   db.query("UPDATE vastaus SET oikea_vastaus = $2 WHERE vastaus_id = $1;", 
-  [req.body.vastaus_id, req.body.oikea_vastaus], (err, result) => { 
+  [req.body.vastaus_id, req.body.oikein], (err, result) => { 
     if (err) {
       return next(err)
     }

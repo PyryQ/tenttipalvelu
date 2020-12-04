@@ -41,15 +41,27 @@ app.post('/lisaakysymys/:tentti_id/:kysymys/:pisteet', (req, res, next) => {
 })
 
 //Lisää vastaus
-app.post('/lisaavastaus/:kysymys_id/:vastaus/:oikea_vastaus', (req, res, next) => {
-  db.query("INSERT INTO vastaus (kysymys_id_fk, vastaus, oikea_vastaus) VALUES ($1, $2, $3);", 
-  [req.params.kysymys_id, req.params.vastaus, req.params.oikea_vastaus], (err, result) => { 
-    if (err) {
-      return next(err)
-    }
-    res.send("Vastauksen lisäys onnistui")
-  })
+app.post('/lisaavastaus', (req, res, next) => {
+    db.query("INSERT INTO vastaus (kysymys_id_fk, vastaus, oikea_vastaus) VALUES ($1, 'Uusi vastaus', false) RETURNING vastaus_id;", 
+    [req.body.kysymys_id], (err, result) => { 
+      if (err) {
+        return next(err)
+      }
+      res.send(result.rows[0].vastaus_id)
+    })
+
 })
+
+// app.post('/lisaavastaus/:kysymys_id/:vastaus/:oikea_vastaus', (req, res, next) => {
+//   db.query("INSERT INTO vastaus (kysymys_id_fk, vastaus, oikea_vastaus) VALUES ($1, $2, $3) RETURNING vastaus_id;", 
+//   [req.params.kysymys_id, req.params.vastaus, req.params.oikea_vastaus], (err, result) => { 
+//     if (err) {
+//       return next(err)
+//     }
+//     var uusi_vastaus_id = result.rows[0].vastaus_id
+//     res.send(uusi_vastaus_id)
+//   })
+// })
 
 //Lisää käyttäjä
 app.post('/lisaakayttaja/:en/:sn/:sp/:r/:ss', (req, res, next) => {

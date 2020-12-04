@@ -69,7 +69,7 @@ function App() {
         {uid: uuid(), kysymys: "Mikä seuraavista on GIF?", vastaukset: [
           {uid: uuid(), vastaus: "graph iteration format", valittu: false, oikea_vastaus: false}, 
           {uid: uuid(), vastaus: "graphics interchange format", valittu: false, oikea_vastaus: true}, 
-          {uid: uuid(), vastaus: "george iliott format ", valittu: false, oikea_vastaus: false}
+          {uid: uuid(), vastaus: "george iliott format", valittu: false, oikea_vastaus: false}
         ]},
         {uid: uuid(), kysymys: "Kuka on oikea_vastaus Ben?", vastaukset: [
           {uid: uuid(), vastaus: "Ben Zysgowicz", valittu: false, oikea_vastaus: false}, 
@@ -212,39 +212,39 @@ function App() {
   //   }
   // },[state])
 
-  useEffect(() => {
-    const updateData = async () => {
-    try{
-      let result = await axios.get("http://localhost:4000/tentit")
+  // useEffect(() => {
+  //   const updateData = async () => {
+  //   try{
+  //     let result = await axios.get("http://localhost:4000/tentit")
 
-      //state pohjustetaan
-      if (result.data.length > 0){
-        for (var i = 0; i < result.data.length; i++){ //käydään läpi tentit
-          result.data[i].kysely = []
-          let kysymykset = await axios.get("http://localhost:4000/kysymykset/" + result.data[i].tentti_id)
-          result.data[i].kysely = kysymykset.data
+  //     //state pohjustetaan
+  //     if (result.data.length > 0){
+  //       for (var i = 0; i < result.data.length; i++){ //käydään läpi tentit
+  //         result.data[i].kysely = []
+  //         let kysymykset = await axios.get("http://localhost:4000/kysymykset/" + result.data[i].tentti_id)
+  //         result.data[i].kysely = kysymykset.data
 
-          if (result.data[i].kysely.length > 0){
-            for (var j = 0; j < result.data[i].kysely.length; j++){ // käydään kysymykset
-              result.data[i].kysely[j].vastaukset = []
-              let vastaukset = await axios.get("http://localhost:4000/vastaukset/" + result.data[i].kysely[j].kysymys_id)
-              result.data[i].kysely[j].vastaukset = vastaukset.data
-            }
-          }
-          setData2(result.data);
-          setDataAlustettu2(true)
-        }
-        dispatch({type: "INIT_DATA", data: result.data})
-        console.log(result.data)
-      }else{
-        throw("Tietokannan alustaminen epäonnistui (Get)") 
-      }
-      }
-      catch(exception){
-        console.log(exception)
-      }
-    }
-  },[state])
+  //         if (result.data[i].kysely.length > 0){
+  //           for (var j = 0; j < result.data[i].kysely.length; j++){ // käydään kysymykset
+  //             result.data[i].kysely[j].vastaukset = []
+  //             let vastaukset = await axios.get("http://localhost:4000/vastaukset/" + result.data[i].kysely[j].kysymys_id)
+  //             result.data[i].kysely[j].vastaukset = vastaukset.data
+  //           }
+  //         }
+  //         setData2(result.data);
+  //         setDataAlustettu2(true)
+  //       }
+  //       dispatch({type: "INIT_DATA", data: result.data})
+  //       console.log(result.data)
+  //     }else{
+  //       throw("Tietokannan alustaminen epäonnistui (Get)") 
+  //     }
+  //     }
+  //     catch(exception){
+  //       console.log(exception)
+  //     }
+  //   }
+  // }
 
     
 
@@ -327,7 +327,7 @@ function App() {
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].valittu = action.data.valittuV
         return syväKopioR
       case 'MUUTA_VASTAUSTA':
-        //syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].vastaus = action.data.vastaus
+        syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].vastaus = action.data.vastaus
         return syväKopioR
       case 'MUUTA_OIKEA_VASTAUS':
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].oikea_vastaus = action.data.valittuV
@@ -353,17 +353,14 @@ function App() {
         syväKopioR[tenttiValinta].nimi = action.data.nimi
         return syväKopioR
       case 'LISÄÄ_TENTTI':
-        let uusiTentti = {uid: uuid(), nimi: "Uusi tentti", kysely: [{
-          uid: uuid(), kysymys: "", vastaukset: [{vastaus: "", valittu: false, oikea_vastaus: false}]}]
+        let uusiTentti = {uid: uuid(), nimi: "Uusi tentti", kysely: []
         }
         syväKopioR.push(uusiTentti)
         return syväKopioR
       case 'POISTA_TENTTI':
-        console.log(tenttiValinta)
         if(state.length > 1){
           syväKopioR.splice(tenttiValinta, 1)
         }
-        console.log(tenttiValinta)
         return syväKopioR
       default:
         throw new Error();

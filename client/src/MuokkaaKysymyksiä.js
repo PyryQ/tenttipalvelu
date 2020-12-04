@@ -37,12 +37,15 @@ export default function MuokkaaKysymyksiä(props) {
 
           {/*Button vastauksen poistamiselle*/}
           <Button className="vastausPoisto" key={"poista_v" + itemV.vastaus_id}
-            onClick={() => (props.dispatch({type: 'POISTA_VASTAUS', data:{indexKy: indexK, indexVa: indexV}}), poistaVastaus(itemV.vastaus_id))}>
+            onClick={() => (poistaVastaus(itemV.vastaus_id), props.dispatch({type: 'POISTA_VASTAUS', data:{indexKy: indexK, indexVa: indexV}}))}>
           <DeleteIcon/></Button>
         </div>)}
 
         {/*Button vastauksen lisäämiselle*/}
-        <Button className="lisääM" onClick={() => (props.dispatch({type: 'LISÄÄ_VASTAUS', data:{indexKy: indexK, kysymys_id: itemK.kysymys_id}}), lisääVastaus(itemK.kysymys_id))} key={"lisää_v" + itemK.vastaus_id}>
+        
+        <Button className="lisääM" onClick={() => 
+          (lisääVastaus(itemK.kysymys_id), 
+          props.dispatch({type: 'LISÄÄ_VASTAUS', data:{indexKy: indexK, kysymys_id: itemK.kysymys_id}}))} key={"lisää_v" + itemK.vastaus_id}>
         <AddCircleOutlineIcon/></Button>
       </div>
     }

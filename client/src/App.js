@@ -212,39 +212,39 @@ function App() {
   //   }
   // },[state])
 
-  // useEffect(() => {
-  //   const updateData = async () => {
-  //   try{
-  //     let result = await axios.get("http://localhost:4000/tentit")
 
-  //     //state pohjustetaan
-  //     if (result.data.length > 0){
-  //       for (var i = 0; i < result.data.length; i++){ //käydään läpi tentit
-  //         result.data[i].kysely = []
-  //         let kysymykset = await axios.get("http://localhost:4000/kysymykset/" + result.data[i].tentti_id)
-  //         result.data[i].kysely = kysymykset.data
+  const updateData = async () => {
+    try{
+      let result = await axios.get("http://localhost:4000/tentit")
 
-  //         if (result.data[i].kysely.length > 0){
-  //           for (var j = 0; j < result.data[i].kysely.length; j++){ // käydään kysymykset
-  //             result.data[i].kysely[j].vastaukset = []
-  //             let vastaukset = await axios.get("http://localhost:4000/vastaukset/" + result.data[i].kysely[j].kysymys_id)
-  //             result.data[i].kysely[j].vastaukset = vastaukset.data
-  //           }
-  //         }
-  //         setData2(result.data);
-  //         setDataAlustettu2(true)
-  //       }
-  //       dispatch({type: "INIT_DATA", data: result.data})
-  //       console.log(result.data)
-  //     }else{
-  //       throw("Tietokannan alustaminen epäonnistui (Get)") 
-  //     }
-  //     }
-  //     catch(exception){
-  //       console.log(exception)
-  //     }
-  //   }
-  // }
+      //state pohjustetaan
+      if (result.data.length > 0){
+        for (var i = 0; i < result.data.length; i++){ //käydään läpi tentit
+          result.data[i].kysely = []
+          let kysymykset = await axios.get("http://localhost:4000/kysymykset/" + result.data[i].tentti_id)
+          result.data[i].kysely = kysymykset.data
+
+          if (result.data[i].kysely.length > 0){
+            for (var j = 0; j < result.data[i].kysely.length; j++){ // käydään kysymykset
+              result.data[i].kysely[j].vastaukset = []
+              let vastaukset = await axios.get("http://localhost:4000/vastaukset/" + result.data[i].kysely[j].kysymys_id)
+              result.data[i].kysely[j].vastaukset = vastaukset.data
+            }
+          }
+          setData2(result.data);
+          setDataAlustettu2(true)
+        }
+        dispatch({type: "INIT_DATA", data: result.data})
+        console.log(result.data)
+      }else{
+        throw("Tietokannan alustaminen epäonnistui (Get)") 
+      }
+      }
+      catch(exception){
+        console.log(exception)
+      }
+    }
+
 
     
 
@@ -326,14 +326,15 @@ function App() {
       case 'VASTAUS_VALITTU':
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].valittu = action.data.valittuV
         return syväKopioR
-      case 'MUUTA_VASTAUSTA':
+      case 'MUOKKAA_VASTAUSTA':
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].vastaus = action.data.vastaus
         return syväKopioR
       case 'MUUTA_OIKEA_VASTAUS':
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].oikea_vastaus = action.data.valittuV
         return syväKopioR
       case 'LISÄÄ_VASTAUS':
-        let uusiVastaus = {uid: uuid(), vastaus: "Uusi vastaus", valittu: false, oikea_vastaus: false}
+        console.log(action.data.vastaus_id)
+        let uusiVastaus = {vastaus: "Uusi vastaus", valittu: false, oikea_vastaus: false, vastaus_id: action.data.vastaus_id}
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset.push(uusiVastaus)
         return syväKopioR
       case 'POISTA_VASTAUS':
@@ -424,6 +425,7 @@ function App() {
             </div> : 
             näkymä === 2 ?
               <Fade right><MuokkaaKysymyksiä 
+                paivitaData={updateData}
                 dispatch={dispatch}
                 kysymys={state[tenttiValinta]}/>
               </Fade> : <div>

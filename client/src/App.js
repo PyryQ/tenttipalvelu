@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {useEffect, useState, useReducer} from 'react';
 import Fade from 'react-reveal/Fade';
 import uuid from 'react-uuid';
@@ -18,6 +18,8 @@ import Login from './Login'
 import Kaavio2 from './Kaavio2';
 import Kaavio from './Kaavio';
 
+
+
 // Kehitettävää: 
 //aktiivisen tentin buttonille eri väri
 // Kysymyskomponentti?
@@ -26,6 +28,7 @@ import Kaavio from './Kaavio';
 // Kommentointia
 // Hookit, onBlur?
 // tekstittömän painikkeen muotoilu
+
 
 
 function App() {
@@ -37,8 +40,10 @@ function App() {
 
   const [palautettu, setPalautettu] = useState(false) //Onko kysely palautettu
   const [tenttiValinta, settenttiValinta] = useState(0) //Mikä tenteistä on valittu
-  const [näkymä, setNäkymä] = useState(1) //Vastaus- vai muokkausnäkymä
+  const [näkymä, setNäkymä] = useState(4) //Vastaus- vai muokkausnäkymä
   const [käyttäjänSähköposti, setKäyttäjänSähköposti] = useState(null)
+
+  const [kirjauduttuSisään, setKirjauduttuSisään] = useState(false)
 
   //Alkuperäinen taulukko kyselyistä ja niiden vastauksista
   const kyselyt = []
@@ -370,6 +375,18 @@ function App() {
     }
   }
 
+
+//Kirjautumisen ja käyttäjän tietojen hallinnointia
+
+  const kirjauduttu = (onkoKirjauduttu) => {
+    setKirjauduttuSisään(onkoKirjauduttu)
+    setNäkymä(1)
+  }
+
+  const asetasähköposti = (sähköposti) => {
+    setKirjauduttuSisään(sähköposti)
+  }
+
   ////////////////////////////Muiden hookkien muistiinpanoja - useMemo - useRef
   //Dom puusta tietoa, useRef
   //Toinen hook, useMemo, jottei renderöidä turhuuksia
@@ -388,19 +405,51 @@ function App() {
   //useRef, focuksen saamiseksi, esimerkiksi scroll-listan alimpaan elementtiin päästään käsiksi
   //const refContainer = useRef(initialValue)
 
+
+  //Routertestailua
+
+  
+  // function Muokkaus() {
+  //   return <Text style={styles.header}>Muokkaus</Text>;
+  // }
+  
+  // function Kaavio() {
+  //   return <Text style={styles.header}>Kaavio</Text>;
+  // }
+  
+  // function Kysymykset() {
+  //   return <Text style={styles.header}>{match.params.topicId}</Text>;
+  // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
     <div>
       {/*Yläpalkki navigointipainikkeineen*/}
       <div className={classes1.root}>
         <AppBar position="static">
           <Toolbar>
-            <Button color="inherit" edge="start" className={classes1.menuButton}>TENTIT</Button>
-            <Button color="inherit">Käyttäjä</Button>
-            <Button variant="contained" color="secondary" onClick={() => setNäkymä(1)}>Näytä kysely</Button>
+            {kirjauduttuSisään ?
+            <div>
+            <Button color="inherit" edge="start" className={classes1.menuButton} onClick={() => setNäkymä(1)}>TENTIT</Button>
+            <Button color="inherit" onClick={() => setNäkymä(2)}>Käyttäjä</Button>
             <Button variant="contained" color="secondary" onClick={() => setNäkymä(2)}>Näytä kyselyn muokkaus</Button>
             <Button variant="contained" color="secondary" onClick={() => setNäkymä(3)}>Demot</Button>
-            <div className={classes1.spacer}></div>
+            <div className={classes1.spacer}/>
             <Button color="inherit">POISTU</Button>
+            </div>
+            : <Button color="inherit" edge="start" onClick={() => setNäkymä(4)}>Kirjaudu sisään</Button>}
           </Toolbar>
       </AppBar>
       </div>
@@ -408,40 +457,48 @@ function App() {
 
       <div>
         {/*Painikkeet kyselyn valintaa varten*/}
-        {state.map((arvo, index) => <BootstrapButton key={"kyselypainike" + index} variant="contained" color="primary" 
-          disableRipple className={classesButton.margin} 
-          onClick={() => {settenttiValinta(index); setPalautettu(false);}}>{arvo.nimi}
-        </BootstrapButton>) }
+        {näkymä === 1 || näkymä === 2 ? 
+          <div>{state.map((arvo, index) => <BootstrapButton key={"kyselypainike" + index} variant="contained" color="primary" 
+            disableRipple className={classesButton.margin} 
+            onClick={() => {settenttiValinta(index); setPalautettu(false);}}>{arvo.nimi}
+            </BootstrapButton>)}</div> 
+        : null}
         <br/><br/>
         
         {/*Tarkistetaan, ettei state ole undefined*/}
-        {state[tenttiValinta] != undefined ? 
-          näkymä === 1 ? <div> {/*Näkymän mukaan tulostetaan*/}
-            <Fade right><TulostaKysymykset
-              dispatch={dispatch}
-              kysymys={state[tenttiValinta]} 
-              palautettu= {palautettu}/>
-            </Fade>
-            <br/>
-            <Button variant={"contained"} color="primary" onClick={() => {setPalautettu(true);}}>Näytä vastaukset</Button>
-            </div> : 
-            näkymä === 2 ?
-              <Fade right><MuokkaaKysymyksiä 
-                dispatch={dispatch}
-                kysymys={state[tenttiValinta]}/>
-              </Fade> : <div>
-                <Fade right>
-                {/*<Kaavio/>*/}
-                <KaavioVaaka/>
-                <br></br>
-                </Fade>
-              </div>
-         : null }
-        <br></br>
-        <Button variant={"contained"} color="primary" onClick={() => updateData()}>Tallenna</Button>
-        <Käyttäjä sähköposti = {käyttäjä_oletus_sähköposti}/>
-        <Login></Login>
+        {/*{state[tenttiValinta] != undefined ? */}
+        {näkymä === 1 ? <div> {/*Näkymän mukaan tulostetaan*/}
+          <Fade right><TulostaKysymykset
+            dispatch={dispatch}
+            kysymys={state[tenttiValinta]} 
+            palautettu= {palautettu}/>
+          </Fade>
+          <br/>
+          <Button variant={"contained"} color="primary" onClick={() => {setPalautettu(true);}}>Näytä vastaukset</Button>
+          </div> : null}
 
+        {näkymä === 2 ?
+          <Fade right><MuokkaaKysymyksiä 
+            dispatch={dispatch}
+            kysymys={state[tenttiValinta]}/>
+            </Fade> : null}
+          
+        {näkymä === 3 ?
+        <div>
+          <Fade right>
+            {/*<Kaavio/>*/}
+            <KaavioVaaka/>
+            <br></br>
+          </Fade>
+        </div> : null}
+
+        {näkymä === 4 ?
+          <Login kirjautuminen = {kirjauduttu}/> : null
+        }
+
+        {näkymä === 5 ?
+        <Käyttäjä sähköposti = {käyttäjä_oletus_sähköposti}/> : null}
+        <br></br>
         </div>
       </div>
   );

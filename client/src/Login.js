@@ -4,12 +4,13 @@ import Form from "react-bootstrap/Form";
 import Button from '@material-ui/core/Button';
 //'@material-ui/core/Button';
 import "./App.css";
+import kirjauduttu from "./App.js"
 
-export default function Login() {
+export default function Login(props) {
   const [käyttäjänSähköposti, setKäyttäjänSähköposti] = useState("");
   const [käyttäjänSalasana, setKäyttäjänSalasana] = useState("");
   const [salasananTarkistus, setSalasananTarkistus] = useState("")
-  const [salasanaOikein, setSalasanaOikein] = useState("ei ole onnistunut");
+  const [salasanaOikein, setSalasanaOikein] = useState(false);
 
   function validateForm() {
     return käyttäjänSalasana.length > 0 && käyttäjänSähköposti.length > 0;
@@ -34,7 +35,8 @@ export default function Login() {
 
   function tarkistaSalasana() {
     if (käyttäjänSalasana == salasananTarkistus){
-        setSalasanaOikein("onnistui")
+        setSalasanaOikein(true)
+        props.kirjautuminen(true)
     }
   }
 
@@ -61,7 +63,6 @@ export default function Login() {
         <Button block size="lg" type="submit" disabled={!validateForm()} onClick={() => tarkistaSalasana()}>
           Kirjaudu
         </Button>
-    <div> Kirjautuminen: {salasanaOikein}</div>
       </Form>
     </div>
   );

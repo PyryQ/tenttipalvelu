@@ -1,4 +1,4 @@
-import axios from 'axios'; //serverin käyttöä varten
+import axios from 'axios';
 
 
 export async function paivitaTenttiNimi(tentti_id, nimi) {
@@ -74,7 +74,8 @@ export async function poistaVastaus(vastaus_id) {
 
 export async function lisääTentti() {
   try{
-    let result = await axios.post("http://localhost:4000/lisaatentti/Uusi tentti")
+    let result = await axios.post("http://localhost:4000/lisaatentti")
+    return(result.data)
   }
   catch(exception){
     console.log("Vastausta ei onnistuttu lisäämään.")
@@ -83,7 +84,8 @@ export async function lisääTentti() {
 
 export async function lisääKysymys(tentti_id) {
   try{
-    let result = await axios.post("http://localhost:4000/lisaakysymys/" + tentti_id + "/Uusi kysymys/3")
+    let result = await axios.post("http://localhost:4000/lisaakysymys", {tentti_id: tentti_id})
+    return(result.data)
   }
   catch(exception){
     console.log("Kysymystä ei onnistuttu lisäämään.")
@@ -92,8 +94,7 @@ export async function lisääKysymys(tentti_id) {
 
 export async function lisääVastaus(kysymys_id) {
   try{
-    let result = await axios.post("http://localhost:4000/lisaavastaus/", {kysymys_id: kysymys_id})
-    console.log(result.data)
+    let result = await axios.post("http://localhost:4000/lisaavastaus", {kysymys_id: kysymys_id})
     return(result.data)
   }
   catch(exception){
@@ -107,13 +108,24 @@ export async function lisääVastaus(kysymys_id) {
 
 
 
-export async function haeVastausId(kysymys_id) {
+// export async function haeVastausId(kysymys_id) {
+//   try{
+//     let result = await axios.post("http://localhost:4000/lisaavastaus/", {kysymys_id: kysymys_id})
+//     console.log(result.data)
+//     return(result.data)
+//   }
+//   catch(exception){
+//     console.log("Vastausta ei onnistuttu lisäämään.")
+//   }
+// }
+
+export async function haeKäyttäjänTiedot(sähköposti) {
   try{
-    let result = await axios.post("http://localhost:4000/lisaavastaus/", {kysymys_id: kysymys_id})
+    let result = await axios.get("http://localhost:4000/kayttajantiedot/" + sähköposti)
     console.log(result.data)
-    return(result.data)
+    return(result.data[0])
   }
   catch(exception){
-    console.log("Vastausta ei onnistuttu lisäämään.")
+    console.log("Käyttäjän tietoja ei saatu.")
   }
 }

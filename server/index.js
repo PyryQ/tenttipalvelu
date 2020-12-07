@@ -1,5 +1,11 @@
 const express = require('express')
 var cors = require("cors")
+
+var corsOptions = {
+  origin: 'http://localhost:3000',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
 var bodyParser = require("body-parser")
 const app = express()
 module.exports = app
@@ -8,7 +14,7 @@ const db = require('./db')
 const port = 4000
 
 app.use(bodyParser.json())
-app.use(cors())
+app.use(cors(corsOptions))
 
 
 
@@ -16,26 +22,25 @@ app.use(cors())
 //---------------------------------------------------POST------------------------------------
 
 //Lisää tentti (lisää defaultarvot tietokantaan?)
-app.post('/lisaatentti/:nimi', (req, res, next) => {
-  db.query("INSERT INTO tentti (nimi) values ($1);", 
-  [req.params.nimi], (err, result) => {
+app.post('/lisaatentti', (req, res, next) => {
+  db.query("INSERT INTO tentti (nimi) values ('Uusi tentti') RETURNING tentti_id;", (err, result) => {
     if (err) {
       return next(err)
     }
-    res.send("Tentin lisäys onnistui")
+    res.send(result.rows[0].tentti_id)
   })
 })
 //http://localhost:4000/lisaatentti/TenttiNimi/30/10/2021-01-01 12:00:00/2021-01-01 14:00:00/pisterajat
 //( to_timestamp )
 
 //Lisää kysymys
-app.post('/lisaakysymys/:tentti_id/:kysymys/:pisteet', (req, res, next) => {
-  db.query("INSERT INTO kysymys (tentti_id_fk, kysymys, kysymyspisteet) VALUES ($1, $2, $3);", 
-  [req.params.tentti_id, req.params.kysymys, req.params.pisteet], (err, result) => { 
+app.post('/lisaakysymys', (req, res, next) => {
+  db.query("INSERT INTO kysymys (tentti_id_fk, kysymys, kysymyspisteet) VALUES ($1, 'Uusi kysymys', 3) RETURNING kysymys_id;", 
+  [req.body.tentti_id], (err, result) => { 
     if (err) {
       return next(err)
     }
-    res.send("Kysymyksen lisäys onnistui")
+    res.send(result.rows[0].kysymys_id)
   })
 
 })
@@ -155,16 +160,6 @@ app.get('/vastaukset/:kysymys_id', (req, res, next) => {
   })
 })
 
-//Kaikki käyttäjät
-app.get('/kayttajat', (req, res, next) => {
-  db.query('SELECT * FROM käyttäjä', (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(result.rows)
-  })
-})
-
 //Käyttäjän tentit
 app.get('/kayttajantentit/:kayttaja_id', (req, res, next) => {
   db.query('SELECT * FROM käyttäjäntentti WHERE käyttäjä_id_fk = $1', 
@@ -183,7 +178,7 @@ app.get('/kayttajantentit/:kayttaja_id', (req, res, next) => {
     if (err) {
       return next(err)
     }
-    res.send(result.rows)
+    res.send(result.rows8)
   })
 })
 
@@ -209,8 +204,27 @@ app.get('/kayttajanrooli/:sahkoposti', (req, res, next) => {
   })
 })
 
+//Käyttäjän tiedot
+app.get('/kayttajantiedot/:sahkoposti', (req, res, next) => {
+  db.query("SELECT * FROM käyttäjä WHERE sähköposti = $1", 
+  [req.params.sahkoposti], (err, result) => {
+    if (err) {
+      return next(err)
+    }
+    res.send(result.rows)
+  })
+})
 
-
+//Käyttäjän salasana
+app.get('/kayttajansalasana/:sahkoposti', (req, res, next) => {
+  db.query("SELECT salasana FROM käyttäjä WHERE sähköposti = $1", 
+  [req.params.sahkoposti], (err, result) => {
+    if (err) {
+      return next(err)
+    }
+    res.send(result.rows)
+  })
+})
 
 
 

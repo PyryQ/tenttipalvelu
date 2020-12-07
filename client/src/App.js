@@ -13,6 +13,8 @@ import './App.css';
 import TulostaKysymykset from './TulostaKysymykset';
 import MuokkaaKysymyksiä from './MuokkaaKysymyksiä';
 import KaavioVaaka from './KaavioVaaka';
+import Käyttäjä from './Käyttäjä';
+import Login from './Login'
 import Kaavio2 from './Kaavio2';
 import Kaavio from './Kaavio';
 
@@ -36,6 +38,7 @@ function App() {
   const [palautettu, setPalautettu] = useState(false) //Onko kysely palautettu
   const [tenttiValinta, settenttiValinta] = useState(0) //Mikä tenteistä on valittu
   const [näkymä, setNäkymä] = useState(1) //Vastaus- vai muokkausnäkymä
+  const [käyttäjänSähköposti, setKäyttäjänSähköposti] = useState(null)
 
   //Alkuperäinen taulukko kyselyistä ja niiden vastauksista
   const kyselyt = []
@@ -245,7 +248,8 @@ function App() {
       }
     }
 
-
+    let oletuskäyttäjä = {käyttäjä_id: 1, etunimi: "Aku", sukunimi: "Ankka", sähköposti: "aku.ankka@ankkalinna.fi", rooli: "admin"};
+    let käyttäjä_oletus_sähköposti = "testi@testi.fi";
     
 
   // localStoragen data-avaimena on "data", joka alustetaan tässä
@@ -333,7 +337,6 @@ function App() {
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].oikea_vastaus = action.data.valittuV
         return syväKopioR
       case 'LISÄÄ_VASTAUS':
-        console.log(action.data.vastaus_id)
         let uusiVastaus = {vastaus: "Uusi vastaus", valittu: false, oikea_vastaus: false, vastaus_id: action.data.vastaus_id}
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset.push(uusiVastaus)
         return syväKopioR
@@ -344,7 +347,7 @@ function App() {
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].kysymys = action.data.kysymys
         return syväKopioR
       case 'LISÄÄ_KYSYMYS':
-        let uusiKysymys =  {uid: uuid(), kysymys: "Uusi kysymys", vastaukset: []}
+        let uusiKysymys =  {kysymys: "Uusi kysymys", vastaukset: [], kysymys_id: action.data.kysymys_id}
         syväKopioR[tenttiValinta].kysely.push(uusiKysymys)
         return syväKopioR
       case 'POISTA_KYSYMYS':
@@ -354,8 +357,7 @@ function App() {
         syväKopioR[tenttiValinta].nimi = action.data.nimi
         return syväKopioR
       case 'LISÄÄ_TENTTI':
-        let uusiTentti = {uid: uuid(), nimi: "Uusi tentti", kysely: []
-        }
+        let uusiTentti = {tentti_id: action.data.tentti_id, nimi: "Uusi tentti", kysely: []}
         syväKopioR.push(uusiTentti)
         return syväKopioR
       case 'POISTA_TENTTI':
@@ -393,7 +395,7 @@ function App() {
         <AppBar position="static">
           <Toolbar>
             <Button color="inherit" edge="start" className={classes1.menuButton}>TENTIT</Button>
-            <Button color="inherit">TIETOA SOVELLUKSESTA</Button>
+            <Button color="inherit">Käyttäjä</Button>
             <Button variant="contained" color="secondary" onClick={() => setNäkymä(1)}>Näytä kysely</Button>
             <Button variant="contained" color="secondary" onClick={() => setNäkymä(2)}>Näytä kyselyn muokkaus</Button>
             <Button variant="contained" color="secondary" onClick={() => setNäkymä(3)}>Demot</Button>
@@ -425,21 +427,21 @@ function App() {
             </div> : 
             näkymä === 2 ?
               <Fade right><MuokkaaKysymyksiä 
-                paivitaData={updateData}
                 dispatch={dispatch}
                 kysymys={state[tenttiValinta]}/>
               </Fade> : <div>
                 <Fade right>
                 {/*<Kaavio/>*/}
-                <Button variant="contained" color="secondary" onClick={() => console.log(data2)}>Data2</Button>
                 <KaavioVaaka/>
                 <br></br>
-
                 </Fade>
               </div>
          : null }
         <br></br>
-        <Button variant={"contained"} color="primary">Tyhjää muisti</Button>
+        <Button variant={"contained"} color="primary" onClick={() => updateData()}>Tallenna</Button>
+        <Käyttäjä sähköposti = {käyttäjä_oletus_sähköposti}/>
+        <Login></Login>
+
         </div>
       </div>
   );

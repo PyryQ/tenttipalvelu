@@ -14,6 +14,7 @@ import TulostaKysymykset from './TulostaKysymykset';
 import MuokkaaKysymyksiä from './MuokkaaKysymyksiä';
 import KaavioVaaka from './KaavioVaaka';
 import Käyttäjä from './Käyttäjä';
+import LuoKäyttäjä from './LuoKäyttäjä';
 import Login from './Login'
 import Kaavio from './Kaavio';
 
@@ -361,7 +362,8 @@ function App() {
             <div className={classes1.spacer}/>
             <Button color="inherit">POISTU</Button>
             </div>
-            : <Button color="inherit" edge="start" onClick={() => setNäkymä(4)}>Kirjaudu sisään</Button>}
+            : <div><Button color="inherit" edge="start" onClick={() => setNäkymä(4)}>Kirjaudu sisään</Button>
+              <Button color="inherit" edge="start" onClick={() => setNäkymä(6)}>Luo käyttäjä</Button></div>}
           </Toolbar>
       </AppBar>
       </div>
@@ -410,6 +412,9 @@ function App() {
 
         {näkymä === 5 ?
         <Käyttäjä sähköposti = {käyttäjänSähköposti}/> : null}
+
+        {näkymä === 6 ?
+        <LuoKäyttäjä sähköposti = {käyttäjänSähköposti}/> : null}
         <br></br>
         </div>
       </div>

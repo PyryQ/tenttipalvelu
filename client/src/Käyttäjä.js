@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {useEffect, useState, useReducer} from 'react';
 import { Input } from '@material-ui/core';
+import Card from '@material-ui/core/Card';
 
 //useMemo-hahmottelua
   // //https://www.digitalocean.com/community/tutorials/react-usememo
@@ -24,17 +25,26 @@ export default function Käyttäjä(props) {
   useEffect(()=>{
     const haeKäyttäjänData = async (sähköposti) => {
       let käyttäjä = await axios.get("http://localhost:4000/kayttajantiedot/" + sähköposti)
-      setKäyttäjänTiedot(käyttäjä.data)
+      console.log(käyttäjä.data)
+      setKäyttäjänTiedot(käyttäjä.data[0])
+      console.log(käyttäjänTiedot)
     }
     haeKäyttäjänData(k_sähköposti)
   },[])
 
   console.log(käyttäjänTiedot)
   //let käyttäjä = await axios.get("http://localhost:4000/kayttajantiedot/" + k_sähköposti)
-  return <div>
-    Käyttäjän sähköposti:
-    <br></br>
-    <Input defaultValue={k_sähköposti}></Input>
-    Käyttäjän etunimi:
-    </div>;
+  if (käyttäjänTiedot != null || käyttäjänTiedot != undefined){
+    return <Card>
+      Käyttäjän sähköposti: {k_sähköposti}
+      <br></br>
+      Käyttäjän etunimi: <Input defaultValue={käyttäjänTiedot.etunimi}></Input>
+      <br></br>
+      Käyttäjän sukunimi: <Input defaultValue={käyttäjänTiedot.sukunimi}></Input>
+      <br></br>
+      Käyttäjän rooli: {käyttäjänTiedot.rooli}
+      <br></br>
+      Käyttäjän salasana: *****
+    </Card>
+  } else return null
 }

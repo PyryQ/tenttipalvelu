@@ -29,6 +29,7 @@ import Kaavio from './Kaavio';
 // käyttäjän sitominen vastauksiin
 // pisteytys
 //httpfunktiot omiin kansioihin
+//rekisteröitymispalkki
 
 
 
@@ -354,7 +355,7 @@ function App() {
             {kirjauduttuSisään ?
             <div>
             <Button color="inherit" edge="start" className={classes1.menuButton} onClick={() => setNäkymä(1)}>TENTIT</Button>
-            <Button color="inherit" onClick={() => setNäkymä(2)}>Käyttäjä</Button>
+            <Button color="inherit" onClick={() => setNäkymä(5)}>Käyttäjä</Button>
             <Button variant="contained" color="secondary" onClick={() => setNäkymä(2)}>Näytä kyselyn muokkaus</Button>
             <Button variant="contained" color="secondary" onClick={() => setNäkymä(3)}>Demot</Button>
             <div className={classes1.spacer}/>
@@ -408,7 +409,7 @@ function App() {
         }
 
         {näkymä === 5 ?
-        <Käyttäjä sähköposti = {käyttäjä_oletus_sähköposti}/> : null}
+        <Käyttäjä sähköposti = {käyttäjänSähköposti}/> : null}
         <br></br>
         </div>
       </div>

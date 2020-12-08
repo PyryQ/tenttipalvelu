@@ -11,7 +11,7 @@ import { TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import {paivitaTenttiNimi, paivitaKysymysNimi, paivitaVastausNimi, poistaVastaus, 
-  poistaKysymys, lisääKysymys, lisääVastaus, lisääTentti, poistaTentti, paivitaOikeaVastaus} from './HttpKutsut';
+  poistaKysymys, lisääKysymys, lisääVastaus, lisääTentti, poistaTentti, paivitaOikeaVastaus, päivitäTentinAloitusaika, päivitäTentinLopetusaika} from './HttpKutsut';
 // Kehitettävää: 
 //aktiivisen tentin buttonille eri väri
 
@@ -23,11 +23,8 @@ export default function MuokkaaKysymyksiä(props) {
 
   //Päivitetään tietokanta ja asetetaan vastauksen id staten päivittämistä varten
   async function lisääUusiTentti() {
-
     lisääTentti().then((result) => {
-
       let tentti_id = result
-      console.log(tentti_id)
       props.dispatch({type: 'LISÄÄ_TENTTI', data:{tentti_id: tentti_id}})
     
     }).catch((error) => {
@@ -37,7 +34,6 @@ export default function MuokkaaKysymyksiä(props) {
 
 //Päivitetään tietokanta ja asetetaan vastauksen id staten päivittämistä varten
 async function lisääUusiKysymys(tentti_id) {
-
   lisääKysymys(tentti_id).then((result) => {
 
     let kysymys_id = result
@@ -51,9 +47,7 @@ async function lisääUusiKysymys(tentti_id) {
 
   //Päivitetään tietokanta ja asetetaan vastauksen id staten päivittämistä varten
   async function lisääUusiVastaus(indexK, kysymys_id) {
-
     lisääVastaus(kysymys_id).then((result) => {
-
       let vastaus_id = result
       props.dispatch({type: 'LISÄÄ_VASTAUS', data:{indexKy: indexK, kysymys_id: kysymys_id, vastaus_id: vastaus_id}})
     
@@ -62,7 +56,45 @@ async function lisääUusiKysymys(tentti_id) {
     })
   }
 
-  let dataM = props.kysymys; //Alustetaan dataM kysymyksen mukaan
+  async function muutaAloitusaika(päiväjaaika, tentti_id) {
+
+    päivitäTentinAloitusaika(päiväjaaika, tentti_id).then((result) => {
+      let uusiAika = result.data
+      uusiAika = asetaAika(uusiAika)
+      console.log(uusiAika)
+      props.dispatch({type: 'PÄIVITÄ_TENTIN_ALOITUSAIKA', data:{päiväjaaika: uusiAika}})
+    
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
+
+  async function muutaLopetusaika(päiväjaaika, tentti_id) {
+
+    päivitäTentinLopetusaika(päiväjaaika, tentti_id).then((result) => {
+      let uusiAika = result.data
+      uusiAika = asetaAika(uusiAika)
+      console.log(uusiAika)
+      props.dispatch({type: 'PÄIVITÄ_TENTIN_LOPETUSAIKA', data:{päiväjaaika: uusiAika}})
+    
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
+
+
+
+
+  let dataM = props.tentti; //Alustetaan dataM kysymyksen mukaan
+  console.log(dataM.tentin_aloitusaika)
+
+  function asetaAika(aika) {
+    if (aika != null){
+      aika = aika.replace(/\.\d+/, "");
+      aika = aika.replace('Z', "");
+      return aika;
+    }
+  }
 
   //Tulostetaan vaihtoehdot kysymyksen mukaan
   const näytäVaihtoehdot = (itemK, indexK) => {
@@ -119,31 +151,6 @@ async function lisääUusiKysymys(tentti_id) {
   
   return (
     <div>
-      <Card className="korttiM" elevation={3} key={"tiedot"}>
-      <form className={classes.container} noValidate>
-        <TextField
-          id="datetime-local"
-          label="Tentin aloitusaika"
-          type="datetime-local"
-          defaultValue="2021-05-24T10:30"
-          className={classes.textField}
-          InputLabelProps={{
-          shrink: true,
-        }}/>
-        <TextField
-          id="datetime-local"
-          label="Tentin lopetusaika"
-          type="datetime-local"
-          defaultValue="2021-05-24T10:30"
-          className={classes.textField}
-          InputLabelProps={{
-          shrink: true,
-        }}/>
-      </form>
-
-      </Card>
-
-      <br></br>
 
       {/*Input tentin nimen muokkaamiseksi*/}
       <Input key={"tentti_input" + dataM.tentti_id} className="kysymysM" defaultValue={dataM.nimi} 
@@ -152,6 +159,7 @@ async function lisääUusiKysymys(tentti_id) {
       </Input>
       <br></br>
 
+      
       {/*Button tentin poistamiseksi*/}
       <Button className="poistaTT" 
         onClick={() => {
@@ -165,6 +173,33 @@ async function lisääUusiKysymys(tentti_id) {
       {/*Button tentin lisäämiseksi*/}
       <Button className="lisääUT" onClick={() => lisääUusiTentti()}>
         <AddCircleOutlineIcon/>Lisää uusi tentti</Button>
+
+        <form className={classes.container} noValidate>
+        <TextField
+          key={"aloitusaika" + dataM.tentti_id}
+          id="datetime-local"
+          label="Tentin aloitusaika"
+          type="datetime-local"
+          defaultValue={asetaAika(dataM.tentin_aloitusaika)}
+          className={classes.textField}
+          onBlur={(e) => muutaAloitusaika(e.target.value, dataM.tentti_id)}
+          InputLabelProps={{
+          shrink: true,
+        }}/>
+        <TextField
+          key={"lopetusaika" + dataM.tentti_id}
+          id="datetime-local"
+          label="Tentin lopetusaika"
+          type="datetime-local"
+          defaultValue ={asetaAika(dataM.tentin_lopetusaika)}
+          className={classes.textField}
+          onBlur={(e) => muutaLopetusaika(e.target.value, dataM.tentti_id)}
+          InputLabelProps={{
+          shrink: true,
+        }}/>
+      </form>
+
+      <br></br>
 
       {/*Tulostetaan kysymys, sen poistobutton ja vastausvaihtoehdot*/}
       {dataM.kysely.map((itemK, indexK) => 

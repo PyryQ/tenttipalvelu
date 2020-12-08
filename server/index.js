@@ -253,6 +253,29 @@ app.put('/paivitatenttiteksti/:tentti_id/:uusinimi', (req, res, next) => {
 })
 
 
+//päivitä tentin aloitusaika
+app.put('/paivitatenttialoitusaika', (req, res, next) => {
+  db.query("UPDATE tentti SET tentin_aloitusaika = $2 WHERE tentti_id=$1 RETURNING tentin_aloitusaika;", 
+  [req.body.tentti_id, req.body.päiväjaaika], (err, result) => {
+    if (err) {
+      return next(err)
+    }
+    res.send(result.rows[0].tentin_aloitusaika)
+  })
+})
+
+//päivitä tentin lopetusaika
+app.put('/paivitatenttilopetusaika', (req, res, next) => {
+  db.query("UPDATE tentti SET tentin_lopetusaika = $2 WHERE tentti_id=$1 RETURNING tentin_lopetusaika;", 
+  [req.body.tentti_id, req.body.päiväjaaika], (err, result) => {
+    if (err) {
+      return next(err)
+    }
+    res.send(result.rows[0].tentin_lopetusaika)
+  })
+})
+
+
 //päivitä kysymys
 app.put('/paivitakysymys/:tentti_id/:uusiKysymys/:pisteet/', (req, res, next) => {
   db.query("UPDATE kysymys SET kysymys = $2, kysymyspisteet = 3$ WHERE tentti_id_fk = $1;", 
@@ -320,6 +343,10 @@ app.put('/paivitakayttajanvastaus/:k_id/:v_id/:k_valinta/:v_oikein', (req, res, 
     res.send("Käyttäjän vastauksen päivitys onnistui")
   }) 
 })
+
+
+
+
 
 
 

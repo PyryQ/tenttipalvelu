@@ -22,10 +22,8 @@ export default function Login(props) {
 
   useEffect(()=>{
     const haeKäyttäjänSalasana = async () => {
-        console.log(käyttäjänSalasana)
         if(käyttäjänSalasana != ""){
             let tietokantaSalasana = await axios.get("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti)
-            console.log(tietokantaSalasana.data[0].salasana)
             setSalasananTarkistus(tietokantaSalasana.data[0].salasana)
         }
     }
@@ -49,7 +47,7 @@ export default function Login(props) {
             autoFocus
             type="email"
             value={käyttäjänSähköposti}
-            onChange={(e) => setKäyttäjänSähköposti(e.target.value)}
+            onChange={(e) => (setKäyttäjänSähköposti(e.target.value), props.käyttäjänOsoite(e.target.value))}
           />
         </Form.Group>
         <Form.Group size="lg" controlId="password">

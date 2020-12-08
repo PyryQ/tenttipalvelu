@@ -10,6 +10,26 @@ export async function paivitaTenttiNimi(tentti_id, nimi) {
     }
   }
 
+export async function päivitäTentinAloitusaika(päiväjaaika, tentti_id) {
+  try{
+    let result = await axios.put("http://localhost:4000/paivitatenttialoitusaika", {päiväjaaika: päiväjaaika, tentti_id: tentti_id})
+    return result;
+  }
+  catch(exception){
+    console.log("Kysymystä ei onnistuttu päivittämään.")
+  }
+}
+
+export async function päivitäTentinLopetusaika(päiväjaaika, tentti_id) {
+  try{
+    let result = await axios.put("http://localhost:4000/paivitatenttilopetusaika", {päiväjaaika: päiväjaaika, tentti_id: tentti_id})
+    return result;
+  }
+  catch(exception){
+    console.log("Kysymystä ei onnistuttu päivittämään.")
+  }
+}
+
 export async function paivitaKysymysNimi(kysymys_id, kysymys) {
     console.log(kysymys_id) 
     try{

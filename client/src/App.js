@@ -15,7 +15,6 @@ import MuokkaaKysymyksiä from './MuokkaaKysymyksiä';
 import KaavioVaaka from './KaavioVaaka';
 import Käyttäjä from './Käyttäjä';
 import Login from './Login'
-import Kaavio2 from './Kaavio2';
 import Kaavio from './Kaavio';
 
 
@@ -26,8 +25,10 @@ import Kaavio from './Kaavio';
 // reducer omaan tiedostoon?
 // Muuttujien nimien selkeytys
 // Kommentointia
-// Hookit, onBlur?
-// tekstittömän painikkeen muotoilu
+// kirjautuminen tarkistus popup
+// käyttäjän sitominen vastauksiin
+// pisteytys
+//httpfunktiot omiin kansioihin
 
 
 
@@ -108,30 +109,6 @@ function App() {
       }
     ]
 
-  //data serverin datan muodostamista/testaamista varten
-  //dataa käsitellään kuitenkinkyselyt listan pohjalta staten avulla
-  const kyselytServeri = 
-    [{uid: uuid(), nimi: "Numerovisa testi", kysely: [
-      {uid: uuid(), kysymys: "Kuinka monta ihmistä on käynyt kuussa?", vastaukset: [
-        {uid: uuid(), vastaus: "0", valittu: false, oikea_vastaus: false}, 
-        {uid: uuid(), vastaus: "12", valittu: false, oikea_vastaus: true}, 
-        {uid: uuid(), vastaus: "15", valittu: false, oikea_vastaus: false}
-        ]},
-      {uid: uuid(), kysymys: "Kuinka monta sanaa Potter-kirjasarjan suomennoksissa on yhteensä?", vastaukset: [
-        {uid: uuid(), vastaus: "857 911", valittu: false, oikea_vastaus: true}, 
-        {uid: uuid(), vastaus: "955 543", valittu: false, oikea_vastaus: false}, 
-        {uid: uuid(), vastaus: "1 100 438", valittu: false, oikea_vastaus: false}, 
-        {uid: uuid(), vastaus: "1 204 539", valittu: false, oikea_vastaus: false}
-        ]},
-      {uid: uuid(), kysymys: "Mikä seuraavista luvuista on lähinnä Tanskan asukasmäärää?", vastaukset: [
-        {uid: uuid(), vastaus: "5,2 miljoonaa", valittu: false, oikea_vastaus: false}, 
-        {uid: uuid(), vastaus: "5,6 miljoonaa", valittu: false, oikea_vastaus: false}, 
-        {uid: uuid(), vastaus: "5,8 miljoonaa", valittu: false, oikea_vastaus: true}
-        ]}
-      ]
-    }
-  ]
-
   // Alustetaan state ja reducer kyselyn avulla
   const [state, dispatch] = useReducer(reducer, kyselyt);
         
@@ -190,35 +167,6 @@ function App() {
     }
     fetchData();
   },[])
-
-  //////////////////////////////PUT
-  // useEffect(() => {
-  //   const updateData = async () => {
-  //     try{
-  //       let result = await axios.put("http://localhost:3001/kyselyt", state)
-  //     }
-  //     catch(exception){
-  //       console.log("Dataa ei onnistuttu päivittämään.")
-  //     }
-  //   }
-  //   if(dataAlustettu){
-  //     updateData();
-  //   }
-  // },[state])
-
-  // useEffect(() => {
-  //   const updateTentti = async () => {
-  //     try{
-  //       let result = await axios.put("http://localhost:4000/paivitatentti/tentti_id/uusinimi/tp/mp/ta/tl/pr", state)
-  //     }
-  //     catch(exception){
-  //       console.log("Dataa ei onnistuttu päivittämään.")
-  //     }
-  //   }
-  //   if(dataAlustettu){
-  //     updateTentti();
-  //   }
-  // },[state])
 
 
   const updateData = async () => {
@@ -370,12 +318,19 @@ function App() {
           syväKopioR.splice(tenttiValinta, 1)
         }
         return syväKopioR
+      case 'PÄIVITÄ_TENTIN_ALOITUSAIKA':
+        console.log(action.data.päiväjaaika)
+        syväKopioR[tenttiValinta].tentin_aloitusaika = action.data.päiväjaaika
+        return syväKopioR;
+      case 'PÄIVITÄ_TENTIN_LOPETUSAIKA':
+        syväKopioR[tenttiValinta].tentin_lopetusaika = action.data.päiväjaaika
+        return syväKopioR;
       default:
         throw new Error();
     }
   }
 
-
+  
 //Kirjautumisen ja käyttäjän tietojen hallinnointia
 
   const kirjauduttu = (onkoKirjauduttu) => {
@@ -383,53 +338,9 @@ function App() {
     setNäkymä(1)
   }
 
-  const asetasähköposti = (sähköposti) => {
-    setKirjauduttuSisään(sähköposti)
+  const asetaSähköposti = (sähköposti) => {
+    setKäyttäjänSähköposti(sähköposti)
   }
-
-  ////////////////////////////Muiden hookkien muistiinpanoja - useMemo - useRef
-  //Dom puusta tietoa, useRef
-  //Toinen hook, useMemo, jottei renderöidä turhuuksia
-  //Laitetaan funktion vastaus muistiin, poimitaan vastausarvo
-  //<Kysymys> const Kysymys </Kysymys>
-  //const KysymysMemo = Read.memo(Kysymys)
-  //compare(previousProps, nextProps){
-  // a = previousProps.index == nextProps.index
-  // b = previousProps.teksti == nextProps.teksti
-  // return a&&b
-  //const KysymysMemo = React.memo(Kysymys, compare)
-  //useCallback, mikäli propseissa välitetään funktioita
-  //}
-  //onBlur, event, kun solusta poistutaan
-  //codepen reactMemo
-  //useRef, focuksen saamiseksi, esimerkiksi scroll-listan alimpaan elementtiin päästään käsiksi
-  //const refContainer = useRef(initialValue)
-
-
-  //Routertestailua
-
-  
-  // function Muokkaus() {
-  //   return <Text style={styles.header}>Muokkaus</Text>;
-  // }
-  
-  // function Kaavio() {
-  //   return <Text style={styles.header}>Kaavio</Text>;
-  // }
-  
-  // function Kysymykset() {
-  //   return <Text style={styles.header}>{match.params.topicId}</Text>;
-  // }
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -480,7 +391,7 @@ function App() {
         {näkymä === 2 ?
           <Fade right><MuokkaaKysymyksiä 
             dispatch={dispatch}
-            kysymys={state[tenttiValinta]}/>
+            tentti={state[tenttiValinta]}/>
             </Fade> : null}
           
         {näkymä === 3 ?
@@ -493,7 +404,7 @@ function App() {
         </div> : null}
 
         {näkymä === 4 ?
-          <Login kirjautuminen = {kirjauduttu}/> : null
+          <Login kirjautuminen = {kirjauduttu} käyttäjänOsoite = {asetaSähköposti}/> : null
         }
 
         {näkymä === 5 ?

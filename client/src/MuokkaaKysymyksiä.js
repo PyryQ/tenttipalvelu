@@ -7,6 +7,8 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import { Input } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
+import { TextField } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
 import {paivitaTenttiNimi, paivitaKysymysNimi, paivitaVastausNimi, poistaVastaus, 
   poistaKysymys, lisääKysymys, lisääVastaus, lisääTentti, poistaTentti, paivitaOikeaVastaus} from './HttpKutsut';
@@ -18,8 +20,6 @@ import {paivitaTenttiNimi, paivitaKysymysNimi, paivitaVastausNimi, poistaVastaus
 
 
 export default function MuokkaaKysymyksiä(props) {
-
-
 
   //Päivitetään tietokanta ja asetetaan vastauksen id staten päivittämistä varten
   async function lisääUusiTentti() {
@@ -60,12 +60,9 @@ async function lisääUusiKysymys(tentti_id) {
     }).catch((error) => {
       console.log(error)
     })
-}
+  }
 
-
-
-  //Alustetaan dataM kysymyksen mukaan
-  let dataM = props.kysymys;
+  let dataM = props.kysymys; //Alustetaan dataM kysymyksen mukaan
 
   //Tulostetaan vaihtoehdot kysymyksen mukaan
   const näytäVaihtoehdot = (itemK, indexK) => {
@@ -99,9 +96,55 @@ async function lisääUusiKysymys(tentti_id) {
     }
     catch{alert("Vastausvaihtoehtojen tulostus epäonnistui")}
   }
+
+
+  //Date and timen muotoilua
+  const useStyles = makeStyles((theme) => ({
+    container: {
+      display: 'flex',
+      flexWrap: 'wrap',
+    },
+    textField: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      width: 200,
+    },
+  }));
+
+  const classes = useStyles();
+
+
+
+
   
   return (
     <div>
+      <Card className="korttiM" elevation={3} key={"tiedot"}>
+      <form className={classes.container} noValidate>
+        <TextField
+          id="datetime-local"
+          label="Tentin aloitusaika"
+          type="datetime-local"
+          defaultValue="2021-05-24T10:30"
+          className={classes.textField}
+          InputLabelProps={{
+          shrink: true,
+        }}/>
+        <TextField
+          id="datetime-local"
+          label="Tentin lopetusaika"
+          type="datetime-local"
+          defaultValue="2021-05-24T10:30"
+          className={classes.textField}
+          InputLabelProps={{
+          shrink: true,
+        }}/>
+      </form>
+
+      </Card>
+
+      <br></br>
+
       {/*Input tentin nimen muokkaamiseksi*/}
       <Input key={"tentti_input" + dataM.tentti_id} className="kysymysM" defaultValue={dataM.nimi} 
         onBlur={(e) => (paivitaTenttiNimi(dataM.tentti_id, e.target.value), 

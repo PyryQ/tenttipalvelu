@@ -16,6 +16,7 @@
     "chart.js": "^2.9.4",
     "json-server": "^0.16.2",
     "material-ui-icons": "^1.0.0-beta.36",
+    "passport": "^0.4.1",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",
     "react-chartjs-2": "^2.11.1",

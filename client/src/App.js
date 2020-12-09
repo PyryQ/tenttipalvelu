@@ -375,8 +375,7 @@ function App() {
           <div>{state.map((arvo, index) => <BootstrapButton key={"kyselypainike" + index} variant="contained" color="primary" 
             disableRipple className={classesButton.margin} 
             onClick={() => {settenttiValinta(index); setPalautettu(false);}}>{arvo.nimi}
-            </BootstrapButton>)}</div> 
-        : null}
+            </BootstrapButton>)}
         <br/><br/>
         
         {/*Tarkistetaan, ettei state ole undefined*/}
@@ -396,6 +395,9 @@ function App() {
             dispatch={dispatch}
             tentti={state[tenttiValinta]}/>
             </Fade> : null}
+            </div> 
+            
+            : null}
           
         {näkymä === 3 ?
         <div>

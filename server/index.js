@@ -227,6 +227,80 @@ app.get('/kayttajansalasana/:sahkoposti', (req, res, next) => {
 })
 
 
+var tarkistaSalasana = function (req, res, next) {
+  if (req.tarkistaSalasana == req.annettuSalasana){
+    req.salasanaOikein = true;
+  }
+  next()
+}
+
+
+
+
+
+
+
+
+
+
+
+//-------------------------------------------LOGIN---------------------------------
+
+//http://www.passportjs.org/docs/downloads/html/
+//app.use(flash());
+
+var passport = require('passport')
+  , LocalStrategy = require('passport-local').Strategy;
+
+passport.use(new LocalStrategy({
+  usernameField: 'sähköposti',
+  passwordField: 'salasana'
+},
+  function(username, password, done) {
+    console.log("käyttäjän tarkistukseen tultiin")
+    käyttäjä.findOne({ username: username }, function(err, user) {
+      if (err) { return done(err); }
+      if (!user) {
+        return done(null, false, { message: 'Incorrect username.' });
+      }
+      if (!user.validPassword(password)) {
+        return done(null, false, { message: 'Incorrect password.' });
+      }
+      return done(null, user);
+    });
+  }
+));
+
+
+app.get('/login', function(req, res, next) {
+  console.log("tänne tullaan")
+  passport.authenticate('local', function(err, user, info) {
+    if (err) { return next(err); }
+    if (!user) { return res.redirect('/login'); }
+    req.logIn(user, function(err) {
+      if (err) { return next(err); }
+      return res.redirect('/users/' + user.username);
+    });
+  })(req, res, next);
+});
+
+app.post('/login',
+  passport.authenticate('local', { successRedirect: 'http://localhost:3000/',
+                                   failureRedirect: 'http://localhost:3000/'
+                                  }),
+  function(req, res) {
+    console.log("Autentikointi onnistunut")
+    // If this function gets called, authentication was successful.
+    // `req.user` contains the authenticated user.
+    res.redirect('/kayttajantiedot/' + req.user.username);
+  }
+                                  
+);
+
+
+
+
+
 
 //--------------------------------------------PUT----------------------------------------------
 

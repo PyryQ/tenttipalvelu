@@ -23,13 +23,13 @@ export default function Login(props) {
 
   useEffect(()=>{
     const haeKäyttäjänSalasana = async () => {
-        if(käyttäjänSalasana != ""){
-            let tietokantaSalasana = await axios.get("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti)
-            setSalasananTarkistus(tietokantaSalasana.data[0].salasana)
-        }
+      if(käyttäjänSalasana != ""){
+        let tietokantaSalasana = await axios.get("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti)
+        setSalasananTarkistus(tietokantaSalasana.data[0].salasana)
+      }
     }
     haeKäyttäjänSalasana()
-    },[tarkistaSalasana])
+    },[validateForm])
 
 
   function tarkistaSalasana() {
@@ -41,13 +41,34 @@ export default function Login(props) {
 
   return (
     // Sisäänkirjautumisen form
+    <div>
+    <form action="http://localhost:4000/login" method="post">
+      <div>
+        <label>Username:</label>
+        <input type="text" name="username"/>
+      </div>
+      <div>
+        <label>Password:</label>
+        <input type="password" name="password"/>
+      </div>
+      <div>
+        <input type="submit" value="Log In"/>
+      </div>
+    </form>
+
+
+
+
+
+
     <div className="Login">
-      <Form onSubmit={handleSubmit}>
+      <Form action='/login' method="post" onSubmit={handleSubmit}>
         <Form.Group size="lg" controlId="email">
           <Form.Label>Sähköposti: </Form.Label>
           <Form.Control
             autoFocus
             type="email"
+            name="email"
             value={käyttäjänSähköposti}
             onChange={(e) => (setKäyttäjänSähköposti(e.target.value), props.käyttäjänOsoite(e.target.value))}
           />
@@ -56,6 +77,7 @@ export default function Login(props) {
           <Form.Label>Salasana: </Form.Label>
           <Form.Control
             type="password"
+            name="password"
             value={käyttäjänSalasana}
             onChange={(e) => setKäyttäjänSalasana(e.target.value)}
           />
@@ -64,6 +86,7 @@ export default function Login(props) {
           Kirjaudu
         </Button>
       </Form>
+    </div>
     </div>
   );
 }

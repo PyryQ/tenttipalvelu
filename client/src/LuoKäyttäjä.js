@@ -19,7 +19,11 @@ export default function Login(props) {
   const [salasanaOikein, setSalasanaOikein] = useState(false);
 
   function validateForm() {
-    return käyttäjänSalasana.length > 0 && käyttäjänSähköposti.length > 0;
+    let onkoPätevä = false;
+    if (käyttäjänSalasana.length > 0 && käyttäjänSähköposti.length > 0 && käyttäjänEtunimi.length > 0 && käyttäjänSähköposti.length > 0){
+      onkoPätevä = true;
+    }
+    return onkoPätevä;
   }
 
   function handleSubmit(event) {
@@ -27,10 +31,10 @@ export default function Login(props) {
   }
 
     useEffect(()=>{
-        const luoKäyttäjä = async () => {
-            if(käyttäjänSalasana != ""){
-            let tietokantaSalasana = await axios.post("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti)
-        }
+      const luoKäyttäjä = async () => {
+        if(käyttäjänSalasana != ""){
+        let tietokantaSalasana = await axios.post("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti)
+      }
     }
     },[palautaKäyttäjänTiedot])
 

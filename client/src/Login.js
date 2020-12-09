@@ -42,7 +42,7 @@ export default function Login(props) {
   return (
     // Sisäänkirjautumisen form
     <div>
-    <form action="http://localhost:4000/login" method="post">
+    <form action="http://localhost:4000/login" method="get">
       <div>
         <label>Username:</label>
         <input type="text" name="username"/>

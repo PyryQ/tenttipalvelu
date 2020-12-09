@@ -25,9 +25,7 @@ export default function Käyttäjä(props) {
   useEffect(()=>{
     const haeKäyttäjänData = async (sähköposti) => {
       let käyttäjä = await axios.get("http://localhost:4000/kayttajantiedot/" + sähköposti)
-      console.log(käyttäjä.data)
       setKäyttäjänTiedot(käyttäjä.data[0])
-      console.log(käyttäjänTiedot)
     }
     haeKäyttäjänData(k_sähköposti)
   },[])

@@ -1,4 +1,5 @@
 const express = require('express')
+var app = express()
 var cors = require("cors")
 
 var corsOptions = {
@@ -7,14 +8,26 @@ var corsOptions = {
 }
 
 var bodyParser = require("body-parser")
-const app = express()
+
 module.exports = app
 const db = require('./db')
 
 const port = 4000
+// connect flash for flash messages
 
-app.use(bodyParser.json())
-app.use(cors(corsOptions))
+
+// use passport session
+var session = require("express-session"),
+    bodyParser = require("body-parser");
+
+app.use(express.static("public"));
+app.use(session({ secret: "cats" }));
+app.use(bodyParser.urlencoded({ extended: false }));
+//app.use(passport.initialize());
+//app.use(passport.session());
+//app.use(flash());
+// routes should be at the last
+
 
 
 
@@ -237,9 +250,14 @@ var tarkistaSalasana = function (req, res, next) {
 
 
 
+//-----------SESSION
 
+//req.logIn(user, { session: false });
 
-
+//req.logIn(user, function(err) {
+  //if (err) { throw err; }
+  // session saved
+//});
 
 
 
@@ -248,17 +266,31 @@ var tarkistaSalasana = function (req, res, next) {
 
 //http://www.passportjs.org/docs/downloads/html/
 //app.use(flash());
+//C:\Users\pyryq\harjoitus\tenttipalvelu\server\node_modules\passport\lib\http\request.js:46
 
 var passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
 
-passport.use(new LocalStrategy({
-  usernameField: 'sähköposti',
-  passwordField: 'salasana'
-},
+passport.use(new LocalStrategy(
   function(username, password, done) {
     console.log("käyttäjän tarkistukseen tultiin")
-    käyttäjä.findOne({ username: username }, function(err, user) {
+
+    db.query("SELECT * FROM käyttäjä WHERE sähköposti = $1", 
+    [username], (err, result) => {
+      console.log(result.rows)
+      let user = result.rows
+      if (err) {return next(err)}
+
+      // if (!user.validPassword(password)) {
+      //   return done(null, false, { message: 'Incorrect password.' });
+      // }
+
+      let salasana = result.rows
+      return done(null, result.rows);
+    })
+
+
+     user.findOne({ sähköposti: username }, function(err, user) {
       if (err) { return done(err); }
       if (!user) {
         return done(null, false, { message: 'Incorrect username.' });
@@ -271,8 +303,18 @@ passport.use(new LocalStrategy({
   }
 ));
 
+app.get('/api/users/me',
+  passport.authenticate('basic', { session: false }),
+  function(req, res) {
+    res.json({ id: req.user.id, username: req.user.username });
+  });
 
-app.get('/login', function(req, res, next) {
+
+app.get('/login', { successRedirect: 'http://localhost:3000/',
+                    failureRedirect: 'http://localhost:3000/',
+                    session: false
+                  },
+function(req, res, next) {
   console.log("tänne tullaan")
   passport.authenticate('local', function(err, user, info) {
     if (err) { return next(err); }
@@ -286,7 +328,8 @@ app.get('/login', function(req, res, next) {
 
 app.post('/login',
   passport.authenticate('local', { successRedirect: 'http://localhost:3000/',
-                                   failureRedirect: 'http://localhost:3000/'
+                                   failureRedirect: 'http://localhost:3000/',
+                                   session: false
                                   }),
   function(req, res) {
     console.log("Autentikointi onnistunut")

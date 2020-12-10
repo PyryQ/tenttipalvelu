@@ -15,18 +15,28 @@ export default function Login(props) {
   const [käyttäjänRooli, setKäyttäjänRooli] = useState("");
   const [käyttäjänRooliTarkistus, setKäyttäjänRooliTarkistus] = useState("");
 
+  const [tiedotPätevät, setTiedotPätevät] = useState(false);
   const [salasananTarkistus, setSalasananTarkistus] = useState("")
   const [salasanaOikein, setSalasanaOikein] = useState(false);
 
   function validateForm() {
-    let onkoPätevä = false;
+    console.log("validointiin tullaan")
     if (käyttäjänSalasana < 5){
       alert("Salasanan pitää olla vähintään 5 merkkiä pitkä.");
     }
-    if (käyttäjänSalasana.length > 0 && käyttäjänSähköposti.length > 0 && käyttäjänEtunimi.length > 0 && käyttäjänSähköposti.length > 0){
-      onkoPätevä = true;
+    else if (käyttäjänSalasana.length > 0 && käyttäjänSähköposti.length > 0 && käyttäjänEtunimi.length > 0 && käyttäjänSähköposti.length > 0){
+      if (käyttäjänRooliTarkistus == "admin1234"){
+        console.log("admin oikein")
+        setKäyttäjänRooli("admin")
+        setTiedotPätevät(true);
+      }
+      else if (käyttäjänRooliTarkistus == "oppilas"){
+        setKäyttäjänRooli("oppilas")
+        setTiedotPätevät(true);
+      }
+      else alert("Roolin asettaminen ei onnistunut")
     }
-    return onkoPätevä;
+    else alert("Jokin kohta puuttuu.");
   }
 
   function handleSubmit(event) {
@@ -35,11 +45,23 @@ export default function Login(props) {
 
     useEffect(()=>{
       const luoKäyttäjä = async () => {
-        if(käyttäjänSalasana != ""){
-        let tietokantaSalasana = await axios.post("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti)
+        console.log("Käyttäjän luontiin tultiin.")
+        if(tiedotPätevät){
+          let käyttäjänTiedot = käyttäjänEtunimi + "/" + käyttäjänSukunimi + "/" + käyttäjänSähköposti + "/" + käyttäjänSalasana + "/" + käyttäjänRooli
+          console.log(käyttäjänTiedot)
+          let tietokantaKäyttäjä = await axios.post("http://localhost:4000/lisaakayttaja/" + käyttäjänTiedot)
+          console.log(tietokantaKäyttäjä)
+          props.käyttäjänOsoite(käyttäjänSähköposti)
+          props.kirjautuminen(true)
+        }
+        // if(tiedotPätevät){
+        //   let käyttäjänTiedot = {etunimi: käyttäjänEtunimi, sukunimi: käyttäjänSukunimi, sahkoposti: käyttäjänSähköposti, salasana: käyttäjänSalasana, rooli: käyttäjänRooli}
+        //   console.log(käyttäjänTiedot)
+        //   let tietokantaSalasana = await axios.post("http://localhost:4000/lisaakayttaja", {käyttäjänTiedot})
+        // }
       }
-    }
-    },[palautaKäyttäjänTiedot])
+      luoKäyttäjä()
+    },[tiedotPätevät])
 
 
   function tarkistaRooli(rooli) {
@@ -49,7 +71,7 @@ export default function Login(props) {
     else if (rooli == "oppilas"){
         setKäyttäjänRooliTarkistus("oppilas")
     }
-    else return ("Roolin asettaminen ei onnistunut")
+    else alert("Roolin asettaminen ei onnistunut")
   }
 
   function palautaKäyttäjänTiedot() {
@@ -82,9 +104,11 @@ export default function Login(props) {
         <Form.Group size="lg" controlId="email">
           <Form.Label>Sähköposti: </Form.Label>
           <Form.Control
+            autoFocus
             type="email"
+            name="sähköposti"
             value={käyttäjänSähköposti}
-            onChance={(e) => setKäyttäjänSähköposti(e.target.value)}
+            onChange={(e) => setKäyttäjänSähköposti(e.target.value)}
           />
 
         </Form.Group>
@@ -103,11 +127,11 @@ export default function Login(props) {
           <Form.Label>Salasana: </Form.Label>
           <Form.Control
             type="password"
-            value={käyttäjänRooli}
-            onChange={(e) => (setKäyttäjänRooli(e.target.value), tarkistaRooli(e.target.value))}
+            value={käyttäjänRooliTarkistus}
+            onChange={(e) => (setKäyttäjänRooliTarkistus(e.target.value))}
           />
         </Form.Group>
-        <Button block size="lg" type="submit" disabled={!validateForm()} onClick={() => palautaKäyttäjänTiedot()}>
+        <Button block size="lg" type="submit" onClick={() => (validateForm(), palautaKäyttäjänTiedot())}>
           Luo käyttäjä
         </Button>
       </Form>

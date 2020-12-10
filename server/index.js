@@ -1,6 +1,8 @@
 const express = require('express')
-var app = express()
 var cors = require("cors")
+var app = express()
+
+app.use(cors())
 
 var corsOptions = {
   origin: 'http://localhost:3000',
@@ -85,9 +87,19 @@ app.post('/lisaavastaus', (req, res, next) => {
 // })
 
 //Lisää käyttäjä
-app.post('/lisaakayttaja', (req, res, next) => {
+app.post('/lisaakayttaja/:en/:sn/:sp/:r/:ss', (req, res, next) => {
+  db.query("INSERT INTO käyttäjä (etunimi, sukunimi, sähköposti, rooli, salasana) values ($1, $2, $3, $4, $5) RETURNING sähköposti;", 
+  [req.params.en, req.params.sn, req.params.sp, req.params.r, req.params.ss], (err, result) => { 
+    if (err) {
+      return next(err)
+    }
+    res.send(result.rows[0].sähköposti) 
+  }) 
+})
+
+app.post('/lisaakayttaja2', (req, res, next) => {
   db.query("INSERT INTO käyttäjä (etunimi, sukunimi, sähköposti, rooli, salasana) values ($1, $2, $3, $4, $5);", 
-  [req.body.en, req.body.sn, req.body.sp, req.body.r, req.body.ss], (err, result) => { 
+  [req.body.etunimi, req.body.sukunimi, req.body.sahkoposti, req.body.rooli, req.body.salasana], (err, result) => { 
     if (err) {
       return next(err)
     }

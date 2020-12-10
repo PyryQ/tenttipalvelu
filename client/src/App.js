@@ -416,7 +416,7 @@ function App() {
         <Käyttäjä sähköposti = {käyttäjänSähköposti}/> : null}
 
         {näkymä === 6 ?
-        <LuoKäyttäjä sähköposti = {käyttäjänSähköposti}/> : null}
+        <LuoKäyttäjä kirjautuminen = {kirjauduttu} käyttäjänOsoite = {asetaSähköposti}/> : null}
         <br></br>
         </div>
       </div>

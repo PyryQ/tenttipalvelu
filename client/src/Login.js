@@ -4,8 +4,7 @@ import Form from "react-bootstrap/Form";
 import Button from '@material-ui/core/Button';
 //'@material-ui/core/Button';
 import "./App.css";
-import kirjauduttu from "./App.js"
-import asetaSähköposti from "./App.js"
+
 
 export default function Login(props) {
   const [käyttäjänSähköposti, setKäyttäjänSähköposti] = useState("");
@@ -22,19 +21,20 @@ export default function Login(props) {
   }
 
   useEffect(()=>{
-    const tarkistaSalasana = async () => {
+    const tarkistaKäyttäjänSalasana = async () => {
       if(käyttäjänSalasana != ""){
         let tietokantaSalasana = await axios.get("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti)
         setSalasananTarkistus(tietokantaSalasana.data[0].salasana)
       }
     }
-    tarkistaSalasana()
+    tarkistaKäyttäjänSalasana()
     },[tarkistaSalasana])
 
 
   function tarkistaSalasana() {
     if (käyttäjänSalasana == salasananTarkistus){
         setSalasanaOikein(true)
+        props.käyttäjänOsoite(käyttäjänSähköposti)
         props.kirjautuminen(true)
     }
   }
@@ -59,7 +59,7 @@ export default function Login(props) {
             type="email"
             name="sähköposti"
             value={käyttäjänSähköposti}
-            onChange={(e) => (setKäyttäjänSähköposti(e.target.value), props.käyttäjänOsoite(e.target.value))}
+            onChange={(e) => setKäyttäjänSähköposti(e.target.value)}
           />
         </Form.Group>
         <Form.Group size="lg" controlId="salasana">

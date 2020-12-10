@@ -17,12 +17,14 @@ export default function Login(props) {
   }
 
   function handleSubmit(event) {
+    console.log("handlesubmit")
     event.preventDefault();
   }
 
   useEffect(()=>{
     const tarkistaKäyttäjänSalasana = async () => {
       if(käyttäjänSalasana != ""){
+        console.log("Salasanan tarkistukseen tullaan")
         let tietokantaSalasana = await axios.get("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti)
         setSalasananTarkistus(tietokantaSalasana.data[0].salasana)
       }
@@ -32,11 +34,13 @@ export default function Login(props) {
 
 
   function tarkistaSalasana() {
+    console.log("salasanatarkistus")
     if (käyttäjänSalasana == salasananTarkistus){
-        setSalasanaOikein(true)
-        props.käyttäjänOsoite(käyttäjänSähköposti)
-        props.kirjautuminen(true)
+      setSalasanaOikein(true)
+      props.käyttäjänOsoite(käyttäjänSähköposti)
+      props.kirjautuminen(true)
     }
+    else alert("Kirjautuminen ei onnistunut.")
   }
 
 
@@ -49,7 +53,6 @@ export default function Login(props) {
   return (
     // Sisäänkirjautumisen form
     <div>
-
     <div className="Login">
       <Form onSubmit={handleSubmit}>
         <Form.Group size="lg" controlId="email">
@@ -71,7 +74,7 @@ export default function Login(props) {
             onChange={(e) => setKäyttäjänSalasana(e.target.value)}
           />
         </Form.Group>
-        <Button block size="lg" type="submit" disabled={!validateForm()} onClick={() => tarkistaSalasana()}>
+        <Button block size="lg" type="submit" onClick={() => tarkistaSalasana()}>
           Kirjaudu
         </Button>
       </Form>

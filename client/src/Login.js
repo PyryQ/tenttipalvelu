@@ -10,7 +10,7 @@ export default function Login(props) {
   const [käyttäjänSähköposti, setKäyttäjänSähköposti] = useState("");
   const [käyttäjänSalasana, setKäyttäjänSalasana] = useState("");
   const [salasananTarkistus, setSalasananTarkistus] = useState("")
-  const [salasanaOikein, setSalasanaOikein] = useState(false);
+  const [tietokantaHaku, setTietokantaHaku] = useState(false);
 
   function validateForm() {
     return käyttäjänSalasana.length > 0 && käyttäjänSähköposti.length > 0;
@@ -30,13 +30,14 @@ export default function Login(props) {
       }
     }
     tarkistaKäyttäjänSalasana()
-    },[tarkistaSalasana])
+    },[tietokantaHaku])
 
 
   function tarkistaSalasana() {
+    setTietokantaHaku(true)
     console.log("salasanatarkistus")
     if (käyttäjänSalasana == salasananTarkistus){
-      setSalasanaOikein(true)
+      alert("Kirjautuminen onnistui!")
       props.käyttäjänOsoite(käyttäjänSähköposti)
       props.kirjautuminen(true)
     }

@@ -52,9 +52,9 @@ app.post('/lisaatentti', (req, res, next) => {
 //( to_timestamp )
 
 //Lisää kysymys
-app.post('/lisaakysymys', (req, res, next) => {
+app.post('/lisaakysymys/:tentti_id', (req, res, next) => {
   db.query("INSERT INTO kysymys (tentti_id_fk, kysymys, kysymyspisteet) VALUES ($1, 'Uusi kysymys', 3) RETURNING kysymys_id;", 
-  [req.body.tentti_id], (err, result) => { 
+  [req.params.tentti_id], (err, result) => { 
     if (err) {
       return next(err)
     }
@@ -528,9 +528,9 @@ app.put('/paivitakysymys/:tentti_id/:uusiKysymys/:pisteet/', (req, res, next) =>
 })
 
 //päivitä kysymyksen teksti
-app.put('/paivitakysymysteksti', (req, res, next) => {
+app.put('/paivitakysymysteksti/:kysymys_id/:kysymys', (req, res, next) => {
   db.query("UPDATE kysymys SET kysymys = $2 WHERE kysymys_id = $1;", 
-  [req.body.kysymys_id, req.body.kysymys], (err, result) => { 
+  [req.params.kysymys_id, req.params.kysymys], (err, result) => { 
     if (err) {
       return next(err)
     }
@@ -550,9 +550,9 @@ app.put('/paivitavastaus/:vastaus_id/:vastaus/:oikea_vastaus', (req, res, next) 
 })
 
 //päivitä vastausteksti
-app.put('/paivitavastausteksti', (req, res, next) => {
+app.put('/paivitavastausteksti/:vastaus_id/:vastaus', (req, res, next) => {
   db.query("UPDATE vastaus SET vastaus = $2 WHERE vastaus_id = $1;", 
-  [req.body.v_id, req.body.v], (err, result) => { 
+  [req.params.vastaus_id, req.params.vastaus], (err, result) => { 
     if (err) {
       return next(err)
     }

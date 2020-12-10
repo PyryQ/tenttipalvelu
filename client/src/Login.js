@@ -22,14 +22,14 @@ export default function Login(props) {
   }
 
   useEffect(()=>{
-    const haeKäyttäjänSalasana = async () => {
+    const tarkistaSalasana = async () => {
       if(käyttäjänSalasana != ""){
         let tietokantaSalasana = await axios.get("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti)
         setSalasananTarkistus(tietokantaSalasana.data[0].salasana)
       }
     }
-    haeKäyttäjänSalasana()
-    },[validateForm])
+    tarkistaSalasana()
+    },[tarkistaSalasana])
 
 
   function tarkistaSalasana() {
@@ -39,10 +39,46 @@ export default function Login(props) {
     }
   }
 
+
+  //json webtoken
+  //b crypt
+
+  //https://www.npmjs.com/package/bcrypt
+  //https://www.npmjs.com/package/jsonwebtoken
+
   return (
     // Sisäänkirjautumisen form
     <div>
-    <form action="http://localhost:4000/login" method="get">
+
+    <div className="Login">
+      <Form onSubmit={handleSubmit}>
+        <Form.Group size="lg" controlId="email">
+          <Form.Label>Sähköposti: </Form.Label>
+          <Form.Control
+            autoFocus
+            type="email"
+            name="sähköposti"
+            value={käyttäjänSähköposti}
+            onChange={(e) => (setKäyttäjänSähköposti(e.target.value), props.käyttäjänOsoite(e.target.value))}
+          />
+        </Form.Group>
+        <Form.Group size="lg" controlId="salasana">
+          <Form.Label>Salasana: </Form.Label>
+          <Form.Control
+            type="password"
+            name="salasana"
+            value={käyttäjänSalasana}
+            onChange={(e) => setKäyttäjänSalasana(e.target.value)}
+          />
+        </Form.Group>
+        <Button block size="lg" type="submit" disabled={!validateForm()} onClick={() => tarkistaSalasana()}>
+          Kirjaudu
+        </Button>
+      </Form>
+    </div>
+
+
+    <form action="http://localhost:4000/login" method="post">
       <div>
         <label>Username:</label>
         <input type="text" name="username"/>
@@ -55,38 +91,6 @@ export default function Login(props) {
         <input type="submit" value="Log In"/>
       </div>
     </form>
-
-
-
-
-
-
-    <div className="Login">
-      <Form action='/login' method="post" onSubmit={handleSubmit}>
-        <Form.Group size="lg" controlId="email">
-          <Form.Label>Sähköposti: </Form.Label>
-          <Form.Control
-            autoFocus
-            type="email"
-            name="email"
-            value={käyttäjänSähköposti}
-            onChange={(e) => (setKäyttäjänSähköposti(e.target.value), props.käyttäjänOsoite(e.target.value))}
-          />
-        </Form.Group>
-        <Form.Group size="lg" controlId="password">
-          <Form.Label>Salasana: </Form.Label>
-          <Form.Control
-            type="password"
-            name="password"
-            value={käyttäjänSalasana}
-            onChange={(e) => setKäyttäjänSalasana(e.target.value)}
-          />
-        </Form.Group>
-        <Button block size="lg" type="submit" disabled={!validateForm()} onClick={() => tarkistaSalasana()}>
-          Kirjaudu
-        </Button>
-      </Form>
-    </div>
     </div>
   );
 }

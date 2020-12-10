@@ -20,6 +20,9 @@ export default function Login(props) {
 
   function validateForm() {
     let onkoPätevä = false;
+    if (käyttäjänSalasana < 5){
+      alert("Salasanan pitää olla vähintään 5 merkkiä pitkä.");
+    }
     if (käyttäjänSalasana.length > 0 && käyttäjänSähköposti.length > 0 && käyttäjänEtunimi.length > 0 && käyttäjänSähköposti.length > 0){
       onkoPätevä = true;
     }

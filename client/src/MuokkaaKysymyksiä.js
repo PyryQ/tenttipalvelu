@@ -86,7 +86,6 @@ async function lisääUusiKysymys(tentti_id) {
 
 
   let dataM = props.tentti; //Alustetaan dataM kysymyksen mukaan
-  console.log(dataM.tentin_aloitusaika)
 
   function asetaAika(aika) {
     if (aika != null){

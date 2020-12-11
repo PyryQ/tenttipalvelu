@@ -10,6 +10,7 @@ var corsOptions = {
 }
 
 var bodyParser = require("body-parser")
+app.use(bodyParser.json())
 
 module.exports = app
 const db = require('./db')
@@ -19,8 +20,8 @@ const port = 4000
 
 
 // use passport session
-var session = require("express-session"),
-    bodyParser = require("body-parser");
+// var session = require("express-session"),
+//     bodyParser = require("body-parser");
 
 const bcrypt = require('bcrypt')
 const passport = require('passport')
@@ -244,9 +245,9 @@ app.get('/kayttajantiedot/:sahkoposti', (req, res, next) => {
 })
 
 //Käyttäjän salasana
-app.get('/kayttajansalasana/:sahkoposti', (req, res, next) => {
+app.get('/kayttajansalasana', (req, res, next) => {
   db.query("SELECT salasana FROM käyttäjä WHERE sähköposti = $1", 
-  [req.params.sahkoposti], (err, result) => {
+  [req.body.sahkoposti, req.body.salasana], (err, result) => {
     if (err) {
       return next(err)
     }
@@ -280,9 +281,9 @@ var tarkistaSalasana = function (req, res, next) {
 //-------------------------------------------LOGIN---------------------------------
 
 //Käyttäjän salasana
-app.get('/tarkistasalasana/:sähköposti', (req, res, next) => {
+app.get('/tarkistasalasana', (req, res, next) => {
   db.query("SELECT salasana FROM käyttäjä WHERE sähköposti = $1", 
-  [req.params.sähköposti, req.params.salasana], (err, result) => {
+  [req.body.sähköposti, req.body.salasana], (err, result) => {
     if (err) {
       return next(err)
     }
@@ -291,13 +292,16 @@ app.get('/tarkistasalasana/:sähköposti', (req, res, next) => {
   })
 })
 
-app.get('/kayttajansalasana', (req, res, next) => {
+app.get('/kayttajansalasana/:sahkoposti/:salasana', (req, res, next) => {
   db.query("SELECT salasana FROM käyttäjä WHERE sähköposti = $1", 
-  [req.body.sahkoposti, req.body.salasana], (err, result) => {
+  [req.params.sahkoposti], (err, result) => {
+    console.log(req.params.salasana)
+    console.log(result.row)
+
     if (err) {
       return next(err)
     }
-    console.log(result.row)
+
     res.send(result.rows)
   })
 })

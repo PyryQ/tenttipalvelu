@@ -31,6 +31,7 @@ import Kaavio from './Kaavio';
 // pisteytys
 //httpfunktiot omiin kansioihin
 //rekisteröitymispalkki
+//salasanan vahvuus
 
 
 

@@ -114,7 +114,7 @@ export async function lisääKysymys(tentti_id) {
 
 export async function lisääVastaus(kysymys_id) {
   try{
-    let result = await axios.post("http://localhost:4000/lisaavastaus" + kysymys_id)
+    let result = await axios.post("http://localhost:4000/lisaavastaus", {kysymys_id: kysymys_id})
     return(result.data)
   }
   catch(exception){

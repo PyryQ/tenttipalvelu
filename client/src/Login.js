@@ -5,6 +5,22 @@ import Button from '@material-ui/core/Button';
 //'@material-ui/core/Button';
 import "./App.css";
 
+var jwt = require('jsonwebtoken');
+var token = jwt.sign({ foo: 'bar' }, 'shhhhh');
+console.log(token)
+
+//https://www.npmjs.com/package/jsonwebtoken
+//HS256
+
+try {
+  let tokenTulos = jwt.verify(token, 'shhhhh')
+    console.log(tokenTulos) // bar
+
+} catch(e){
+  console.log("Token ei käy.")
+}
+
+
 
 export default function Login(props) {
   const [käyttäjänSähköposti, setKäyttäjänSähköposti] = useState("");
@@ -22,15 +38,16 @@ export default function Login(props) {
   }
 
   useEffect(()=>{
-    const tarkistaKäyttäjänSalasana = async () => {
+    const tarkistaKirjautuminen = async () => {
       if(käyttäjänSalasana != ""){
         console.log("Salasanan tarkistukseen tullaan")
-        let tietokantaSalasana = await axios.get("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti)
+        let tietokantaSalasana = await axios.get("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti +"/"+käyttäjänSalasana)
+        //let tietokantaSalasana = await axios.get("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti +"/"+käyttäjänSalasana)
         setSalasananTarkistus(tietokantaSalasana.data[0].salasana)
       }
     }
-    tarkistaKäyttäjänSalasana()
-    },[tietokantaHaku])
+    tarkistaKirjautuminen()
+    },[tarkistaSalasana])
 
 
   function tarkistaSalasana() {
@@ -54,7 +71,7 @@ export default function Login(props) {
   return (
     // Sisäänkirjautumisen form
     <div>
-    <div className="Login">
+    <div action="login" method="post"className="Login" key="kirjautuminen1">
       <Form onSubmit={handleSubmit}>
         <Form.Group size="lg" controlId="email">
           <Form.Label>Sähköposti: </Form.Label>
@@ -82,7 +99,35 @@ export default function Login(props) {
     </div>
 
 
-    <form action="http://localhost:4000/login" method="post">
+
+
+    <div className="Login">
+      <Form onSubmit={handleSubmit}key="kirjautuminen2">
+        <Form.Group size="lg" controlId="email">
+          <Form.Label>Sähköposti: </Form.Label>
+          <Form.Control
+            autoFocus
+            type="email"
+            name="sähköposti"
+            value={käyttäjänSähköposti}
+          />
+        </Form.Group>
+        <Form.Group size="lg" controlId="salasana">
+          <Form.Label>Salasana: </Form.Label>
+          <Form.Control
+            type="password"
+            name="salasana"
+            value={käyttäjänSalasana}
+          />
+        </Form.Group>
+        <Button block size="lg" type="submit" disabled={!validateForm()}>
+          Kirjaudu
+        </Button>
+      </Form>
+    </div>
+
+
+    <form action="http://localhost:4000/login" method="post" key="kirjautuminen3">
       <div>
         <label>Username:</label>
         <input type="text" name="username"/>

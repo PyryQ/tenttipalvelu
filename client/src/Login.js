@@ -43,9 +43,11 @@ export default function Login(props) {
   const tarkistaKirjautuminenTesti = async () => {
     if(käyttäjänSalasana != ""){
      console.log("Salasanan tarkistukseen tullaan")
-      let tietokantaSalasana = await axios.get("http://localhost:4000/tarkistasalasana/" + käyttäjänSähköposti +"/"+käyttäjänSalasana)
+      let tietokantaToken = await axios.post("http://localhost:4000/tarkistasalasana", {sahkoposti: käyttäjänSähköposti, salasana: käyttäjänSalasana})
       //let tietokantaSalasana = await axios.get("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti +"/"+käyttäjänSalasana)
-      setSalasananTarkistus(tietokantaSalasana.data[0].salasana)
+      
+      console.log(tietokantaToken)
+      setSalasananTarkistus(tietokantaToken.data.salasana)
     }
   }
 

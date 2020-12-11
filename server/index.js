@@ -4,10 +4,10 @@ var app = express()
 
 app.use(cors())
 
-var corsOptions = {
-  origin: 'http://localhost:3000',
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-}
+// var corsOptions = {
+//   origin: 'http://localhost:3000',
+//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+// }
 
 var bodyParser = require("body-parser")
 app.use(bodyParser.json())
@@ -134,9 +134,18 @@ app.post('/lisaavastaus', (req, res, next) => {
 // })
 
 //Lisää käyttäjä
-app.post('/lisaakayttaja/:en/:sn/:sp/:r/:ss', (req, res, next) => {
+app.post('/lisaakayttaja', (req, res, next) => {
+
+  //Cryptataan salasana
+  bcrypt.hash(req.body.salasana, SALT_ROUNDS, (err, hash) => {
+    console.log(hash)
+    let hashattySalasana = hash
+  });
+
+
+
   db.query("INSERT INTO käyttäjä (etunimi, sukunimi, sähköposti, rooli, salasana) values ($1, $2, $3, $4, $5) RETURNING sähköposti;", 
-  [req.params.en, req.params.sn, req.params.sp, req.params.r, req.params.ss], (err, result) => { 
+  [req.body.etunimi, req.body.sukunimi, req.body.sahkoposti, req.body.rooli, hashattySalasana], (err, result) => { 
     if (err) {
       return next(err)
     }
@@ -326,23 +335,41 @@ app.get('/kayttajansalasana', (req, res, next) => {
 
 //-------------------------------------------LOGIN---------------------------------
 
-//Käyttäjän salasana
-app.get('/tarkistasalasana/:sahkoposti/:salasana', (req, res, next) => {
+
+//https://www.digitalocean.com/community/tutorials/api-authentication-with-json-web-tokensjwt-and-passport
+
+//Tarkistetaan salasana
+app.post('/tarkistasalasana', (req, res, next) => {
+  let annettuSalasana = req.body.salasana
   db.query("SELECT salasana FROM käyttäjä WHERE sähköposti = $1", 
-  [req.params.sahkoposti], (err, result) => {
+  [req.body.sahkoposti], (err, result) => {
+
     if (err) {
       return next(err)
     }
-    console.log(result)
-    res.send(result)
+    console.log(annettuSalasana)
+    console.log(result.rows)
+    let käyttäjänSalasana = result.rows[0].salasana
+    if (annettuSalasana === käyttäjänSalasana){
+
+      // bcrypt.hash("kissa", SALT_ROUNDS, (err, hash) => {
+      //   console.log(hash)
+      //   hashattySalasana = hash
+      //   // Store hash in your password DB.
+      // });
+
+      console.log("Salasanat täsmäävät.")
+      res.send(result.rows[0]) //token tähän
+    }
+    else console.log("Salasanat eivät täsmää.")
   })
 })
 
 app.get('/kayttajansalasana/:sahkoposti/:salasana', (req, res, next) => {
   db.query("SELECT salasana FROM käyttäjä WHERE sähköposti = $1", 
   [req.params.sahkoposti], (err, result) => {
-    console.log(req.params.salasana)
-    console.log(result.row)
+    //console.log(req.params.salasana)
+    console.log(result.rows[0])
 
     if (err) {
       return next(err)

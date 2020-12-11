@@ -47,9 +47,9 @@ export default function Login(props) {
       const luoKäyttäjä = async () => {
         console.log("Käyttäjän luontiin tultiin.")
         if(tiedotPätevät){
-          let käyttäjänTiedot = käyttäjänEtunimi + "/" + käyttäjänSukunimi + "/" + käyttäjänSähköposti + "/" + käyttäjänRooli + "/" + käyttäjänSalasana
+          let käyttäjänTiedot = {etunimi: käyttäjänEtunimi, sukunimi: käyttäjänSukunimi, sahkoposti: käyttäjänSähköposti, rooli: käyttäjänRooli, salasana: käyttäjänSalasana}
           console.log(käyttäjänTiedot)
-          let tietokantaKäyttäjä = await axios.post("http://localhost:4000/lisaakayttaja/" + käyttäjänTiedot)
+          let tietokantaKäyttäjä = await axios.post("http://localhost:4000/lisaakayttaja", käyttäjänTiedot)
           console.log(tietokantaKäyttäjä)
           alert("Käyttäjän luonti onnistui!")
           props.käyttäjänOsoite(käyttäjänSähköposti)

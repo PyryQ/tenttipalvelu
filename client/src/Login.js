@@ -5,20 +5,10 @@ import Button from '@material-ui/core/Button';
 //'@material-ui/core/Button';
 import "./App.css";
 
-var jwt = require('jsonwebtoken');
-var token = jwt.sign({ foo: 'bar' }, 'shhhhh');
-console.log(token)
+
 
 //https://www.npmjs.com/package/jsonwebtoken
 //HS256
-
-try {
-  let tokenTulos = jwt.verify(token, 'shhhhh')
-    console.log(tokenTulos) // bar
-
-} catch(e){
-  console.log("Token ei käy.")
-}
 
 
 
@@ -37,21 +27,33 @@ export default function Login(props) {
     event.preventDefault();
   }
 
-  useEffect(()=>{
-    const tarkistaKirjautuminen = async () => {
-      if(käyttäjänSalasana != ""){
-        console.log("Salasanan tarkistukseen tullaan")
-        let tietokantaSalasana = await axios.get("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti +"/"+käyttäjänSalasana)
-        //let tietokantaSalasana = await axios.get("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti +"/"+käyttäjänSalasana)
-        setSalasananTarkistus(tietokantaSalasana.data[0].salasana)
-      }
+  // useEffect(()=>{
+  //   const tarkistaKirjautuminen = async () => {
+  //     if(käyttäjänSalasana != ""){
+  //       console.log("Salasanan tarkistukseen tullaan")
+  //       let tietokantaSalasana = await axios.get("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti +"/"+käyttäjänSalasana)
+  //       //let tietokantaSalasana = await axios.get("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti +"/"+käyttäjänSalasana)
+  //       setSalasananTarkistus(tietokantaSalasana.data[0].salasana)
+  //     }
+  //   }
+  //   tarkistaKirjautuminen()
+  //   },[tarkistaSalasana])
+
+
+  const tarkistaKirjautuminenTesti = async () => {
+    if(käyttäjänSalasana != ""){
+     console.log("Salasanan tarkistukseen tullaan")
+      let tietokantaSalasana = await axios.get("http://localhost:4000/tarkistasalasana/" + käyttäjänSähköposti +"/"+käyttäjänSalasana)
+      //let tietokantaSalasana = await axios.get("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti +"/"+käyttäjänSalasana)
+      setSalasananTarkistus(tietokantaSalasana.data[0].salasana)
     }
-    tarkistaKirjautuminen()
-    },[tarkistaSalasana])
+  }
+
+
 
 
   function tarkistaSalasana() {
-    setTietokantaHaku(true)
+    tarkistaKirjautuminenTesti()
     console.log("salasanatarkistus")
     if (käyttäjänSalasana == salasananTarkistus){
       alert("Kirjautuminen onnistui!")

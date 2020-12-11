@@ -38,6 +38,52 @@ const BCRYPT_SALT_ROUNDS = 12;
 
 
 
+
+
+
+
+//-----------------------Token- ja hashesimerkkejä
+
+
+var jwt = require('jsonwebtoken');
+var token = jwt.sign({ foo: 'bar' }, 'shhhhh');
+
+console.log(token)
+const SALT_ROUNDS = 9
+
+let alkuhetki = Date.now()
+let loppuhetki
+let hashattySalasana
+
+bcrypt.hash("kissa", SALT_ROUNDS, (err, hash) => {
+  console.log(hash)
+  hashattySalasana = hash
+  loppuhetki = Date.now()
+  console.log("operaation kesto ms: ", loppuhetki-alkuhetki)
+  // Store hash in your password DB.
+  vertaaHasheja()
+});
+
+const vertaaHasheja = async () => {
+  await bcrypt.compare("kissa", hashattySalasana, (err, result) => {
+    console.log(result)
+  });
+}
+
+
+try {
+  let tokenTulos = jwt.verify(token, 'shhhhh')
+    console.log(tokenTulos) // bar
+
+} catch(e){
+  console.log("Token ei käy.")
+}
+
+
+
+
+
+
 //---------------------------------------------------POST------------------------------------
 
 //Lisää tentti (lisää defaultarvot tietokantaan?)
@@ -256,12 +302,12 @@ app.get('/kayttajansalasana', (req, res, next) => {
 })
 
 
-var tarkistaSalasana = function (req, res, next) {
-  if (req.tarkistaSalasana == req.annettuSalasana){
-    req.salasanaOikein = true;
-  }
-  next()
-}
+// var tarkistaSalasana = function (req, res, next) {
+//   if (req.tarkistaSalasana == req.annettuSalasana){
+//     req.salasanaOikein = true;
+//   }
+//   next()
+// }
 
 
 
@@ -281,14 +327,14 @@ var tarkistaSalasana = function (req, res, next) {
 //-------------------------------------------LOGIN---------------------------------
 
 //Käyttäjän salasana
-app.get('/tarkistasalasana', (req, res, next) => {
+app.get('/tarkistasalasana/:sahkoposti/:salasana', (req, res, next) => {
   db.query("SELECT salasana FROM käyttäjä WHERE sähköposti = $1", 
-  [req.body.sähköposti, req.body.salasana], (err, result) => {
+  [req.params.sahkoposti], (err, result) => {
     if (err) {
       return next(err)
     }
-    console.log(result.rows)
-    res.send(result.rows)
+    console.log(result)
+    res.send(result)
   })
 })
 

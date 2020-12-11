@@ -52,8 +52,6 @@ export default function Login(props) {
   }
 
 
-
-
   function tarkistaSalasana() {
     tarkistaKirjautuminenTesti()
     console.log("salasanatarkistus")

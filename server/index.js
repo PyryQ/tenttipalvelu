@@ -136,23 +136,11 @@ app.post('/lisaavastaus', (req, res, next) => {
 // })
 
 //Lisää käyttäjä
-
-
-
-
-
 app.post('/lisaakayttaja', (req, res, next) => {
-
-  bcrypt.hash(req.body.salasana, SALT_ROUNDS, (err, hash) => {
-    console.log(hash)
-  });
-
-
-
-
 
   let annettuSähköposti = req.body.sahkoposti
   let annettuSalasana = req.body.salasana
+
   db.query("INSERT INTO käyttäjä (etunimi, sukunimi, sähköposti, rooli) values ($1, $2, $3, $4) RETURNING sähköposti;", 
   [req.body.etunimi, req.body.sukunimi, req.body.sahkoposti, req.body.rooli], (err, result) => { 
     if (err) {
@@ -168,6 +156,7 @@ app.post('/lisaakayttaja', (req, res, next) => {
         }
       })
     });
+
     res.send(result.rows[0].sähköposti) 
   }) 
 

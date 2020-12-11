@@ -16,7 +16,8 @@ export default function Login(props) {
   const [käyttäjänRooliTarkistus, setKäyttäjänRooliTarkistus] = useState("");
 
   const [tiedotPätevät, setTiedotPätevät] = useState(false);
-
+  const [salasananTarkistus, setSalasananTarkistus] = useState("")
+  const [salasanaOikein, setSalasanaOikein] = useState(false);
 
   function validateForm() {
     console.log("validointiin tullaan")
@@ -27,12 +28,15 @@ export default function Login(props) {
       if (käyttäjänRooliTarkistus == "admin1234"){
         console.log("admin oikein")
         setKäyttäjänRooli("admin")
+        setTiedotPätevät(true);
         luoKäyttäjä()
       }
       else if (käyttäjänRooliTarkistus == "oppilas"){
         setKäyttäjänRooli("oppilas")
+        setTiedotPätevät(true);
         luoKäyttäjä()
       }
+
       else alert("Roolin asettaminen ei onnistunut")
     }
     else alert("Jokin kohta puuttuu.");
@@ -59,7 +63,9 @@ export default function Login(props) {
         //   console.log(käyttäjänTiedot)
         //   let tietokantaSalasana = await axios.post("http://localhost:4000/lisaakayttaja", {käyttäjänTiedot})
         // }
-    }
+  }
+
+
 
 
   return (

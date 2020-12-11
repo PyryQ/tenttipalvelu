@@ -42,42 +42,44 @@ const BCRYPT_SALT_ROUNDS = 12;
 
 
 
+
+
 //-----------------------Token- ja hashesimerkkejä
 
 
-var jwt = require('jsonwebtoken');
-var token = jwt.sign({ foo: 'bar' }, 'shhhhh');
+// var jwt = require('jsonwebtoken');
+// var token = jwt.sign({ foo: 'bar' }, 'shhhhh');
 
-console.log(token)
+// console.log(token)
 const SALT_ROUNDS = 9
 
-let alkuhetki = Date.now()
-let loppuhetki
-let hashattySalasana
 
-bcrypt.hash("kissa", SALT_ROUNDS, (err, hash) => {
-  console.log(hash)
-  hashattySalasana = hash
-  loppuhetki = Date.now()
-  console.log("operaation kesto ms: ", loppuhetki-alkuhetki)
-  // Store hash in your password DB.
-  vertaaHasheja()
-});
 
 const vertaaHasheja = async () => {
   await bcrypt.compare("kissa", hashattySalasana, (err, result) => {
     console.log(result)
   });
 }
+let hashattySalasana
 
 
-try {
-  let tokenTulos = jwt.verify(token, 'shhhhh')
-    console.log(tokenTulos) // bar
-
-} catch(e){
-  console.log("Token ei käy.")
+const asetaHash = () => {
+  bcrypt.hash("kissa", SALT_ROUNDS, (err, hash) => {
+    hashattysalasana = hash
+    console.log(hash)
+    return hash
+  });
 }
+
+
+
+// try {
+//   let tokenTulos = jwt.verify(token, 'shhhhh')
+//     console.log(tokenTulos) // bar
+
+// } catch(e){
+//   console.log("Token ei käy.")
+// }
 
 
 
@@ -134,23 +136,41 @@ app.post('/lisaavastaus', (req, res, next) => {
 // })
 
 //Lisää käyttäjä
+
+
+
+
+
 app.post('/lisaakayttaja', (req, res, next) => {
 
-  //Cryptataan salasana
   bcrypt.hash(req.body.salasana, SALT_ROUNDS, (err, hash) => {
     console.log(hash)
-    let hashattySalasana = hash
   });
 
 
 
-  db.query("INSERT INTO käyttäjä (etunimi, sukunimi, sähköposti, rooli, salasana) values ($1, $2, $3, $4, $5) RETURNING sähköposti;", 
-  [req.body.etunimi, req.body.sukunimi, req.body.sahkoposti, req.body.rooli, hashattySalasana], (err, result) => { 
+
+
+  let annettuSähköposti = req.body.sahkoposti
+  let annettuSalasana = req.body.salasana
+  db.query("INSERT INTO käyttäjä (etunimi, sukunimi, sähköposti, rooli) values ($1, $2, $3, $4) RETURNING sähköposti;", 
+  [req.body.etunimi, req.body.sukunimi, req.body.sahkoposti, req.body.rooli], (err, result) => { 
     if (err) {
       return next(err)
     }
+
+    bcrypt.hash(req.body.salasana, SALT_ROUNDS, (err, hash) => {
+      db.query("UPDATE käyttäjä SET salasana = $1 WHERE sähköposti = $2", 
+      [hash, annettuSähköposti], (error, result) => { 
+        console.log(hash)
+        if (error) {
+          return next(error)
+        }
+      })
+    });
     res.send(result.rows[0].sähköposti) 
   }) 
+
 })
 
 app.post('/lisaakayttaja2', (req, res, next) => {

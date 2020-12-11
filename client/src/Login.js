@@ -105,7 +105,7 @@ export default function Login(props) {
 
 
 
-    <div className="Login">
+    {/* <div className="Login">
       <Form onSubmit={handleSubmit}key="kirjautuminen2">
         <Form.Group size="lg" controlId="email">
           <Form.Label>Sähköposti: </Form.Label>
@@ -128,7 +128,7 @@ export default function Login(props) {
           Kirjaudu
         </Button>
       </Form>
-    </div>
+    </div> */}
 
 
     <form action="http://localhost:4000/login" method="post" key="kirjautuminen3">

@@ -42,21 +42,23 @@ export default function Login(props) {
 
   const tarkistaKirjautuminen = async () => {
     if(käyttäjänSalasana != ""){
-     console.log("Salasanan tarkistukseen tullaan")
-     try {
-      let tietokantaToken = await axios.post("http://localhost:4000/tarkistasalasana", {sahkoposti: käyttäjänSähköposti, salasana: käyttäjänSalasana})
-      //let tietokantaSalasana = await axios.get("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti +"/"+käyttäjänSalasana)
-      console.log(tietokantaToken.data)
+      console.log("Salasanan tarkistukseen tullaan")
+      try {
+        let tietokantaToken = await axios.post("http://localhost:4000/tarkistasalasana", {sahkoposti: käyttäjänSähköposti, salasana: käyttäjänSalasana})
+        //let tietokantaSalasana = await axios.get("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti +"/"+käyttäjänSalasana)
+        console.log(tietokantaToken.data)
 
-      if (tietokantaToken.data != "" && tietokantaToken.data != undefined && tietokantaToken.data != null){
-        alert("Kirjautuminen onnistui")
-        props.kirjautuminen(true)
+        if (tietokantaToken.data != "" && tietokantaToken.data != undefined && tietokantaToken.data != null){
+          alert("Kirjautuminen onnistui")
+          props.käyttäjänToken(tietokantaToken.data)
+          props.kirjautuminen(true)
+        }
+      
+      }catch (error){
+        console.log(error)
+        alert("Kirjautuminen ei onnistunut.")
+        console.log("Tokenin asettamisessa jotain pielessä.")
       }
-    
-    }catch (Exception){
-      alert("Kirjautuminen ei onnistunut.")
-      console.log("Tokenin asettamisessa jotain pielessä.")
-    }
     }
   }
 
@@ -121,21 +123,6 @@ export default function Login(props) {
         </Button>
       </Form>
     </div> */}
-
-
-    <form action="http://localhost:4000/login" method="post" key="kirjautuminen3">
-      <div>
-        <label>Username:</label>
-        <input type="text" name="username"/>
-      </div>
-      <div>
-        <label>Password:</label>
-        <input type="password" name="password"/>
-      </div>
-      <div>
-        <input type="submit" value="Log In"/>
-      </div>
-    </form>
     </div>
   );
 }

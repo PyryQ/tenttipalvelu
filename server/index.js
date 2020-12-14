@@ -34,6 +34,8 @@ const BCRYPT_SALT_ROUNDS = 12;
 //app.use(flash());
 // routes should be at the last
 
+let user;
+
 
 
 
@@ -89,14 +91,17 @@ const asetaHash = () => {
 //---------------------------------------------------POST------------------------------------
 
 //Lisää tentti (lisää defaultarvot tietokantaan?)
-app.post('/lisaatentti', (req, res, next) => {
-  db.query("INSERT INTO tentti (nimi) values ('Uusi tentti') RETURNING tentti_id;", (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(result.rows[0].tentti_id)
-  })
-})
+app.post('/lisaatentti', 
+  passport.authenticate('basic', { session: false }), 
+  (req, res, next) => {
+    db.query("INSERT INTO tentti (nimi) values ('Uusi tentti') RETURNING tentti_id;", (err, result) => {
+      if (err) {
+        return next(err)
+      }
+      res.send(result.rows[0].tentti_id)
+    })
+  }
+)
 //http://localhost:4000/lisaatentti/TenttiNimi/30/10/2021-01-01 12:00:00/2021-01-01 14:00:00/pisterajat
 //( to_timestamp )
 
@@ -146,6 +151,7 @@ app.post('/lisaakayttaja', (req, res, next) => {
     if (err) {
       return next(err)
     }
+
 
     bcrypt.hash(req.body.salasana, SALT_ROUNDS, (err, hash) => {
       db.query("UPDATE käyttäjä SET salasana = $1 WHERE sähköposti = $2", 
@@ -320,20 +326,35 @@ app.get('/kayttajansalasana', (req, res, next) => {
 })
 
 
+app.get('/tarkistarooli/:token', (req, res, next) => {
+
+  let käyttäjänToken = req.params.token  
+  let tokenRooli;
+  let tokenSähköposti;
+
+  jwt.verify(käyttäjänToken, 'sonSALAisuus', function(err, decoded) {
+    tokenRooli = decoded.rooli
+    tokenSähköposti = decoded.sähköposti
+  })
+
+  db.query("SELECT rooli FROM käyttäjä WHERE sähköposti = $1", 
+    [tokenSähköposti], (err, result) => {
+
+      if (err) {
+        return next(err)
+      }
+      if (tokenRooli === "admin" && result.rows[0].rooli === "admin"){
+        res.send(true)
+      }
+      else res.send(false)
+
+  })
+})
 
 
 
-// var tarkistaSalasana = function (req, res, next) {
-//   if (req.tarkistaSalasana == req.annettuSalasana){
-//     req.salasanaOikein = true;
-//   }
-//   next()
-// }
 
-
-
-
-//-----------SESSION
+//-----------MIDDLEWARE
 
 //req.logIn(user, { session: false });
 
@@ -341,6 +362,32 @@ app.get('/kayttajansalasana', (req, res, next) => {
   //if (err) { throw err; }
   // session saved
 //});
+
+var roolinTarkistus = function (req, res, next){
+  
+  console.log(req.body.token)
+
+  jwt.verify(req.body.token, 'sonSALAisuus', function(err, decoded) {
+    console.log(decoded.rooli)
+    if (decoded.rooli === "admin"){
+      next()
+    }
+    else return "Ei muutosoikeuksia"
+  });
+}
+
+var parsiToken = function (req){
+  console.log(req.body.token)
+
+  jwt.verify(req.body.token, 'sonSALAisuus', function(err, decoded) {
+    console.log(decoded.rooli)
+    if (decoded.rooli === "admin"){
+      return true;
+    }
+    else return false;
+  });
+
+}
 
 
 
@@ -360,21 +407,19 @@ app.post('/tarkistasalasana', (req, res, next) => {
     if (err) {
       return next(err)
     }
-    console.log(result.rows[0].salasana)
+
+    user = {
+      sähköposti: req.body.sahkoposti,
+      rooli: result.rows[0].rooli
+    }
 
     bcrypt.compare(annettuSalasana, result.rows[0].salasana, function(err, resultB) {
       if (resultB){
         var token = jwt.sign({ sähköposti: annettuSähköposti, rooli: result.rows[0].rooli }, 'sonSALAisuus');
         res.send(token)
       }
-      
-      
-      console.log(resultB)
     });
 
-
-    console.log(annettuSalasana)
-    console.log(result.rows[0].salasana)
   })
 })
 
@@ -434,52 +479,33 @@ app.post('/kirjaudu', (req, res, next) => {
 
 
 
+// passport.use(new LocalStrategy(
+//   function(token, done) {
+
+
+
+//     User.findOne({ username: username }, function (err, user) {
+//       if (err) { return done(err); }
+//       if (!user) {
+//         return done(null, false, { message: 'Incorrect username.' });
+//       }
+//       if (!user.validPassword(password)) {
+//         return done(null, false, { message: 'Incorrect password.' });
+//       }
+//       return done(null, user);
+//     });
+//   }
+// ));
+
+
+
+
+
 //http://www.passportjs.org/docs/downloads/html/
 //app.use(flash());
 //C:\Users\pyryq\harjoitus\tenttipalvelu\server\node_modules\passport\lib\http\request.js:46
 
-// passport.use(
-//   'login',
-//   new LocalStrategy(
-//     {
-//       usernameField: 'sähköposti',
-//       passwordField: 'salasana',
-//       session: false
-//     },
-//     (username, password, done) => {
-//       try {
-//         console.log("täällä ollaan ja katotaan löytyykö käyttäjä")
-//         app.get('/kayttajantiedot/:sahkoposti', (req, res, next) => {
-//           db.query("SELECT * FROM käyttäjä WHERE sähköposti = $1", 
-//           [username], (err, result) => {
-//             console.log(result.rows)
-//             let user = result.rows.sähköposti
-//             if (err) {
-//               return next(err)
-//             }
-//           })
-//         }).then(user => {
-//           if (user === null) {
-//             return done(null, false, { message: 'bad username' });
-//           } else {
-//             bcrypt.compare(password, user.password).then(response => {
-//               if (response !== true) {
-//                 console.log('Salasanat eivät täsmää');
-//                 return done(null, false, { message: 'passwords do not match' });
-//               }
-//               console.log('user found!');
-//               //console.log(user);
-//               // note the return needed with passport local - remove this return for passport JWT
-//               return done(null, user);
-//             });
-//           }
-//         });
-//       } catch (err) {
-//         done(err);
-//       }
-//     },
-//   ),
-// );
+
 
 
 // var passport = require('passport')

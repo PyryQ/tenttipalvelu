@@ -17,7 +17,9 @@ import Käyttäjä from './Käyttäjä';
 import LuoKäyttäjä from './LuoKäyttäjä';
 import Login from './Login'
 import Kaavio from './Kaavio';
+import { tarkistaKäyttäjänRooli } from './HttpKutsut';
 
+//import parsiToken from'/server/index.js'
 
 
 // Kehitettävää: 
@@ -30,8 +32,8 @@ import Kaavio from './Kaavio';
 // käyttäjän sitominen vastauksiin
 // pisteytys
 //httpfunktiot omiin kansioihin
-//rekisteröitymispalkki
 //salasanan vahvuus
+//body
 
 
 
@@ -47,6 +49,7 @@ function App() {
   const [näkymä, setNäkymä] = useState(4) //Vastaus- vai muokkausnäkymä
   const [käyttäjänSähköposti, setKäyttäjänSähköposti] = useState(null)
   const [käyttäjänToken, setKäyttäjänToken] = useState(null)
+  const [käyttäjänRooli, setKäyttäjänRooli] = useState(null)
 
   const [kirjauduttuSisään, setKirjauduttuSisään] = useState(false)
 
@@ -204,9 +207,6 @@ function App() {
         console.log(exception)
       }
     }
-
-    let oletuskäyttäjä = {käyttäjä_id: 1, etunimi: "Aku", sukunimi: "Ankka", sähköposti: "aku.ankka@ankkalinna.fi", rooli: "admin"};
-    let käyttäjä_oletus_sähköposti = "testi@testi.fi";
     
 
   // localStoragen data-avaimena on "data", joka alustetaan tässä
@@ -274,6 +274,11 @@ function App() {
   })(Button);
   const classesButton = useStyles();
 
+  
+
+    
+
+
   ///////////////////////////REDUCER
   
   function reducer(state, action) { //data tai state
@@ -335,7 +340,7 @@ function App() {
   }
 
   
-//Kirjautumisen ja käyttäjän tietojen hallinnointia
+//Kirjautumisen, roolin ja käyttäjän tietojen hallinnointia
 
   const kirjauduttu = (onkoKirjauduttu) => {
     setKirjauduttuSisään(onkoKirjauduttu)
@@ -348,9 +353,26 @@ function App() {
 
   const asetaToken = (token) => {
     setKäyttäjänToken(token)
+    console.log("käyttäjän token, " + token)
+  }
+
+  const asetaRooli = (rooli) => {
+    setKäyttäjänRooli(rooli)
+    console.log("käyttäjän rooli, " + rooli)
   }
 
 
+  function käyttäjäOnAdmin() {
+    let onkoAdmin = false;
+    if (käyttäjänToken != null){
+      tarkistaKäyttäjänRooli(käyttäjänToken).then((result) =>{
+        onkoAdmin = result
+      }).catch((error) => {
+        console.log(error)
+      })
+    }
+    return onkoAdmin;
+  }
 
 
   return (
@@ -363,7 +385,7 @@ function App() {
             <div>
             <Button color="inherit" edge="start" className={classes1.menuButton} onClick={() => setNäkymä(1)}>TENTIT</Button>
             <Button color="inherit" onClick={() => setNäkymä(5)}>Käyttäjä</Button>
-            <Button variant="contained" color="secondary" onClick={() => setNäkymä(2)}>Näytä kyselyn muokkaus</Button>
+            <Button variant="contained" color="secondary" disabled={!käyttäjäOnAdmin()} onClick={() => setNäkymä(2)}>Näytä kyselyn muokkaus</Button>
             <Button variant="contained" color="secondary" onClick={() => setNäkymä(3)}>Demot</Button>
             <div className={classes1.spacer}/>
             <Button color="inherit">POISTU</Button>
@@ -396,10 +418,11 @@ function App() {
           <Button variant={"contained"} color="primary" onClick={() => {setPalautettu(true);}}>Näytä vastaukset</Button>
           </div> : null}
 
-        {näkymä === 2 ?
+        {näkymä === 2 && käyttäjäOnAdmin() ?
           <Fade right><MuokkaaKysymyksiä 
             dispatch={dispatch}
-            tentti={state[tenttiValinta]}/>
+            tentti={state[tenttiValinta]}
+            token = {käyttäjänToken}/>
             </Fade> : null}
             </div> 
             
@@ -415,14 +438,14 @@ function App() {
         </div> : null}
 
         {näkymä === 4 ?
-          <Login kirjautuminen = {kirjauduttu} käyttäjänOsoite = {asetaSähköposti}/> : null
+          <Login kirjautuminen = {kirjauduttu} käyttäjänOsoite = {asetaSähköposti} käyttäjänToken = {asetaToken} käyttäjänRooli = {asetaRooli}/> : null
         }
 
         {näkymä === 5 ?
         <Käyttäjä sähköposti = {käyttäjänSähköposti}/> : null}
 
         {näkymä === 6 ?
-        <LuoKäyttäjä kirjautuminen = {kirjauduttu} käyttäjänOsoite = {asetaSähköposti} käyttäjänToken = {asetaToken}/> : null}
+        <LuoKäyttäjä kirjautuminen = {kirjauduttu} käyttäjänOsoite = {asetaSähköposti}/> : null}
         <br></br>
         </div>
       </div>

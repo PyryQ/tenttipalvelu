@@ -149,3 +149,16 @@ export async function haeKäyttäjänTiedot(sähköposti) {
     console.log("Käyttäjän tietoja ei saatu.")
   }
 }
+
+
+export async function tarkistaKäyttäjänRooli(käyttäjänToken) {
+  try{
+    let result = await axios.get("http://localhost:4000/tarkistarooli/" + käyttäjänToken)
+    let onkoAdmin = result.data
+    return(onkoAdmin)
+  }
+  catch(exception){
+    console.log("Roolia ei saatu tarkistettua.")
+  }
+    
+}

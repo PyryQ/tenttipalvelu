@@ -40,32 +40,26 @@ export default function Login(props) {
   //   },[tarkistaSalasana])
 
 
-  const tarkistaKirjautuminenTesti = async () => {
+  const tarkistaKirjautuminen = async () => {
     if(käyttäjänSalasana != ""){
      console.log("Salasanan tarkistukseen tullaan")
+     try {
       let tietokantaToken = await axios.post("http://localhost:4000/tarkistasalasana", {sahkoposti: käyttäjänSähköposti, salasana: käyttäjänSalasana})
       //let tietokantaSalasana = await axios.get("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti +"/"+käyttäjänSalasana)
-      
-      console.log(tietokantaToken)
-      setSalasananTarkistus(tietokantaToken.data.salasana)
+      console.log(tietokantaToken.data)
+
+      if (tietokantaToken.data != "" && tietokantaToken.data != undefined && tietokantaToken.data != null){
+        alert("Kirjautuminen onnistui")
+        props.kirjautuminen(true)
+      }
+    
+    }catch (Exception){
+      alert("Kirjautuminen ei onnistunut.")
+      console.log("Tokenin asettamisessa jotain pielessä.")
+    }
     }
   }
 
-
-  function tarkistaSalasana() {
-    tarkistaKirjautuminenTesti()
-    console.log("salasanatarkistus")
-    if (käyttäjänSalasana == salasananTarkistus){
-      alert("Kirjautuminen onnistui!")
-      props.käyttäjänOsoite(käyttäjänSähköposti)
-      props.kirjautuminen(true)
-    }
-    else alert("Kirjautuminen ei onnistunut.")
-  }
-
-
-  //json webtoken
-  //b crypt
 
   //https://www.npmjs.com/package/bcrypt
   //https://www.npmjs.com/package/jsonwebtoken
@@ -94,7 +88,7 @@ export default function Login(props) {
             onChange={(e) => setKäyttäjänSalasana(e.target.value)}
           />
         </Form.Group>
-        <Button block size="lg" type="submit" onClick={() => tarkistaSalasana()}>
+        <Button block size="lg" type="submit" onClick={() => tarkistaKirjautuminen()}>
           Kirjaudu
         </Button>
       </Form>

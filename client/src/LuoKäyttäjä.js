@@ -19,24 +19,23 @@ export default function Login(props) {
   const [salasananTarkistus, setSalasananTarkistus] = useState("")
   const [salasanaOikein, setSalasanaOikein] = useState(false);
 
-  function validateForm() {
+  const luoKäyttäjä = async () => {
     console.log("validointiin tullaan")
     if (käyttäjänSalasana < 5){
       alert("Salasanan pitää olla vähintään 5 merkkiä pitkä.");
     }
     else if (käyttäjänSalasana.length > 0 && käyttäjänSähköposti.length > 0 && käyttäjänEtunimi.length > 0 && käyttäjänSähköposti.length > 0){
-      if (käyttäjänRooliTarkistus == "admin1234"){
-        console.log("admin oikein")
-        setKäyttäjänRooli("admin")
-        setTiedotPätevät(true);
-        luoKäyttäjä()
-      }
-      else if (käyttäjänRooliTarkistus == "oppilas"){
-        setKäyttäjänRooli("oppilas")
-        setTiedotPätevät(true);
-        luoKäyttäjä()
-      }
+      if (käyttäjänRooliTarkistus == "admin1234" || käyttäjänRooliTarkistus == "oppilas"){
+        if (käyttäjänRooliTarkistus == "admin1234"){
+          setKäyttäjänRooli("admin")
+        }
+        else setKäyttäjänRooli("oppilas")
 
+        let käyttäjänTiedot = {etunimi: käyttäjänEtunimi, sukunimi: käyttäjänSukunimi, sahkoposti: käyttäjänSähköposti, rooli: käyttäjänRooli, salasana: käyttäjänSalasana}
+        let tietokantaKäyttäjä = await axios.post("http://localhost:4000/lisaakayttaja", käyttäjänTiedot)
+        
+        alert("Käyttäjän luonti onnistui!")
+      }
       else alert("Roolin asettaminen ei onnistunut")
     }
     else alert("Jokin kohta puuttuu.");
@@ -45,27 +44,6 @@ export default function Login(props) {
   function handleSubmit(event) {
     event.preventDefault();
   }
-
-
-  const luoKäyttäjä = async () => {
-    console.log("Käyttäjän luontiin tultiin.")
-      if(tiedotPätevät){
-        let käyttäjänTiedot = {etunimi: käyttäjänEtunimi, sukunimi: käyttäjänSukunimi, sahkoposti: käyttäjänSähköposti, rooli: käyttäjänRooli, salasana: käyttäjänSalasana}
-        console.log(käyttäjänTiedot)
-        let tietokantaKäyttäjä = await axios.post("http://localhost:4000/lisaakayttaja", käyttäjänTiedot)
-        console.log(tietokantaKäyttäjä)
-        alert("Käyttäjän luonti onnistui!")
-        props.käyttäjänOsoite(käyttäjänSähköposti)
-        props.kirjautuminen(true)
-      }
-        // if(tiedotPätevät){
-        //   let käyttäjänTiedot = {etunimi: käyttäjänEtunimi, sukunimi: käyttäjänSukunimi, sahkoposti: käyttäjänSähköposti, salasana: käyttäjänSalasana, rooli: käyttäjänRooli}
-        //   console.log(käyttäjänTiedot)
-        //   let tietokantaSalasana = await axios.post("http://localhost:4000/lisaakayttaja", {käyttäjänTiedot})
-        // }
-  }
-
-
 
 
   return (
@@ -120,7 +98,7 @@ export default function Login(props) {
             onChange={(e) => (setKäyttäjänRooliTarkistus(e.target.value))}
           />
         </Form.Group>
-        <Button block size="lg" type="submit" onClick={() => validateForm()}>
+        <Button block size="lg" type="submit" onClick={() => luoKäyttäjä()}>
           Luo käyttäjä
         </Button>
       </Form>

@@ -46,6 +46,7 @@ function App() {
   const [tenttiValinta, settenttiValinta] = useState(0) //Mikä tenteistä on valittu
   const [näkymä, setNäkymä] = useState(4) //Vastaus- vai muokkausnäkymä
   const [käyttäjänSähköposti, setKäyttäjänSähköposti] = useState(null)
+  const [käyttäjänToken, setKäyttäjänToken] = useState(null)
 
   const [kirjauduttuSisään, setKirjauduttuSisään] = useState(false)
 
@@ -345,6 +346,10 @@ function App() {
     setKäyttäjänSähköposti(sähköposti)
   }
 
+  const asetaToken = (token) => {
+    setKäyttäjänToken(token)
+  }
+
 
 
 
@@ -417,7 +422,7 @@ function App() {
         <Käyttäjä sähköposti = {käyttäjänSähköposti}/> : null}
 
         {näkymä === 6 ?
-        <LuoKäyttäjä kirjautuminen = {kirjauduttu} käyttäjänOsoite = {asetaSähköposti}/> : null}
+        <LuoKäyttäjä kirjautuminen = {kirjauduttu} käyttäjänOsoite = {asetaSähköposti} käyttäjänToken = {asetaToken}/> : null}
         <br></br>
         </div>
       </div>

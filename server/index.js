@@ -47,16 +47,16 @@ const BCRYPT_SALT_ROUNDS = 12;
 //-----------------------Token- ja hashesimerkkejä
 
 
-// var jwt = require('jsonwebtoken');
-// var token = jwt.sign({ foo: 'bar' }, 'shhhhh');
+var jwt = require('jsonwebtoken');
+
 
 // console.log(token)
 const SALT_ROUNDS = 9
 
 
 
-const vertaaHasheja = async () => {
-  await bcrypt.compare("kissa", hashattySalasana, (err, result) => {
+const vertaaHasheja = async (annettuSalasana, tietokantaSalasana) => {
+  await bcrypt.compare(annettuSalasana, tietokantaSalasana, (err, result) => {
     console.log(result)
   });
 }
@@ -320,6 +320,9 @@ app.get('/kayttajansalasana', (req, res, next) => {
 })
 
 
+
+
+
 // var tarkistaSalasana = function (req, res, next) {
 //   if (req.tarkistaSalasana == req.annettuSalasana){
 //     req.salasanaOikein = true;
@@ -350,27 +353,28 @@ app.get('/kayttajansalasana', (req, res, next) => {
 //Tarkistetaan salasana
 app.post('/tarkistasalasana', (req, res, next) => {
   let annettuSalasana = req.body.salasana
-  db.query("SELECT salasana FROM käyttäjä WHERE sähköposti = $1", 
+  let annettuSähköposti = req.body.sahkoposti
+  db.query("SELECT salasana, rooli FROM käyttäjä WHERE sähköposti = $1", 
   [req.body.sahkoposti], (err, result) => {
 
     if (err) {
       return next(err)
     }
+    console.log(result.rows[0].salasana)
+
+    bcrypt.compare(annettuSalasana, result.rows[0].salasana, function(err, resultB) {
+      if (resultB){
+        var token = jwt.sign({ sähköposti: annettuSähköposti, rooli: result.rows[0].rooli }, 'sonSALAisuus');
+        res.send(token)
+      }
+      
+      
+      console.log(resultB)
+    });
+
+
     console.log(annettuSalasana)
-    console.log(result.rows)
-    let käyttäjänSalasana = result.rows[0].salasana
-    if (annettuSalasana === käyttäjänSalasana){
-
-      // bcrypt.hash("kissa", SALT_ROUNDS, (err, hash) => {
-      //   console.log(hash)
-      //   hashattySalasana = hash
-      //   // Store hash in your password DB.
-      // });
-
-      console.log("Salasanat täsmäävät.")
-      res.send(result.rows[0]) //token tähän
-    }
-    else console.log("Salasanat eivät täsmää.")
+    console.log(result.rows[0].salasana)
   })
 })
 

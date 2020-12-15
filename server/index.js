@@ -101,7 +101,7 @@ const asetaHash = () => {
 //---------------------------------------------------POST------------------------------------
 
 //Lisää tentti (lisää defaultarvot tietokantaan?)
-app.post('/lisaatentti', 
+app.post('/lisaatentti/:token', 
   passport.authenticate('jwt', { session: false }), 
   (req, res, next) => {
     db.query("INSERT INTO tentti (nimi) values ('Uusi tentti') RETURNING tentti_id;", (err, result) => {
@@ -420,7 +420,7 @@ var parsiToken = function (req){
 
 
 passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
-
+  console.log("New Strategy")
   console.log(jwt_payload)
 
 
@@ -452,6 +452,47 @@ passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
   // });
 }));
 
+passport.use(new LocalStrategy(opts, function(jwt_payload, done) {
+  console.log("New Strategy")
+  console.log(jwt_payload)
+
+
+}));
+
+
+// router.post('/login', (req, res) => {
+//   passport.authenticate(
+//     'local',
+//     { session: false },
+//     (error, user) => {
+
+//       if (error || !user) {
+//         res.status(400).json({ error });
+//       }
+
+//       /** This is what ends up in our JWT */
+//       const payload = {
+//         username: user.username,
+//         expires: Date.now() + parseInt(process.env.JWT_EXPIRATION_MS),
+//       };
+
+//       /** assigns payload to req.user */
+//       req.login(payload, {session: false}, (error) => {
+//         if (error) {
+//           res.status(400).send({ error });
+//         }
+
+//         /** generate a signed json web token and return it in the response */
+//         const token = jwt.sign(JSON.stringify(payload), keys.secret);
+
+//         /** assign our jwt to the cookie */
+//         res.cookie('jwt', jwt, { httpOnly: true, secure: true });
+//         res.status(200).send({ username });
+//       });
+//     },
+//   )(req, res);
+// });
+
 
 
 
@@ -478,10 +519,12 @@ app.post('/tarkistasalasana', (req, res, next) => {
     try {
     bcrypt.compare(annettuSalasana, result.rows[0].salasana, function(err, resultB) {
       if (resultB){
-        var token = jwt.sign({ sähköposti: annettuSähköposti, rooli: result.rows[0].rooli }, 'sonSALAisuus');
+        const token = jwt.sign({ sähköposti: annettuSähköposti, rooli: result.rows[0].rooli }, 'sonSALAisuus');
+        res.cookie('jwt', jwt, { httpOnly: true, secure: true });
         res.send(token)
       }
     });
+    //res.cookie('jwt', jwt, { httpOnly: true, secure: true });
     }
     catch {"Salasanan tarkistus ei onnistunut"}
 

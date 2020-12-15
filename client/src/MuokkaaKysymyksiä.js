@@ -21,9 +21,11 @@ import {paivitaTenttiNimi, paivitaKysymysNimi, paivitaVastausNimi, poistaVastaus
 
 export default function MuokkaaKysymyksiä(props) {
 
+  let token = props.token
+
   //Päivitetään tietokanta ja asetetaan vastauksen id staten päivittämistä varten
   async function lisääUusiTentti() {
-    lisääTentti().then((result) => {
+    lisääTentti(token).then((result) => {
       let tentti_id = result
       props.dispatch({type: 'LISÄÄ_TENTTI', data:{tentti_id: tentti_id}})
     

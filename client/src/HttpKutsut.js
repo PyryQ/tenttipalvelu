@@ -92,9 +92,9 @@ export async function poistaVastaus(vastaus_id) {
 //------------------------------POST-------------------------
 
 
-export async function lisääTentti() {
+export async function lisääTentti(token) {
   try{
-    let result = await axios.post("http://localhost:4000/lisaatentti")
+    let result = await axios.post("http://localhost:4000/lisaatentti/" + token)
     return(result.data)
   }
   catch(exception){

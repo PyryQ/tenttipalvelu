@@ -54,8 +54,7 @@ export default function Login(props) {
           props.kirjautuminen(true)
         }
       
-      }catch (error){
-        console.log(error)
+      }catch {
         alert("Kirjautuminen ei onnistunut.")
         console.log("Tokenin asettamisessa jotain pielessä.")
       }

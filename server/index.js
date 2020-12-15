@@ -24,10 +24,20 @@ const port = 4000
 //     bodyParser = require("body-parser");
 
 const bcrypt = require('bcrypt')
+
+
+
+//passport
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
-JWTstrategy = require('passport-jwt').Strategy
-ExtractJWT = require('passport-jwt').ExtractJwt;
+var JwtStrategy = require('passport-jwt').Strategy,
+    ExtractJwt = require('passport-jwt').ExtractJwt;
+var opts = {}
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme("jwt")
+opts.secretOrKey = 'sonSALAisuus';
+
+
+
 const BCRYPT_SALT_ROUNDS = 12;
 //app.use(passport.initialize());
 //app.use(passport.session());
@@ -92,7 +102,7 @@ const asetaHash = () => {
 
 //Lisää tentti (lisää defaultarvot tietokantaan?)
 app.post('/lisaatentti', 
-  passport.authenticate('basic', { session: false }), 
+  passport.authenticate('jwt', { session: false }), 
   (req, res, next) => {
     db.query("INSERT INTO tentti (nimi) values ('Uusi tentti') RETURNING tentti_id;", (err, result) => {
       if (err) {
@@ -146,25 +156,27 @@ app.post('/lisaakayttaja', (req, res, next) => {
   let annettuSähköposti = req.body.sahkoposti
   let annettuSalasana = req.body.salasana
 
-  db.query("INSERT INTO käyttäjä (etunimi, sukunimi, sähköposti, rooli) values ($1, $2, $3, $4) RETURNING sähköposti;", 
-  [req.body.etunimi, req.body.sukunimi, req.body.sahkoposti, req.body.rooli], (err, result) => { 
-    if (err) {
-      return next(err)
-    }
+  try{
+    db.query("INSERT INTO käyttäjä (etunimi, sukunimi, sähköposti, rooli) values ($1, $2, $3, $4) RETURNING sähköposti;", 
+    [req.body.etunimi, req.body.sukunimi, req.body.sahkoposti, req.body.rooli], (err, result) => { 
+      if (err) {
+        return next(err)
+      }
 
 
-    bcrypt.hash(req.body.salasana, SALT_ROUNDS, (err, hash) => {
-      db.query("UPDATE käyttäjä SET salasana = $1 WHERE sähköposti = $2", 
-      [hash, annettuSähköposti], (error, result) => { 
-        console.log(hash)
-        if (error) {
-          return next(error)
-        }
-      })
-    });
+      bcrypt.hash(req.body.salasana, SALT_ROUNDS, (err, hash) => {
+        db.query("UPDATE käyttäjä SET salasana = $1 WHERE sähköposti = $2", 
+        [hash, annettuSähköposti], (error, result) => { 
+          console.log(hash)
+          if (error) {
+            return next(error)
+          }
+        })
+      });
 
-    res.send(result.rows[0].sähköposti) 
-  }) 
+      res.send(result.rows[0].sähköposti) 
+    }) 
+  } catch {console.log("Käyttäjän lisääminen ei onnistunut")}
 
 })
 
@@ -406,6 +418,40 @@ var parsiToken = function (req){
 }
 
 
+passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
+
+  console.log(jwt_payload)
+
+
+  // db.query("SELECT rooli FROM käyttäjä WHERE sähköposti = $1", 
+  //   [tokenSähköposti], (err, result) => {
+
+  //     if (err) {
+  //       return next(err)
+  //     }
+  //     if (tokenRooli === "admin" && result.rows[0].rooli === "admin"){
+  //       res.send(true)
+  //     }
+  //     else res.send(false)
+
+  // })
+
+
+
+  // User.findOne({id: jwt_payload.sub}, function(err, user) {
+  //     if (err) {
+  //         return done(err, false);
+  //     }
+  //     if (user) {
+  //         return done(null, user);
+  //     } else {
+  //         return done(null, false);
+  //         // or you could create a new account
+  //     }
+  // });
+}));
+
+
 
 
 //-------------------------------------------LOGIN---------------------------------
@@ -424,17 +470,19 @@ app.post('/tarkistasalasana', (req, res, next) => {
       return next(err)
     }
 
-    user = {
-      sähköposti: req.body.sahkoposti,
-      rooli: result.rows[0].rooli
-    }
-
+    // user = {
+    //   sähköposti: req.body.sahkoposti,
+    //   rooli: result.rows[0].rooli
+    // }
+    try {
     bcrypt.compare(annettuSalasana, result.rows[0].salasana, function(err, resultB) {
       if (resultB){
         var token = jwt.sign({ sähköposti: annettuSähköposti, rooli: result.rows[0].rooli }, 'sonSALAisuus');
         res.send(token)
       }
     });
+    }
+    catch {"Salasanan tarkistus ei onnistunut"}
 
   })
 })

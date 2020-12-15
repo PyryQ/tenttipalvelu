@@ -60,8 +60,6 @@ export default function Käyttäjä(props) {
       Käyttäjän sukunimi: <Input defaultValue={käyttäjänTiedot.sukunimi} onChange={(e) => päivitäSukunimi(e.target.value)}></Input>
       <br></br>
       Käyttäjän rooli: {käyttäjänTiedot.rooli}
-      <br></br>
-      Käyttäjän salasana: *****
     </Card>
   } else return null
 }

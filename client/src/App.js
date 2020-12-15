@@ -362,18 +362,16 @@ function App() {
   }
 
 
-  function käyttäjäOnAdmin() {
+  const käyttäjäOnAdmin = () => {
     let onkoAdmin = false;
     if (käyttäjänToken != null && kirjauduttu){
       tarkistaKäyttäjänRooli(käyttäjänToken).then((result) =>{
         onkoAdmin = result
-        console.log(onkoAdmin)
         return onkoAdmin;
       }).catch((error) => {
         console.log(error)
       })
     }
-    console.log(onkoAdmin)
     return onkoAdmin;
   }
 
@@ -421,7 +419,7 @@ function App() {
           <Button variant={"contained"} color="primary" onClick={() => {setPalautettu(true);}}>Näytä vastaukset</Button>
           </div> : null}
 
-        {näkymä === 2 && käyttäjäOnAdmin() ?
+        {näkymä === 2 ?
           <Fade right><MuokkaaKysymyksiä 
             dispatch={dispatch}
             tentti={state[tenttiValinta]}

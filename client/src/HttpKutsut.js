@@ -154,6 +154,7 @@ export async function haeKäyttäjänTiedot(sähköposti) {
 export async function tarkistaKäyttäjänRooli(käyttäjänToken) {
   try{
     let result = await axios.get("http://localhost:4000/tarkistarooli/" + käyttäjänToken)
+    console.log(result.data)
     let onkoAdmin = result.data
     return(onkoAdmin)
   }

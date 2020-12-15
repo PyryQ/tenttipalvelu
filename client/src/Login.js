@@ -50,7 +50,7 @@ export default function Login(props) {
 
         if (tietokantaToken.data != "" && tietokantaToken.data != undefined && tietokantaToken.data != null){
           alert("Kirjautuminen onnistui")
-          props.käyttäjänToken(tietokantaToken.data)
+          props.asetaToken(tietokantaToken.data)
           props.kirjautuminen(true)
         }
       

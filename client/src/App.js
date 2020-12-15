@@ -364,13 +364,16 @@ function App() {
 
   function käyttäjäOnAdmin() {
     let onkoAdmin = false;
-    if (käyttäjänToken != null){
+    if (käyttäjänToken != null && kirjauduttu){
       tarkistaKäyttäjänRooli(käyttäjänToken).then((result) =>{
         onkoAdmin = result
+        console.log(onkoAdmin)
+        return onkoAdmin;
       }).catch((error) => {
         console.log(error)
       })
     }
+    console.log(onkoAdmin)
     return onkoAdmin;
   }
 
@@ -385,7 +388,7 @@ function App() {
             <div>
             <Button color="inherit" edge="start" className={classes1.menuButton} onClick={() => setNäkymä(1)}>TENTIT</Button>
             <Button color="inherit" onClick={() => setNäkymä(5)}>Käyttäjä</Button>
-            <Button variant="contained" color="secondary" disabled={!käyttäjäOnAdmin()} onClick={() => setNäkymä(2)}>Näytä kyselyn muokkaus</Button>
+            <Button variant="contained" color="secondary" disabled={käyttäjäOnAdmin()} onClick={() => setNäkymä(2)}>Näytä kyselyn muokkaus</Button>
             <Button variant="contained" color="secondary" onClick={() => setNäkymä(3)}>Demot</Button>
             <div className={classes1.spacer}/>
             <Button color="inherit">POISTU</Button>
@@ -438,11 +441,11 @@ function App() {
         </div> : null}
 
         {näkymä === 4 ?
-          <Login kirjautuminen = {kirjauduttu} käyttäjänOsoite = {asetaSähköposti} käyttäjänToken = {asetaToken} käyttäjänRooli = {asetaRooli}/> : null
+          <Login kirjautuminen = {kirjauduttu} käyttäjänOsoite = {asetaSähköposti} asetaToken = {asetaToken} käyttäjänRooli = {asetaRooli}/> : null
         }
 
         {näkymä === 5 ?
-        <Käyttäjä sähköposti = {käyttäjänSähköposti}/> : null}
+        <Käyttäjä sähköposti = {käyttäjänSähköposti} käyttäjänToken = {käyttäjänToken}/> : null}
 
         {näkymä === 6 ?
         <LuoKäyttäjä kirjautuminen = {kirjauduttu} käyttäjänOsoite = {asetaSähköposti}/> : null}

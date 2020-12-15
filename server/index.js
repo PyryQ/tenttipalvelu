@@ -314,6 +314,22 @@ app.get('/kayttajantiedot/:sahkoposti', (req, res, next) => {
   })
 })
 
+app.get('/kayttajantiedottokenista/:token', (req, res, next) => {
+  let käyttäjänToken = req.params.token
+  let tokenSähköposti
+  jwt.verify(käyttäjänToken, 'sonSALAisuus', function(err, decoded) {
+    tokenSähköposti = decoded.sähköposti
+  })
+  db.query("SELECT etunimi, sukunimi, sähköposti, rooli FROM käyttäjä WHERE sähköposti = $1", 
+  [tokenSähköposti], (err, result) => {
+    if (err) {
+      return next(err)
+    }
+    res.send(result.rows)
+  })
+})
+
+
 //Käyttäjän salasana
 app.get('/kayttajansalasana', (req, res, next) => {
   db.query("SELECT salasana FROM käyttäjä WHERE sähköposti = $1", 
@@ -680,6 +696,26 @@ app.put('/paivitavastausteksti/:vastaus_id/:vastaus', (req, res, next) => {
 app.put('/paivitaoikeavastaus', (req, res, next) => {
   db.query("UPDATE vastaus SET oikea_vastaus = $2 WHERE vastaus_id = $1;", 
   [req.body.vastaus_id, req.body.oikein], (err, result) => { 
+    if (err) {
+      return next(err)
+    }
+    res.send(req.body)
+  })
+})
+
+app.put('/paivitaetunimi', (req, res, next) => {
+  db.query("UPDATE käyttäjä SET etunimi = $2 WHERE sähköposti = $1;", 
+  [req.body.sähköposti, req.body.etunimi], (err, result) => { 
+    if (err) {
+      return next(err)
+    }
+    res.send(req.body)
+  })
+})
+
+app.put('/paivitasukunimi', (req, res, next) => {
+  db.query("UPDATE käyttäjä SET sukunimi = $2 WHERE sähköposti = $1;", 
+  [req.body.sähköposti, req.body.sukunimi], (err, result) => { 
     if (err) {
       return next(err)
     }

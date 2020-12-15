@@ -155,6 +155,7 @@ app.post('/lisaakayttaja', (req, res, next) => {
 
   let annettuSähköposti = req.body.sahkoposti
   let annettuSalasana = req.body.salasana
+  console.log(req.body.rooli)
 
   try{
     db.query("INSERT INTO käyttäjä (etunimi, sukunimi, sähköposti, rooli) values ($1, $2, $3, $4) RETURNING sähköposti;", 

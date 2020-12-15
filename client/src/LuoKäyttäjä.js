@@ -25,8 +25,8 @@ export default function Login(props) {
       alert("Salasanan pitää olla vähintään 5 merkkiä pitkä.");
     }
     else if (käyttäjänSalasana.length > 0 && käyttäjänSähköposti.length > 0 && käyttäjänEtunimi.length > 0 && käyttäjänSähköposti.length > 0){
-      if (käyttäjänRooliTarkistus == "admin1234" || käyttäjänRooliTarkistus == "oppilas"){
-        if (käyttäjänRooliTarkistus == "admin1234"){
+      if (käyttäjänRooliTarkistus === "admin1234" || käyttäjänRooliTarkistus === "oppilas"){
+        if (käyttäjänRooliTarkistus === "admin1234"){
           setKäyttäjänRooli("admin")
         }
         else setKäyttäjänRooli("oppilas")

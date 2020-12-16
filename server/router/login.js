@@ -7,26 +7,7 @@ const UserModel = require('../models/user');
 
 const router = express.Router();
 
-router.post('/register', async (req, res) => {
-  const { username, password } = req.body;
 
-  // authentication will take approximately 13 seconds
-  // https://pthree.org/wp-content/uploads/2016/06/bcrypt.png
-  const hashCost = 10;
-
-  try {
-    const passwordHash = await bcrypt.hash(password, hashCost);
-    const userDocument = new UserModel({ username, passwordHash });
-    await userDocument.save();
-    
-    res.status(200).send({ username });
-    
-  } catch (error) {
-    res.status(400).send({
-      error: 'req body should take the form { username, password }',
-    });
-  }
-});
 
 router.post('/login', (req, res) => {
   passport.authenticate(

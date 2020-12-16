@@ -8,6 +8,7 @@ import kirjauduttu from "./App.js"
 import asetaSähköposti from "./App.js"
 
 export default function Login(props) {
+
   const [käyttäjänSähköposti, setKäyttäjänSähköposti] = useState("");
   const [käyttäjänSalasana, setKäyttäjänSalasana] = useState("");
   const [käyttäjänEtunimi, setKäyttäjänEtunimi] = useState("");
@@ -15,16 +16,17 @@ export default function Login(props) {
   const [käyttäjänRooli, setKäyttäjänRooli] = useState("");
   const [käyttäjänRooliTarkistus, setKäyttäjänRooliTarkistus] = useState("");
 
-  const [tiedotPätevät, setTiedotPätevät] = useState(false);
-  const [salasananTarkistus, setSalasananTarkistus] = useState("")
-  const [salasanaOikein, setSalasanaOikein] = useState(false);
+
 
   const luoKäyttäjä = async () => {
     console.log("validointiin tullaan")
-    if (käyttäjänSalasana < 5){
-      alert("Salasanan pitää olla vähintään 5 merkkiä pitkä.");
+    if (!tarkistaSalasana(käyttäjänSalasana)){
+      alert("Salasanan tulee olla vähintään kuusi merkkiä pitkä ja sen tulee sisältää vähintään yksi numero, pieni- ja isokirjain.");
     }
-    else if (käyttäjänSalasana.length > 0 && käyttäjänSähköposti.length > 0 && käyttäjänEtunimi.length > 0 && käyttäjänSähköposti.length > 0){
+    else if(!tarkistaSähköposti(käyttäjänSähköposti)){
+      alert("Sähköposti ei käy.");
+    }
+    else if (käyttäjänEtunimi != "" && käyttäjänSukunimi != "" &&  käyttäjänEtunimi.length > 0){
       if (käyttäjänRooliTarkistus === "admin1234" || käyttäjänRooliTarkistus === "oppilas"){
         if (käyttäjänRooliTarkistus === "admin1234"){
           setKäyttäjänRooli("admin")
@@ -41,8 +43,22 @@ export default function Login(props) {
     else alert("Jokin kohta puuttuu.");
   }
 
+
   function handleSubmit(event) {
     event.preventDefault();
+  }
+
+
+  function tarkistaSähköposti(email) {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  }
+
+  function tarkistaSalasana(str){
+    // at least one number, one lowercase and one uppercase letter
+    // at least six characters
+    var res = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+    return res.test(str);
   }
 
 
@@ -102,6 +118,14 @@ export default function Login(props) {
           Luo käyttäjä
         </Button>
       </Form>
+
+
+
+
+
+
+
+      
     </div>
   );
 }

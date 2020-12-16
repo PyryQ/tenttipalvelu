@@ -34,6 +34,7 @@ import { tarkistaKäyttäjänRooli } from './HttpKutsut';
 //httpfunktiot omiin kansioihin
 //salasanan vahvuus
 //body
+// style omaan jsään?
 
 
 

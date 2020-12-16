@@ -1,13 +1,13 @@
 const express = require('express')
 var cors = require("cors")
 var app = express()
+var router = express.Router();
 
-app.use(cors())
+app.use(cors({
+     origin: 'http://localhost:3000',
+     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+   }))
 
-// var corsOptions = {
-//   origin: 'http://localhost:3000',
-//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-// }
 
 var bodyParser = require("body-parser")
 app.use(bodyParser.json())
@@ -16,16 +16,8 @@ module.exports = app
 const db = require('./db')
 
 const port = 4000
-// connect flash for flash messages
-
-
-// use passport session
-// var session = require("express-session"),
-//     bodyParser = require("body-parser");
 
 const bcrypt = require('bcrypt')
-
-
 
 //passport
 const passport = require('passport')
@@ -35,6 +27,9 @@ var JwtStrategy = require('passport-jwt').Strategy,
 var opts = {}
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme("jwt")
 opts.secretOrKey = 'sonSALAisuus';
+// use passport session
+// var session = require("express-session"),
+//     bodyParser = require("body-parser");
 
 
 
@@ -46,6 +41,13 @@ const BCRYPT_SALT_ROUNDS = 12;
 
 let user;
 
+
+//routertestailua
+var reitit = require('./router/reitit.js');
+app.use('/reitit', reitit);
+
+var login = require('./router/login.js');
+app.use('/login', login);
 
 
 

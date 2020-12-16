@@ -11,6 +11,7 @@ export default function Login(props) {
 
   const [käyttäjänSähköposti, setKäyttäjänSähköposti] = useState("");
   const [käyttäjänSalasana, setKäyttäjänSalasana] = useState("");
+  const [käyttäjänSalasana2, setKäyttäjänSalasana2] = useState("");
   const [käyttäjänEtunimi, setKäyttäjänEtunimi] = useState("");
   const [käyttäjänSukunimi, setKäyttäjänSukunimi] = useState("");
   const [käyttäjänRooli, setKäyttäjänRooli] = useState("");
@@ -25,6 +26,9 @@ export default function Login(props) {
     }
     else if(!tarkistaSähköposti(käyttäjänSähköposti)){
       alert("Sähköposti ei käy.");
+    }
+    else if(käyttäjänSalasana != käyttäjänSalasana2){
+      alert("Salasanat eivät täsmää.");
     }
     else if (käyttäjänEtunimi != "" && käyttäjänSukunimi != "" &&  käyttäjänEtunimi.length > 0){
       if (käyttäjänRooliTarkistus === "admin1234" || käyttäjänRooliTarkistus === "oppilas"){
@@ -101,6 +105,14 @@ export default function Login(props) {
             type="password"
             value={käyttäjänSalasana}
             onChange={(e) => setKäyttäjänSalasana(e.target.value)}
+          />
+          </Form.Group>
+          <Form.Group size="lg" controlId="password">
+          <Form.Label>Salasana uudelleen: </Form.Label>
+          <Form.Control
+            type="password"
+            value={käyttäjänSalasana2}
+            onChange={(e) => setKäyttäjänSalasana2(e.target.value)}
           />
         </Form.Group>
         <br></br>

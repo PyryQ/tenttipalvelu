@@ -5,6 +5,18 @@ import Button from '@material-ui/core/Button';
 //'@material-ui/core/Button';
 import "./App.css";
 
+import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    '& .MuiTextField-root': {
+      margin: theme.spacing(1),
+      width: '25ch',
+    },
+  },
+}));
+
 
 
 //https://www.npmjs.com/package/jsonwebtoken
@@ -13,6 +25,7 @@ import "./App.css";
 
 
 export default function Login(props) {
+  const classes = useStyles();
   const [käyttäjänSähköposti, setKäyttäjänSähköposti] = useState("");
   const [käyttäjänSalasana, setKäyttäjänSalasana] = useState("");
   const [salasananTarkistus, setSalasananTarkistus] = useState("")
@@ -94,6 +107,30 @@ export default function Login(props) {
         </Button>
       </Form>
     </div>
+
+
+    
+      <div>
+        <TextField
+          id="outlined-required"
+          label="Sähköposti"
+          variant="outlined"
+          onChange={(e) => setKäyttäjänSähköposti(e.target.value)}
+        />
+        <TextField
+          id="outlined-required"
+          label="Salasana"
+          type="password"
+          variant="outlined"
+          onChange={(e) => setKäyttäjänSalasana(e.target.value)}
+        />
+        <br></br>
+        <Button block size="lg" onClick={() => tarkistaKirjautuminen()}>
+          Kirjaudu
+        </Button>
+
+      </div>
+   
 
 
 

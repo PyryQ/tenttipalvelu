@@ -26,33 +26,34 @@ export default function MuokkaaKysymyksiä(props) {
   //Päivitetään tietokanta ja asetetaan vastauksen id staten päivittämistä varten
   async function lisääUusiTentti() {
     lisääTentti(token).then((result) => {
-      let tentti_id = result
-      props.dispatch({type: 'LISÄÄ_TENTTI', data:{tentti_id: tentti_id}})
-    
+      if (result != false){
+        let tentti_id = result
+        props.dispatch({type: 'LISÄÄ_TENTTI', data:{tentti_id: tentti_id}})
+      }
     }).catch((error) => {
       console.log(error)
     })
 }
 
 //Päivitetään tietokanta ja asetetaan vastauksen id staten päivittämistä varten
-async function lisääUusiKysymys(tentti_id) {
-  lisääKysymys(tentti_id).then((result) => {
-
-    let kysymys_id = result
-    console.log(kysymys_id)
-    props.dispatch({type: 'LISÄÄ_KYSYMYS', data:{kysymys_id: kysymys_id}})
-  
-  }).catch((error) => {
+async function lisääUusiKysymys(tentti_id, token) {
+  lisääKysymys(tentti_id, token).then((result) => {
+    if (result != false){
+      let kysymys_id = result
+      props.dispatch({type: 'LISÄÄ_KYSYMYS', data:{kysymys_id: kysymys_id}})
+    }
+    }).catch((error) => {
     console.log(error)
   })
 }
 
   //Päivitetään tietokanta ja asetetaan vastauksen id staten päivittämistä varten
   async function lisääUusiVastaus(indexK, kysymys_id) {
-    lisääVastaus(kysymys_id).then((result) => {
-      let vastaus_id = result
-      props.dispatch({type: 'LISÄÄ_VASTAUS', data:{indexKy: indexK, kysymys_id: kysymys_id, vastaus_id: vastaus_id}})
-    
+    lisääVastaus(kysymys_id, token).then((result) => {
+      if (result != false){
+        let vastaus_id = result
+        props.dispatch({type: 'LISÄÄ_VASTAUS', data:{indexKy: indexK, kysymys_id: kysymys_id, vastaus_id: vastaus_id}})
+      }
     }).catch((error) => {
       console.log(error)
     })

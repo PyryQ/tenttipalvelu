@@ -22,7 +22,7 @@ export default function Login(props) {
   const luoKäyttäjä = async () => {
     console.log("validointiin tullaan")
     if (!tarkistaSalasana(käyttäjänSalasana)){
-      alert("Salasanan tulee olla vähintään kuusi merkkiä pitkä ja sen tulee sisältää vähintään yksi numero, pieni- ja isokirjain.");
+      alert("Salasanassa tulee olla vähintään: \n - kuusi merkkiä \n - yksi numero \n - yksi pieni kirjain \n - yksi iso kirjain.");
     }
     else if(!tarkistaSähköposti(käyttäjänSähköposti)){
       alert("Sähköposti ei käy.");
@@ -39,6 +39,9 @@ export default function Login(props) {
 
         let käyttäjänTiedot = {etunimi: käyttäjänEtunimi, sukunimi: käyttäjänSukunimi, sahkoposti: käyttäjänSähköposti, rooli: käyttäjänRooli, salasana: käyttäjänSalasana}
         let tietokantaKäyttäjä = await axios.post("http://localhost:4000/lisaakayttaja", käyttäjänTiedot)
+        if (tietokantaKäyttäjä.data == null || tietokantaKäyttäjä.data == "" || tietokantaKäyttäjä.data == undefined || tietokantaKäyttäjä.data == false){
+          alert("Jokin meni pieleen.")
+        }
         
         alert("Käyttäjän luonti onnistui!")
       }

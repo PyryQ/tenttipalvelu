@@ -43,11 +43,16 @@ let user;
 
 
 //routertestailua
-var reitit = require('./router/reitit.js');
-app.use('/reitit', reitit);
+var lisays = require('./router/lisays.js');
+app.use('/lisays', lisays);
 
-var login = require('./router/login.js');
-app.use('/login', login);
+
+var paivitys = require('./router/paivitys.js');
+app.use('/paivitys', paivitys);
+
+
+// var kirjautuminen = require('./router/kirjautuminen.js');
+// app.use('/kirjautuminen', kirjautuminen);
 
 
 
@@ -69,33 +74,28 @@ const SALT_ROUNDS = 9
 
 
 
-const vertaaHasheja = async (annettuSalasana, tietokantaSalasana) => {
-  await bcrypt.compare(annettuSalasana, tietokantaSalasana, (err, result) => {
-    console.log(result)
-  });
-}
-let hashattySalasana
+// var middleware = {
+//   vainAdmin: function (req, res, next){
+  
+//     let onkoOikeidet = false;
+//     console.log("tarkistustoken " + req)
 
+//     jwt.verify(req, 'sonSALAisuus', function(err, decoded) {
+//       console.log(decoded.rooli)
+//       //voimassaoloaika
+//       if (decoded.rooli === "admin"){
+//         onkoOikeidet = true;
+//       }
+//     });
 
-const asetaHash = () => {
-  bcrypt.hash("kissa", SALT_ROUNDS, (err, hash) => {
-    hashattysalasana = hash
-    console.log(hash)
-    return hash
-  });
-}
-
-
-
-// try {
-//   let tokenTulos = jwt.verify(token, 'shhhhh')
-//     console.log(tokenTulos) // bar
-
-// } catch(e){
-//   console.log("Token ei käy.")
+//     if (onkoOikeidet){
+//       next()
+//     }
+//     else return "ei onnistu"
+//   }
 // }
 
-
+// app.use(middleware.vainAdmin)
 
 
 
@@ -103,17 +103,15 @@ const asetaHash = () => {
 //---------------------------------------------------POST------------------------------------
 
 //Lisää tentti (lisää defaultarvot tietokantaan?)
-app.post('/lisaatentti/:token', 
-  passport.authenticate('jwt', { session: false }), 
-  (req, res, next) => {
-    db.query("INSERT INTO tentti (nimi) values ('Uusi tentti') RETURNING tentti_id;", (err, result) => {
-      if (err) {
-        return next(err)
-      }
-      res.send(result.rows[0].tentti_id)
-    })
-  }
-)
+app.post('/lisaatentti/:token', (req, res, next) => {
+  middleware.vainAdmin(req.params.token, res, next)
+  db.query("INSERT INTO tentti (nimi) values ('Uusi tentti') RETURNING tentti_id;", (err, result) => {
+    if (err) {
+      return next(err)
+    }
+    return res.send(result.rows[0].tentti_id)
+  })
+})
 //http://localhost:4000/lisaatentti/TenttiNimi/30/10/2021-01-01 12:00:00/2021-01-01 14:00:00/pisterajat
 //( to_timestamp )
 
@@ -124,7 +122,7 @@ app.post('/lisaakysymys/:tentti_id', (req, res, next) => {
     if (err) {
       return next(err)
     }
-    res.send(result.rows[0].kysymys_id)
+    return es.send(result.rows[0].kysymys_id)
   })
 
 })
@@ -140,6 +138,14 @@ app.post('/lisaavastaus', (req, res, next) => {
     })
 
 })
+
+
+
+
+
+
+
+
 
 // app.post('/lisaavastaus/:kysymys_id/:vastaus/:oikea_vastaus', (req, res, next) => {
 //   db.query("INSERT INTO vastaus (kysymys_id_fk, vastaus, oikea_vastaus) VALUES ($1, $2, $3) RETURNING vastaus_id;", 
@@ -163,21 +169,21 @@ app.post('/lisaakayttaja', (req, res, next) => {
     db.query("INSERT INTO käyttäjä (etunimi, sukunimi, sähköposti, rooli) values ($1, $2, $3, $4) RETURNING sähköposti;", 
     [req.body.etunimi, req.body.sukunimi, req.body.sahkoposti, req.body.rooli], (err, result) => { 
       if (err) {
-        return next(err)
+        res.send(false) 
       }
-
 
       bcrypt.hash(req.body.salasana, SALT_ROUNDS, (err, hash) => {
         db.query("UPDATE käyttäjä SET salasana = $1 WHERE sähköposti = $2", 
-        [hash, annettuSähköposti], (error, result) => { 
-          console.log(hash)
-          if (error) {
-            return next(error)
+        [hash, annettuSähköposti], (err, result) => { 
+          if (err) {
+            // sähköposti on jo käytössä
+            res.send(false) 
+            //return next(error)
           }
+          res.send(result.rows[0].sähköposti) 
         })
       });
 
-      res.send(result.rows[0].sähköposti) 
     }) 
   } catch {console.log("Käyttäjän lisääminen ei onnistunut")}
 
@@ -394,18 +400,7 @@ app.get('/tarkistarooli/:token', (req, res, next) => {
   // session saved
 //});
 
-var roolinTarkistus = function (req, res, next){
-  
-  console.log(req.body.token)
 
-  jwt.verify(req.body.token, 'sonSALAisuus', function(err, decoded) {
-    console.log(decoded.rooli)
-    if (decoded.rooli === "admin"){
-      next()
-    }
-    else return "Ei muutosoikeuksia"
-  });
-}
 
 var parsiToken = function (req){
   console.log(req.body.token)
@@ -419,83 +414,6 @@ var parsiToken = function (req){
   });
 
 }
-
-
-passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
-  console.log("New Strategy")
-  console.log(jwt_payload)
-
-
-  // db.query("SELECT rooli FROM käyttäjä WHERE sähköposti = $1", 
-  //   [tokenSähköposti], (err, result) => {
-
-  //     if (err) {
-  //       return next(err)
-  //     }
-  //     if (tokenRooli === "admin" && result.rows[0].rooli === "admin"){
-  //       res.send(true)
-  //     }
-  //     else res.send(false)
-
-  // })
-
-
-
-  // User.findOne({id: jwt_payload.sub}, function(err, user) {
-  //     if (err) {
-  //         return done(err, false);
-  //     }
-  //     if (user) {
-  //         return done(null, user);
-  //     } else {
-  //         return done(null, false);
-  //         // or you could create a new account
-  //     }
-  // });
-}));
-
-passport.use(new LocalStrategy(opts, function(jwt_payload, done) {
-  console.log("New Strategy")
-  console.log(jwt_payload)
-
-
-}));
-
-
-// router.post('/login', (req, res) => {
-//   passport.authenticate(
-//     'local',
-//     { session: false },
-//     (error, user) => {
-
-//       if (error || !user) {
-//         res.status(400).json({ error });
-//       }
-
-//       /** This is what ends up in our JWT */
-//       const payload = {
-//         username: user.username,
-//         expires: Date.now() + parseInt(process.env.JWT_EXPIRATION_MS),
-//       };
-
-//       /** assigns payload to req.user */
-//       req.login(payload, {session: false}, (error) => {
-//         if (error) {
-//           res.status(400).send({ error });
-//         }
-
-//         /** generate a signed json web token and return it in the response */
-//         const token = jwt.sign(JSON.stringify(payload), keys.secret);
-
-//         /** assign our jwt to the cookie */
-//         res.cookie('jwt', jwt, { httpOnly: true, secure: true });
-//         res.status(200).send({ username });
-//       });
-//     },
-//   )(req, res);
-// });
-
-
 
 
 //-------------------------------------------LOGIN---------------------------------
@@ -522,11 +440,10 @@ app.post('/tarkistasalasana', (req, res, next) => {
     bcrypt.compare(annettuSalasana, result.rows[0].salasana, function(err, resultB) {
       if (resultB){
         const token = jwt.sign({ sähköposti: annettuSähköposti, rooli: result.rows[0].rooli }, 'sonSALAisuus');
-        res.cookie('jwt', jwt, { httpOnly: true, secure: true });
-        res.send(token)
-      }
-    });
-    //res.cookie('jwt', jwt, { httpOnly: true, secure: true });
+        //res.cookie('jwt', jwt, { httpOnly: true, secure: true });
+        return res.send(token)
+        }
+      });
     }
     catch {"Salasanan tarkistus ei onnistunut"}
 
@@ -588,106 +505,9 @@ app.post('/kirjaudu', (req, res, next) => {
 
 
 
-
-// passport.use(new LocalStrategy(
-//   function(token, done) {
-
-
-
-//     User.findOne({ username: username }, function (err, user) {
-//       if (err) { return done(err); }
-//       if (!user) {
-//         return done(null, false, { message: 'Incorrect username.' });
-//       }
-//       if (!user.validPassword(password)) {
-//         return done(null, false, { message: 'Incorrect password.' });
-//       }
-//       return done(null, user);
-//     });
-//   }
-// ));
-
-
-
-
-
 //http://www.passportjs.org/docs/downloads/html/
 //app.use(flash());
 //C:\Users\pyryq\harjoitus\tenttipalvelu\server\node_modules\passport\lib\http\request.js:46
-
-
-
-
-// var passport = require('passport')
-//   , LocalStrategy = require('passport-local').Strategy;
-
-// passport.use(new LocalStrategy(
-//   function(username, password, done) {
-//     console.log("käyttäjän tarkistukseen tultiin")
-
-//     db.query("SELECT * FROM käyttäjä WHERE sähköposti = $1", 
-//     [username], (err, result) => {
-//       console.log(result.rows)
-//       let user = result.rows
-//       if (err) {return next(err)}
-
-//       // if (!user.validPassword(password)) {
-//       //   return done(null, false, { message: 'Incorrect password.' });
-//       // }
-
-//       let salasana = result.rows
-//       return done(null, result.rows);
-//     })
-
-
-//      user.findOne({ sähköposti: username }, function(err, user) {
-//       if (err) { return done(err); }
-//       if (!user) {
-//         return done(null, false, { message: 'Incorrect username.' });
-//       }
-//       if (!user.validPassword(password)) {
-//         return done(null, false, { message: 'Incorrect password.' });
-//       }
-//       return done(null, user);
-//     });
-//   }
-// ));
-
-// app.get('/api/users/me',
-//   passport.authenticate('basic', { session: false }),
-//   function(req, res) {
-//     res.json({ id: req.user.id, username: req.user.username });
-//   });
-
-
-// app.get('/login', { successRedirect: 'http://localhost:3000/',
-//                     failureRedirect: 'http://localhost:3000/',
-//                     session: false
-//                   },
-// function(req, res, next) {
-//   console.log("tänne tullaan")
-//   passport.authenticate('local', function(err, user, info) {
-//     if (err) { return next(err); }
-//     if (!user) { return res.redirect('/login'); }
-//     req.logIn(user, function(err) {
-//       if (err) { return next(err); }
-//       return res.redirect('/users/' + user.username);
-//     });
-//   })(req, res, next);
-// });
-
-// app.post('/login',
-//   passport.use('local', { successRedirect: 'http://localhost:3000/',
-//                                    failureRedirect: 'http://localhost:3000/',
-//                                    session: false
-//                                   }),
-//   function(req, res) {
-//     console.log("Autentikointi onnistunut")
-//     // If this function gets called, authentication was successful.
-//     // `req.user` contains the authenticated user.
-//     res.redirect('/kayttajantiedot/' + req.user.username);
-//   }                              
-// );
 
 
 

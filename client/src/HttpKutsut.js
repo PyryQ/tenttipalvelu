@@ -94,7 +94,7 @@ export async function poistaVastaus(vastaus_id) {
 
 export async function lisääTentti(token) {
   try{
-    let result = await axios.post("http://localhost:4000/lisaatentti/" + token)
+    let result = await axios.post("http://localhost:4000/lisays/lisaatentti/" + token)
     return(result.data)
   }
   catch(exception){
@@ -102,9 +102,9 @@ export async function lisääTentti(token) {
   }
 }
 
-export async function lisääKysymys(tentti_id) {
+export async function lisääKysymys(tentti_id, token) {
   try{
-    let result = await axios.post("http://localhost:4000/lisaakysymys/" + tentti_id)
+    let result = await axios.post("http://localhost:4000/lisays/lisaakysymys/" + tentti_id + "/" + token)
     return(result.data)
   }
   catch(exception){
@@ -112,9 +112,9 @@ export async function lisääKysymys(tentti_id) {
   }
 }
 
-export async function lisääVastaus(kysymys_id) {
+export async function lisääVastaus(kysymys_id, token) {
   try{
-    let result = await axios.post("http://localhost:4000/lisaavastaus", {kysymys_id: kysymys_id})
+    let result = await axios.post("http://localhost:4000/lisays/lisaavastaus/" + kysymys_id + "/" +  token)
     return(result.data)
   }
   catch(exception){

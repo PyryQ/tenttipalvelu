@@ -39,7 +39,6 @@ const BCRYPT_SALT_ROUNDS = 12;
 //app.use(flash());
 // routes should be at the last
 
-let user;
 
 
 //routertestailua
@@ -49,6 +48,9 @@ app.use('/lisays', lisays);
 
 var paivitys = require('./router/paivitys.js');
 app.use('/paivitys', paivitys);
+
+var poista = require('./router/poista.js');
+app.use('/poista', poista);
 
 
 // var kirjautuminen = require('./router/kirjautuminen.js');
@@ -101,62 +103,6 @@ const SALT_ROUNDS = 9
 
 
 //---------------------------------------------------POST------------------------------------
-
-//Lisää tentti (lisää defaultarvot tietokantaan?)
-app.post('/lisaatentti/:token', (req, res, next) => {
-  middleware.vainAdmin(req.params.token, res, next)
-  db.query("INSERT INTO tentti (nimi) values ('Uusi tentti') RETURNING tentti_id;", (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    return res.send(result.rows[0].tentti_id)
-  })
-})
-//http://localhost:4000/lisaatentti/TenttiNimi/30/10/2021-01-01 12:00:00/2021-01-01 14:00:00/pisterajat
-//( to_timestamp )
-
-//Lisää kysymys
-app.post('/lisaakysymys/:tentti_id', (req, res, next) => {
-  db.query("INSERT INTO kysymys (tentti_id_fk, kysymys, kysymyspisteet) VALUES ($1, 'Uusi kysymys', 3) RETURNING kysymys_id;", 
-  [req.params.tentti_id], (err, result) => { 
-    if (err) {
-      return next(err)
-    }
-    return es.send(result.rows[0].kysymys_id)
-  })
-
-})
-
-//Lisää vastaus
-app.post('/lisaavastaus', (req, res, next) => {
-    db.query("INSERT INTO vastaus (kysymys_id_fk, vastaus, oikea_vastaus) VALUES ($1, 'Uusi vastaus', false) RETURNING vastaus_id;", 
-    [req.body.kysymys_id], (err, result) => { 
-      if (err) {
-        return next(err)
-      }
-      res.send(result.rows[0].vastaus_id)
-    })
-
-})
-
-
-
-
-
-
-
-
-
-// app.post('/lisaavastaus/:kysymys_id/:vastaus/:oikea_vastaus', (req, res, next) => {
-//   db.query("INSERT INTO vastaus (kysymys_id_fk, vastaus, oikea_vastaus) VALUES ($1, $2, $3) RETURNING vastaus_id;", 
-//   [req.params.kysymys_id, req.params.vastaus, req.params.oikea_vastaus], (err, result) => { 
-//     if (err) {
-//       return next(err)
-//     }
-//     var uusi_vastaus_id = result.rows[0].vastaus_id
-//     res.send(uusi_vastaus_id)
-//   })
-// })
 
 //Lisää käyttäjä
 app.post('/lisaakayttaja', (req, res, next) => {
@@ -314,26 +260,26 @@ app.get('/kayttajanvastaukset/:kayttaja_id/:vastaus_id', (req, res, next) => {
 })
 
 //Käyttäjän rooli
-app.get('/kayttajanrooli/:sahkoposti', (req, res, next) => {
-  db.query("SELECT rooli FROM käyttäjä WHERE sähköposti = $1", 
-  [req.params.sahkoposti], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(result.rows)
-  })
-})
+// app.get('/kayttajanrooli/:sahkoposti', (req, res, next) => {
+//   db.query("SELECT rooli FROM käyttäjä WHERE sähköposti = $1", 
+//   [req.params.sahkoposti], (err, result) => {
+//     if (err) {
+//       return next(err)
+//     }
+//     res.send(result.rows)
+//   })
+// })
 
 //Käyttäjän tiedot
-app.get('/kayttajantiedot/:sahkoposti', (req, res, next) => {
-  db.query("SELECT * FROM käyttäjä WHERE sähköposti = $1", 
-  [req.params.sahkoposti], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(result.rows)
-  })
-})
+// app.get('/kayttajantiedot/:sahkoposti', (req, res, next) => {
+//   db.query("SELECT * FROM käyttäjä WHERE sähköposti = $1", 
+//   [req.params.sahkoposti], (err, result) => {
+//     if (err) {
+//       return next(err)
+//     }
+//     res.send(result.rows)
+//   })
+// })
 
 app.get('/kayttajantiedottokenista/:token', (req, res, next) => {
   let käyttäjänToken = req.params.token
@@ -351,16 +297,6 @@ app.get('/kayttajantiedottokenista/:token', (req, res, next) => {
 })
 
 
-//Käyttäjän salasana
-app.get('/kayttajansalasana', (req, res, next) => {
-  db.query("SELECT salasana FROM käyttäjä WHERE sähköposti = $1", 
-  [req.body.sahkoposti, req.body.salasana], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(result.rows)
-  })
-})
 
 
 app.get('/tarkistarooli/:token', (req, res, next) => {
@@ -389,31 +325,6 @@ app.get('/tarkistarooli/:token', (req, res, next) => {
 })
 
 
-
-
-//-----------MIDDLEWARE
-
-//req.logIn(user, { session: false });
-
-//req.logIn(user, function(err) {
-  //if (err) { throw err; }
-  // session saved
-//});
-
-
-
-var parsiToken = function (req){
-  console.log(req.body.token)
-
-  jwt.verify(req.body.token, 'sonSALAisuus', function(err, decoded) {
-    console.log(decoded.rooli)
-    if (decoded.rooli === "admin"){
-      return true;
-    }
-    else return false;
-  });
-
-}
 
 
 //-------------------------------------------LOGIN---------------------------------
@@ -464,21 +375,6 @@ app.get('/kayttajansalasana/:sahkoposti/:salasana', (req, res, next) => {
   })
 })
 
-app.get('/kayttajansalasana2/:sahkoposti', (req, res, next) => {
-  db.query("SELECT salasana FROM käyttäjä WHERE sähköposti = $1", 
-  [req.params.sahkoposti], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(result.rows)
-  })
-})
-
-
-
-
-
-
 
 //Käyttäjän salasana
 app.get('/kirjautuminen/:sahkoposti', (req, res, next) => {
@@ -503,40 +399,9 @@ app.post('/kirjaudu', (req, res, next) => {
 });
 
 
-
-
-//http://www.passportjs.org/docs/downloads/html/
-//app.use(flash());
-//C:\Users\pyryq\harjoitus\tenttipalvelu\server\node_modules\passport\lib\http\request.js:46
-
-
-
-
-
-
 //--------------------------------------------PUT----------------------------------------------
 
-//päivitä tentti
-app.put('/paivitatentti/:tentti_id/:uusinimi/:tp/:mp/:ta/:tl/:pr', (req, res, next) => {
-  db.query("UPDATE tentti SET nimi = $2, tenttipisteet = $3, minimipisteet = $4, tentin_aloitusaika = $5, tentin_lopetusaika = $6, pisterajat = $7  WHERE tentti_id=$1;", 
-  [req.params.tentti_id, req.params.uusinimi, req.params.tp, req.params.mp, req.params.ta, req.params.tl, req.params.pr], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send("Tentin päivitys onnistui")
-  })
-})
 
-//päivitä tentin nimi
-app.put('/paivitatenttiteksti/:tentti_id/:uusinimi', (req, res, next) => {
-  db.query("UPDATE tentti SET nimi = $2 WHERE tentti_id=$1;", 
-  [req.params.tentti_id, req.params.uusinimi], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send("Tentin päivitys onnistui")
-  })
-})
 
 
 //päivitä tentin aloitusaika
@@ -562,28 +427,6 @@ app.put('/paivitatenttilopetusaika', (req, res, next) => {
 })
 
 
-//päivitä kysymys
-app.put('/paivitakysymys/:tentti_id/:uusiKysymys/:pisteet/', (req, res, next) => {
-  db.query("UPDATE kysymys SET kysymys = $2, kysymyspisteet = 3$ WHERE tentti_id_fk = $1;", 
-  [req.params.tentti_id, req.params.uusiKysymys, req.params.pisteet], (err, result) => { 
-    if (err) {
-      return next(err)
-    }
-    res.send("Kysymyksen päivitys onnistui")
-  })
-})
-
-//päivitä kysymyksen teksti
-app.put('/paivitakysymysteksti/:kysymys_id/:kysymys', (req, res, next) => {
-  db.query("UPDATE kysymys SET kysymys = $2 WHERE kysymys_id = $1;", 
-  [req.params.kysymys_id, req.params.kysymys], (err, result) => { 
-    if (err) {
-      return next(err)
-    }
-    res.send("Kysymyksen päivitys onnistui")
-  })
-})
-
 //päivitä vastaus
 app.put('/paivitavastaus/:vastaus_id/:vastaus/:oikea_vastaus', (req, res, next) => {
   db.query("UPDATE vastaus SET vastaus = $2, oikea_vastaus = 3$ WHERE vastaus_id = $1;", 
@@ -595,16 +438,6 @@ app.put('/paivitavastaus/:vastaus_id/:vastaus/:oikea_vastaus', (req, res, next) 
   })
 })
 
-//päivitä vastausteksti
-app.put('/paivitavastausteksti/:vastaus_id/:vastaus', (req, res, next) => {
-  db.query("UPDATE vastaus SET vastaus = $2 WHERE vastaus_id = $1;", 
-  [req.params.vastaus_id, req.params.vastaus], (err, result) => { 
-    if (err) {
-      return next(err)
-    }
-    res.send(req.body)
-  })
-})
 
 //päivitä oikea vastaus
 app.put('/paivitaoikeavastaus', (req, res, next) => {

@@ -7,8 +7,20 @@ import "./App.css";
 import kirjauduttu from "./App.js"
 import asetaSähköposti from "./App.js"
 
-export default function Login(props) {
+import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@material-ui/core/styles';
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    '& .MuiTextField-root': {
+      margin: theme.spacing(1),
+      width: '25ch',
+    },
+  },
+}));
+
+export default function Login(props) {
+  const classes = useStyles();
   const [käyttäjänSähköposti, setKäyttäjänSähköposti] = useState("");
   const [käyttäjänSalasana, setKäyttäjänSalasana] = useState("");
   const [käyttäjänSalasana2, setKäyttäjänSalasana2] = useState("");
@@ -133,6 +145,69 @@ export default function Login(props) {
           Luo käyttäjä
         </Button>
       </Form>
+
+
+      <div>
+        <TextField
+          id="outlined-required"
+          label="Etunimi"
+          variant="outlined"
+          onChange={(e) => setKäyttäjänEtunimi(e.target.value)}
+        />
+        <br></br>
+        <br></br>
+        <TextField
+          id="outlined-required"
+          label="Sukunimi"
+          variant="outlined"
+          onChange={(e) => setKäyttäjänSukunimi(e.target.value)}
+        />
+        <br></br>
+        <br></br>
+        <TextField
+          id="outlined-required"
+          label="Sähköposti"
+          type="email"
+          variant="outlined"
+          onChange={(e) => setKäyttäjänSähköposti(e.target.value)}
+        />
+        <br></br>
+        <br></br>
+        <TextField
+          id="outlined-required"
+          label="Salasana"
+          type="password"
+          variant="outlined"
+          onChange={(e) => setKäyttäjänSalasana(e.target.value)}
+        />
+        <br></br>
+        <br></br>
+        <TextField
+          id="outlined-required"
+          label="Salasana uudelleen"
+          type="password"
+          variant="outlined"
+          onChange={(e) => setKäyttäjänSalasana2(e.target.value)}
+        />
+        <br></br>
+        <br></br>
+        Adminsalasana käyttöoikeuksille.
+        Jos olet oppilas, kirjoita "oppilas".
+        <br></br>
+        <TextField
+          id="outlined-required"
+          label="Roolisalasana"
+          type="password"
+          variant="outlined"
+          onChange={(e) => (setKäyttäjänRooliTarkistus(e.target.value))}
+        />
+        <br></br>
+        <br></br>
+        <Button block size="lg" onClick={() => luoKäyttäjä()}>
+          Luo käyttäjä
+        </Button>
+
+      </div>
 
 
 

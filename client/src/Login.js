@@ -81,11 +81,11 @@ export default function Login(props) {
   return (
     // Sisäänkirjautumisen form
     <div>
-    <div action="login" method="post"className="Login" key="kirjautuminen1">
-      <Form onSubmit={handleSubmit}>
-        <Form.Group size="lg" controlId="email">
-          <Form.Label>Sähköposti: </Form.Label>
-          <Form.Control
+    {/* // <div action="login" method="post"className="Login" key="kirjautuminen1">
+    //   <Form onSubmit={handleSubmit}>
+    //     <Form.Group size="lg" controlId="email">
+    //       <Form.Label>Sähköposti: </Form.Label>
+    //       <Form.Control
             autoFocus
             type="email"
             name="sähköposti"
@@ -106,7 +106,7 @@ export default function Login(props) {
           Kirjaudu
         </Button>
       </Form>
-    </div>
+    </div> */}
 
 
     

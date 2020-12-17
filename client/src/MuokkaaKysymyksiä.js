@@ -36,7 +36,7 @@ export default function MuokkaaKysymyksiä(props) {
 }
 
 //Päivitetään tietokanta ja asetetaan vastauksen id staten päivittämistä varten
-async function lisääUusiKysymys(tentti_id, token) {
+async function lisääUusiKysymys(tentti_id) {
   lisääKysymys(tentti_id, token).then((result) => {
     if (result != false){
       let kysymys_id = result
@@ -85,9 +85,6 @@ async function lisääUusiKysymys(tentti_id, token) {
     })
   }
 
-
-
-
   let dataM = props.tentti; //Alustetaan dataM kysymyksen mukaan
 
   function asetaAika(aika) {
@@ -106,24 +103,24 @@ async function lisääUusiKysymys(tentti_id, token) {
         <div key={"vastaukset" + itemV.vastaus_id}>
           {/*Checkbox oikean vastauksen asettamiselle*/}
           <label><Checkbox className="vastausCheckM" key={"muuta_ov" + itemV.vastaus_id} checked={itemV.oikea_vastaus} 
-            onChange={(e) => (props.dispatch({type: 'MUUTA_OIKEA_VASTAUS', data:{valittuV: e.target.checked, indexKy: indexK, indexVa: indexV}}, paivitaOikeaVastaus(itemV.vastaus_id, e.target.checked)))}/>
+            onChange={(e) => (props.dispatch({type: 'MUUTA_OIKEA_VASTAUS', data:{valittuV: e.target.checked, indexKy: indexK, indexVa: indexV}}, paivitaOikeaVastaus(itemV.vastaus_id, e.target.checked, token)))}/>
           </label>
           
           {/*Input vastauksen asettamiselle*/}
           <Input className="vastausM" defaultValue={itemV.vastaus} key={"muuta_v" + itemV.vastaus_id}
-            onBlur = {(e) => (paivitaVastausNimi(itemV.vastaus_id, e.target.value), 
+            onBlur = {(e) => (paivitaVastausNimi(itemV.vastaus_id, e.target.value, token), 
               props.dispatch({type: 'MUOKKAA_VASTAUSTA', data:{vastaus: e.target.value, indexKy: indexK, indexVa: indexV}}))}>
           </Input>
 
           {/*Button vastauksen poistamiselle*/}
           <Button className="vastausPoisto" key={"poista_v" + itemV.vastaus_id}
-            onClick={() => (poistaVastaus(itemV.vastaus_id), props.dispatch({type: 'POISTA_VASTAUS', data:{indexKy: indexK, indexVa: indexV}}))}>
+            onClick={() => (poistaVastaus(itemV.vastaus_id, token), props.dispatch({type: 'POISTA_VASTAUS', data:{indexKy: indexK, indexVa: indexV}}))}>
           <DeleteIcon/></Button>
         </div>)}
 
         {/*Button vastauksen lisäämiselle*/}
         
-        <Button className="lisääM" onClick={() => lisääUusiVastaus(indexK, itemK.kysymys_id)} 
+        <Button className="lisääM" onClick={() => lisääUusiVastaus(indexK, itemK.kysymys_id, token)} 
           key={"lisää_v" + itemK.vastaus_id}>
         <AddCircleOutlineIcon/></Button>
       </div>
@@ -156,7 +153,7 @@ async function lisääUusiKysymys(tentti_id, token) {
 
       {/*Input tentin nimen muokkaamiseksi*/}
       <Input key={"tentti_input" + dataM.tentti_id} className="kysymysM" defaultValue={dataM.nimi} 
-        onBlur={(e) => (paivitaTenttiNimi(dataM.tentti_id, e.target.value), 
+        onBlur={(e) => (paivitaTenttiNimi(dataM.tentti_id, e.target.value, token), 
         props.dispatch({type: 'MUOKKAA_TENTTI', data:{nimi: e.target.value}}))}>
       </Input>
       <br></br>
@@ -166,7 +163,7 @@ async function lisääUusiKysymys(tentti_id, token) {
       <Button className="poistaTT" 
         onClick={() => {
           if (window.confirm("Poistetaanko " + dataM.nimi)){
-            poistaTentti(dataM.tentti_id);
+            poistaTentti(dataM.tentti_id, token);
             props.dispatch({type: 'POISTA_TENTTI', data:{}});
           }
         }}>
@@ -209,7 +206,7 @@ async function lisääUusiKysymys(tentti_id, token) {
           <div>
             <Input className="kysymysM" 
               defaultValue={itemK.kysymys}
-              onBlur={(e) => (props.dispatch({type: 'MUOKKAA_KYSYMYSTÄ', data:{kysymys: e.target.value, indexKy: indexK}}), paivitaKysymysNimi(itemK.kysymys_id, e.target.value))}>
+              onBlur={(e) => (props.dispatch({type: 'MUOKKAA_KYSYMYSTÄ', data:{kysymys: e.target.value, indexKy: indexK}}), paivitaKysymysNimi(itemK.kysymys_id, e.target.value, token))}>
             </Input> 
 
             <Button className="poistoM" onClick={() => (props.dispatch({type: 'POISTA_KYSYMYS', data:{indexKy: indexK}}), poistaKysymys(itemK.kysymys_id))}>

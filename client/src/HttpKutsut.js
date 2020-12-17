@@ -1,9 +1,10 @@
 import axios from 'axios';
 
 
-export async function paivitaTenttiNimi(tentti_id, nimi) {
+export async function paivitaTenttiNimi(tentti_id, nimi, token) {
     try{
-      let result = await axios.put("http://localhost:4000/paivitatenttiteksti/" + tentti_id +"/"+ nimi)
+      let result = await axios.put("http://localhost:4000/paivitys/paivitatenttiteksti", {tentti_id: tentti_id, nimi: nimi, token: token})
+      return result;
     }
     catch(exception){
       console.log("Kysymystä ei onnistuttu päivittämään.")
@@ -30,19 +31,20 @@ export async function päivitäTentinLopetusaika(päiväjaaika, tentti_id) {
   }
 }
 
-export async function paivitaKysymysNimi(kysymys_id, kysymys) {
-    console.log(kysymys_id) 
+export async function paivitaKysymysNimi(kysymys_id, kysymys, token) {
     try{
-      let result = await axios.put("http://localhost:4000/paivitakysymysteksti/" + kysymys_id +"/" + kysymys)
+      let result = await axios.put("http://localhost:4000/paivitys/paivitakysymysteksti", {kysymys_id: kysymys_id, kysymys: kysymys, token: token})
+      return result;
     }
     catch(exception){
       console.log("Kysymystä ei onnistuttu päivittämään.")
     }
   }
 
-export async function paivitaVastausNimi(vastaus_id, vastaus) {
+export async function paivitaVastausNimi(vastaus_id, vastaus, token) {
     try{
-      let result = await axios.put("http://localhost:4000/paivitavastausteksti/" + vastaus_id + "/" + vastaus)
+      let result = await axios.put("http://localhost:4000/paivitys/paivitavastausteksti", {vastaus_id: vastaus_id, vastaus: vastaus, token: token})
+      return result;
     }
     catch(exception){
       console.log("Vastausta ei onnistuttu päivittämään.")
@@ -80,7 +82,7 @@ export async function poistaKysymys(kysymys_id) {
   }
 }
 
-export async function poistaVastaus(vastaus_id) {
+export async function poistaVastaus(vastaus_id, token) {
   try{
     let result = await axios.delete("http://localhost:4000/poistavastaus/" + vastaus_id)
   }

@@ -46,7 +46,7 @@ router.put('/paivitatenttiteksti', middleware.vainAdmin, (req, res, next) => {
 
 
 
-  //päivitä kysymyksen teksti
+//päivitä kysymyksen teksti
 router.put('/paivitakysymysteksti', middleware.vainAdmin, (req, res, next) => {
     db.query("UPDATE kysymys SET kysymys = $2 WHERE kysymys_id = $1;", 
     [req.body.kysymys_id, req.body.kysymys], (err, result) => { 
@@ -58,6 +58,7 @@ router.put('/paivitakysymysteksti', middleware.vainAdmin, (req, res, next) => {
   })
 
 
+//Päivitä vastauksen teksti
 router.put('/paivitavastausteksti', middleware.vainAdmin, (req, res, next) => {
     db.query("UPDATE vastaus SET vastaus = $2 WHERE vastaus_id = $1;", 
     [req.body.vastaus_id, req.body.vastaus], (err, result) => { 
@@ -69,7 +70,7 @@ router.put('/paivitavastausteksti', middleware.vainAdmin, (req, res, next) => {
   })
 
 
-  //päivitä oikea vastaus
+//päivitä oikea vastaus
 router.put('/paivitaoikeavastaus', middleware.vainAdmin, (req, res, next) => {
   db.query("UPDATE vastaus SET oikea_vastaus = $2 WHERE vastaus_id = $1;", 
   [req.body.vastaus_id, req.body.oikein], (err, result) => { 

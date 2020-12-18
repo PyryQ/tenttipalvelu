@@ -43,23 +43,23 @@ export async function päivitäKysymysNimi(kysymys_id, kysymys, token) {
   }
 
 export async function päivitäVastausNimi(vastaus_id, vastaus, token) {
-    try{
-      let result = await axios.put("http://localhost:4000/paivitys/paivitavastausteksti", {vastaus_id: vastaus_id, vastaus: vastaus, token: token})
-      return result;
-    }
-    catch(exception){
-      console.log("Vastausta ei onnistuttu päivittämään.")
-    }
+  try{
+    let result = await axios.put("http://localhost:4000/paivitys/paivitavastausteksti", {vastaus_id: vastaus_id, vastaus: vastaus, token: token})
+    return result;
   }
+  catch(exception){
+    console.log("Vastausta ei onnistuttu päivittämään.")
+  }
+}
 
 export async function päivitäOikeaVastaus(vastaus_id, onkoOikein, token) {
-    try{
-      let result = await axios.put("http://localhost:4000/paivitaoikeavastaus", {vastaus_id: vastaus_id, oikein: onkoOikein, token: token})
-    }
-    catch(exception){
-      console.log("Vastausta ei onnistuttu päivittämään.")
-    }
+  try{
+    let result = await axios.put("http://localhost:4000/paivitaoikeavastaus", {vastaus_id: vastaus_id, oikein: onkoOikein, token: token})
   }
+  catch(exception){
+    console.log("Vastausta ei onnistuttu päivittämään.")
+  }
+}
 
 
 

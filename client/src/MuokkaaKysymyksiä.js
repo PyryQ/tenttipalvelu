@@ -23,7 +23,10 @@ export default function MuokkaaKysymyksiä(props) {
 
   let token = props.token
 
-  //Päivitetään tietokanta ja asetetaan vastauksen id staten päivittämistä varten
+
+  //---------------------------LISÄÄ
+
+  //Lisää uusi tentti
   async function lisääUusiTentti() {
     lisääTentti(token).then((result) => {
       if (result != false){
@@ -34,6 +37,108 @@ export default function MuokkaaKysymyksiä(props) {
       console.log(error)
     })
 }
+
+  //Lisää uusi kysymys
+  async function lisääUusiKysymys(tentti_id) {
+    lisääKysymys(tentti_id, token).then((result) => {
+      if (result != false){
+        let kysymys_id = result
+        props.dispatch({type: 'LISÄÄ_KYSYMYS', data:{kysymys_id: kysymys_id}})
+      }
+      }).catch((error) => {
+      console.log(error)
+    })
+  }
+
+  //Lisää uusi vastaus
+  async function lisääUusiVastaus(indexK, kysymys_id) {
+    lisääVastaus(kysymys_id, token).then((result) => {
+      if (result != false){
+        let vastaus_id = result
+        props.dispatch({type: 'LISÄÄ_VASTAUS', data:{indexKy: indexK, kysymys_id: kysymys_id, vastaus_id: vastaus_id}})
+      }
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
+
+//-------------------------PÄIVITÄ
+
+async function päivitäTämäTenttiNimi(vastaus_id, teksti) {
+
+  päivitäTenttiNimi(vastaus_id, teksti, token).then((result) => {
+    if (result != false){
+      props.dispatch({type: 'MUOKKAA_TENTTI', data:{nimi: teksti}})
+    }
+  }).catch((error) => {
+    console.log(error)
+  })
+}
+
+async function päivitäTämäKysymysNimi(kysymys_id, teksti, indexK) {
+
+  päivitäKysymysNimi(kysymys_id, teksti, token).then((result) => {
+    if (result != false){
+      props.dispatch({type: 'MUOKKAA_KYSYMYSTÄ', data:{kysymys: teksti, indexKy: indexK}})
+    }
+  }).catch((error) => {
+    console.log(error)
+  })
+}
+
+async function päivitäTämäVastausNimi(vastaus_id, teksti, indexK, indexV) {
+
+  päivitäVastausNimi(vastaus_id, teksti, token).then((result) => {
+    if (result != false){
+      props.dispatch({type: 'MUOKKAA_VASTAUSTA', data:{vastaus: teksti, indexKy: indexK, indexVa: indexV}})
+    }
+  }).catch((error) => {
+    console.log(error)
+  })
+}
+
+
+  async function päivitäTämäOikeaVastaus(vastaus_id, valittu, indexK, indexV) {
+
+    päivitäOikeaVastaus(vastaus_id, valittu, token).then((result) => {
+      if (result != false){
+        props.dispatch({type: 'MUUTA_OIKEA_VASTAUS', data:{valittuV: valittu, indexKy: indexK, indexVa: indexV}})
+      }
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
+
+
+  async function muutaAloitusaika(päiväjaaika, tentti_id) {
+
+    päivitäTentinAloitusaika(päiväjaaika, tentti_id, token).then((result) => {
+      if (result != false){
+        let uusiAika = result.data
+        uusiAika = asetaAika(uusiAika)
+        props.dispatch({type: 'PÄIVITÄ_TENTIN_ALOITUSAIKA', data:{päiväjaaika: uusiAika}})
+      }
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
+
+  async function muutaLopetusaika(päiväjaaika, tentti_id) {
+
+    päivitäTentinLopetusaika(päiväjaaika, tentti_id, token).then((result) => {
+      if (result != false){
+        let uusiAika = result.data
+        uusiAika = asetaAika(uusiAika)
+        props.dispatch({type: 'PÄIVITÄ_TENTIN_LOPETUSAIKA', data:{päiväjaaika: uusiAika}})
+      }
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
+
+
+
+  //---------------------POISTA
 
   async function poistaTämäTentti() {
     console.log("muokkaakysymyksiä" + token)
@@ -70,70 +175,6 @@ export default function MuokkaaKysymyksiä(props) {
   }
 
 
-  //Päivitetään tietokanta ja asetetaan vastauksen id staten päivittämistä varten
-  async function lisääUusiKysymys(tentti_id) {
-    lisääKysymys(tentti_id, token).then((result) => {
-      if (result != false){
-        let kysymys_id = result
-        props.dispatch({type: 'LISÄÄ_KYSYMYS', data:{kysymys_id: kysymys_id}})
-      }
-      }).catch((error) => {
-      console.log(error)
-    })
-  }
-
-  //Päivitetään tietokanta ja asetetaan vastauksen id staten päivittämistä varten
-  async function lisääUusiVastaus(indexK, kysymys_id) {
-    lisääVastaus(kysymys_id, token).then((result) => {
-      if (result != false){
-        let vastaus_id = result
-        props.dispatch({type: 'LISÄÄ_VASTAUS', data:{indexKy: indexK, kysymys_id: kysymys_id, vastaus_id: vastaus_id}})
-      }
-    }).catch((error) => {
-      console.log(error)
-    })
-  }
-
-  async function muutaAloitusaika(päiväjaaika, tentti_id) {
-
-    päivitäTentinAloitusaika(päiväjaaika, tentti_id, token).then((result) => {
-      if (result != false){
-        let uusiAika = result.data
-        uusiAika = asetaAika(uusiAika)
-        console.log(uusiAika)
-        props.dispatch({type: 'PÄIVITÄ_TENTIN_ALOITUSAIKA', data:{päiväjaaika: uusiAika}})
-      }
-    }).catch((error) => {
-      console.log(error)
-    })
-  }
-
-  async function muutaLopetusaika(päiväjaaika, tentti_id) {
-
-    päivitäTentinLopetusaika(päiväjaaika, tentti_id, token).then((result) => {
-      if (result != false){
-        let uusiAika = result.data
-        uusiAika = asetaAika(uusiAika)
-        props.dispatch({type: 'PÄIVITÄ_TENTIN_LOPETUSAIKA', data:{päiväjaaika: uusiAika}})
-      }
-    }).catch((error) => {
-      console.log(error)
-    })
-  }
-
-  async function päivitäTämäOikeaVastaus(vastaus_id, valittu, indexK, indexV) {
-
-    päivitäOikeaVastaus(vastaus_id, valittu, token).then((result) => {
-      if (result != false){
-        let uusiAika = result.data
-        uusiAika = asetaAika(uusiAika)
-        props.dispatch({type: 'MUUTA_OIKEA_VASTAUS', data:{valittuV: valittu, indexKy: indexK, indexVa: indexV}})
-      }
-    }).catch((error) => {
-      console.log(error)
-    })
-  }
-
 
   let dataM = props.tentti; //Alustetaan dataM kysymyksen mukaan
 
@@ -152,27 +193,32 @@ export default function MuokkaaKysymyksiä(props) {
       return <div> {itemK.vastaukset.map((itemV, indexV) => 
         <div key={"vastaukset" + itemV.vastaus_id}>
           {/*Checkbox oikean vastauksen asettamiselle*/}
-          <label><Checkbox className="vastausCheckM" key={"muuta_ov" + itemV.vastaus_id} checked={itemV.oikea_vastaus} 
+          <label><Checkbox className="vastausCheckM" 
+            key={"muuta_ov" + itemV.vastaus_id} 
+            checked={itemV.oikea_vastaus} 
             onChange={(e) => päivitäTämäOikeaVastaus(itemV.vastaus_id, e.target.checked, indexK, indexV)}/>
           </label>
           
           {/*Input vastauksen asettamiselle*/}
-          <Input className="vastausM" defaultValue={itemV.vastaus} key={"muuta_v" + itemV.vastaus_id}
-            onBlur = {(e) => (päivitäVastausNimi(itemV.vastaus_id, e.target.value, token), 
-              props.dispatch({type: 'MUOKKAA_VASTAUSTA', data:{vastaus: e.target.value, indexKy: indexK, indexVa: indexV}}))}>
+          <Input className="vastausM" 
+            defaultValue={itemV.vastaus} 
+            key={"muuta_v" + itemV.vastaus_id}
+            onBlur = {(e) => päivitäTämäVastausNimi(itemV.vastaus_id, e.target.value, indexK, indexV)}>
           </Input>
 
           {/*Button vastauksen poistamiselle*/}
-          <Button className="vastausPoisto" key={"poista_v" + itemV.vastaus_id}
+          <Button className="vastausPoisto" 
+            key={"poista_v" + itemV.vastaus_id}
             onClick={() => poistaTämäVastaus(itemV.vastaus_id, indexK, indexV)}>
-          <DeleteIcon/></Button>
+            <DeleteIcon/></Button>
         </div>)}
 
         {/*Button vastauksen lisäämiselle*/}
         
-        <Button className="lisääM" onClick={() => lisääUusiVastaus(indexK, itemK.kysymys_id, token)} 
-          key={"lisää_v" + itemK.vastaus_id}>
-        <AddCircleOutlineIcon/></Button>
+        <Button className="lisääM" 
+          key={"lisää_v" + itemK.vastaus_id}
+          onClick={() => lisääUusiVastaus(indexK, itemK.kysymys_id, token)}>
+          <AddCircleOutlineIcon/></Button>
       </div>
     }
     catch{alert("Vastausvaihtoehtojen tulostus epäonnistui")}
@@ -203,8 +249,7 @@ export default function MuokkaaKysymyksiä(props) {
 
       {/*Input tentin nimen muokkaamiseksi*/}
       <Input key={"tentti_input" + dataM.tentti_id} className="kysymysM" defaultValue={dataM.nimi} 
-        onBlur={(e) => (päivitäTenttiNimi(dataM.tentti_id, e.target.value, token), 
-        props.dispatch({type: 'MUOKKAA_TENTTI', data:{nimi: e.target.value}}))}>
+        onChange={(e) => päivitäTämäTenttiNimi(dataM.tentti_id, e.target.value)}>
       </Input>
       <br></br>
 
@@ -255,7 +300,7 @@ export default function MuokkaaKysymyksiä(props) {
           <div>
             <Input className="kysymysM" 
               defaultValue={itemK.kysymys}
-              onBlur={(e) => (props.dispatch({type: 'MUOKKAA_KYSYMYSTÄ', data:{kysymys: e.target.value, indexKy: indexK}}), päivitäKysymysNimi(itemK.kysymys_id, e.target.value, token))}>
+              onBlur={(e) => päivitäTämäKysymysNimi(itemK.kysymys_id, e.target.value, token)}>
             </Input> 
 
             <Button className="poistoM" onClick={() => poistaTämäKysymys(itemK.kysymys_id, indexK)}>

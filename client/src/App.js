@@ -23,7 +23,7 @@ import { tarkistaKäyttäjänRooli } from './HttpKutsut';
 
 
 // Kehitettävää: 
-//aktiivisen tentin buttonille eri väri
+// aktiivisen tentin buttonille eri väri
 // Kysymyskomponentti?
 // reducer omaan tiedostoon?
 // Muuttujien nimien selkeytys
@@ -31,16 +31,16 @@ import { tarkistaKäyttäjänRooli } from './HttpKutsut';
 // kirjautuminen tarkistus popup
 // käyttäjän sitominen vastauksiin
 // pisteytys
-//httpfunktiot omiin kansioihin
-//salasanan vahvuus
-//body
 // style omaan jsään?
 
 
 
 function App() {
 
+  const [data, setData] = useState(null)
+  const [data2, setData2] = useState(null)
   const [dataAlustettu, setDataAlustettu] = useState(false) //Onko data alustettu
+  const [dataAlustettu2, setDataAlustettu2] = useState(false) //Onko data alustettu
 
   const [palautettu, setPalautettu] = useState(false) //Onko kysely palautettu
   const [tenttiValinta, setTenttiValinta] = useState(0) //Mikä tenteistä on valittu
@@ -91,7 +91,6 @@ function App() {
             setDataAlustettu2(true)
           }
           dispatch({type: "INIT_DATA", data: result.data})
-          console.log(result.data)
         }else{
           throw("Tietokannan alustaminen epäonnistui (Get)") 
         }
@@ -227,11 +226,17 @@ function App() {
     setNäkymä(1)
   }
 
-
   const asetaToken = (token) => {
     setKäyttäjänToken(token)
   }
 
+  const poistu = () => {
+    if (window.confirm("Poistutaanko ohjelmasta?")){
+      setKirjauduttuSisään(false)
+      setKäyttäjänToken(null)
+      setNäkymä(4)
+    }
+  }
 
   const käyttäjäOnAdmin = async () => {
     let onkoAdmin = false;
@@ -319,9 +324,7 @@ function App() {
             <div className={classes1.spacer}/>
 
             <Button color="inherit" 
-              onClick={() => (setKirjauduttuSisään(false), 
-                              setKäyttäjänToken(null), 
-                              setNäkymä(4))}>POISTU</Button>
+              onClick={() => poistu()}>POISTU</Button>
             </div>
             : <div>
               <Button color="inherit" edge="start" 

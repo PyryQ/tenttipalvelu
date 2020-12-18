@@ -47,7 +47,7 @@ router.put('/paivitatenttiteksti', middleware.vainAdmin, (req, res, next) => {
 
 
   //päivitä kysymyksen teksti
-router.put('/paivitakysymysteksti', (req, res, next) => {
+router.put('/paivitakysymysteksti', middleware.vainAdmin, (req, res, next) => {
     db.query("UPDATE kysymys SET kysymys = $2 WHERE kysymys_id = $1;", 
     [req.body.kysymys_id, req.body.kysymys], (err, result) => { 
       if (err) {
@@ -58,7 +58,7 @@ router.put('/paivitakysymysteksti', (req, res, next) => {
   })
 
 
-router.put('/paivitavastausteksti', (req, res, next) => {
+router.put('/paivitavastausteksti', middleware.vainAdmin, (req, res, next) => {
     db.query("UPDATE vastaus SET vastaus = $2 WHERE vastaus_id = $1;", 
     [req.body.vastaus_id, req.body.vastaus], (err, result) => { 
         if (err) {
@@ -69,10 +69,22 @@ router.put('/paivitavastausteksti', (req, res, next) => {
   })
 
 
+  //päivitä oikea vastaus
+router.put('/paivitaoikeavastaus', middleware.vainAdmin, (req, res, next) => {
+  db.query("UPDATE vastaus SET oikea_vastaus = $2 WHERE vastaus_id = $1;", 
+  [req.body.vastaus_id, req.body.oikein], (err, result) => { 
+    if (err) {
+      return next(err)
+    }
+    res.send(req.body)
+  })
+})
+
+
 
 
 //päivitä tentin aloitusaika
-router.put('/paivitatenttialoitusaika', (req, res, next) => {
+router.put('/paivitatenttialoitusaika', middleware.vainAdmin, (req, res, next) => {
   db.query("UPDATE tentti SET tentin_aloitusaika = $2 WHERE tentti_id=$1 RETURNING tentin_aloitusaika;", 
   [req.body.tentti_id, req.body.päiväjaaika], (err, result) => {
     if (err) {
@@ -83,7 +95,7 @@ router.put('/paivitatenttialoitusaika', (req, res, next) => {
 })
 
 //päivitä tentin lopetusaika
-router.put('/paivitatenttilopetusaika', (req, res, next) => {
+router.put('/paivitatenttilopetusaika', middleware.vainAdmin, (req, res, next) => {
   db.query("UPDATE tentti SET tentin_lopetusaika = $2 WHERE tentti_id=$1 RETURNING tentin_lopetusaika;", 
   [req.body.tentti_id, req.body.päiväjaaika], (err, result) => {
     if (err) {

@@ -10,8 +10,8 @@ import axios from 'axios';
 import { TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-import {paivitaTenttiNimi, paivitaKysymysNimi, paivitaVastausNimi, poistaVastaus, 
-  poistaKysymys, lisääKysymys, lisääVastaus, lisääTentti, poistaTentti, paivitaOikeaVastaus, päivitäTentinAloitusaika, päivitäTentinLopetusaika} from './HttpKutsut';
+import {päivitäTenttiNimi, päivitäKysymysNimi, päivitäVastausNimi, poistaVastaus, 
+  poistaKysymys, lisääKysymys, lisääVastaus, lisääTentti, poistaTentti, päivitäOikeaVastaus, päivitäTentinAloitusaika, päivitäTentinLopetusaika} from './HttpKutsut';
 // Kehitettävää: 
 //aktiivisen tentin buttonille eri väri
 
@@ -121,6 +121,20 @@ export default function MuokkaaKysymyksiä(props) {
     })
   }
 
+  async function päivitäTämäOikeaVastaus(vastaus_id, valittu, indexK, indexV) {
+
+    päivitäOikeaVastaus(vastaus_id, valittu, token).then((result) => {
+      if (result != false){
+        let uusiAika = result.data
+        uusiAika = asetaAika(uusiAika)
+        props.dispatch({type: 'MUUTA_OIKEA_VASTAUS', data:{valittuV: valittu, indexKy: indexK, indexVa: indexV}})
+      }
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
+
+
   let dataM = props.tentti; //Alustetaan dataM kysymyksen mukaan
 
   function asetaAika(aika) {
@@ -139,12 +153,12 @@ export default function MuokkaaKysymyksiä(props) {
         <div key={"vastaukset" + itemV.vastaus_id}>
           {/*Checkbox oikean vastauksen asettamiselle*/}
           <label><Checkbox className="vastausCheckM" key={"muuta_ov" + itemV.vastaus_id} checked={itemV.oikea_vastaus} 
-            onChange={(e) => (props.dispatch({type: 'MUUTA_OIKEA_VASTAUS', data:{valittuV: e.target.checked, indexKy: indexK, indexVa: indexV}}, paivitaOikeaVastaus(itemV.vastaus_id, e.target.checked, token)))}/>
+            onChange={(e) => päivitäTämäOikeaVastaus(itemV.vastaus_id, e.target.checked, indexK, indexV)}/>
           </label>
           
           {/*Input vastauksen asettamiselle*/}
           <Input className="vastausM" defaultValue={itemV.vastaus} key={"muuta_v" + itemV.vastaus_id}
-            onBlur = {(e) => (paivitaVastausNimi(itemV.vastaus_id, e.target.value, token), 
+            onBlur = {(e) => (päivitäVastausNimi(itemV.vastaus_id, e.target.value, token), 
               props.dispatch({type: 'MUOKKAA_VASTAUSTA', data:{vastaus: e.target.value, indexKy: indexK, indexVa: indexV}}))}>
           </Input>
 
@@ -189,7 +203,7 @@ export default function MuokkaaKysymyksiä(props) {
 
       {/*Input tentin nimen muokkaamiseksi*/}
       <Input key={"tentti_input" + dataM.tentti_id} className="kysymysM" defaultValue={dataM.nimi} 
-        onBlur={(e) => (paivitaTenttiNimi(dataM.tentti_id, e.target.value, token), 
+        onBlur={(e) => (päivitäTenttiNimi(dataM.tentti_id, e.target.value, token), 
         props.dispatch({type: 'MUOKKAA_TENTTI', data:{nimi: e.target.value}}))}>
       </Input>
       <br></br>
@@ -241,7 +255,7 @@ export default function MuokkaaKysymyksiä(props) {
           <div>
             <Input className="kysymysM" 
               defaultValue={itemK.kysymys}
-              onBlur={(e) => (props.dispatch({type: 'MUOKKAA_KYSYMYSTÄ', data:{kysymys: e.target.value, indexKy: indexK}}), paivitaKysymysNimi(itemK.kysymys_id, e.target.value, token))}>
+              onBlur={(e) => (props.dispatch({type: 'MUOKKAA_KYSYMYSTÄ', data:{kysymys: e.target.value, indexKy: indexK}}), päivitäKysymysNimi(itemK.kysymys_id, e.target.value, token))}>
             </Input> 
 
             <Button className="poistoM" onClick={() => poistaTämäKysymys(itemK.kysymys_id, indexK)}>

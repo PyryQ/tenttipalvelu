@@ -257,27 +257,7 @@ app.get('/kayttajanvastaukset/:kayttaja_id/:vastaus_id', (req, res, next) => {
   })
 })
 
-//Käyttäjän rooli
-// app.get('/kayttajanrooli/:sahkoposti', (req, res, next) => {
-//   db.query("SELECT rooli FROM käyttäjä WHERE sähköposti = $1", 
-//   [req.params.sahkoposti], (err, result) => {
-//     if (err) {
-//       return next(err)
-//     }
-//     res.send(result.rows)
-//   })
-// })
 
-//Käyttäjän tiedot
-// app.get('/kayttajantiedot/:sahkoposti', (req, res, next) => {
-//   db.query("SELECT * FROM käyttäjä WHERE sähköposti = $1", 
-//   [req.params.sahkoposti], (err, result) => {
-//     if (err) {
-//       return next(err)
-//     }
-//     res.send(result.rows)
-//   })
-// })
 
 app.get('/kayttajantiedottokenista/:token', (req, res, next) => {
   let käyttäjänToken = req.params.token
@@ -341,14 +321,10 @@ app.post('/tarkistasalasana', (req, res, next) => {
       return next(err)
     }
 
-    // user = {
-    //   sähköposti: req.body.sahkoposti,
-    //   rooli: result.rows[0].rooli
-    // }
     try {
     bcrypt.compare(annettuSalasana, result.rows[0].salasana, function(err, resultB) {
       if (resultB){
-        const token = jwt.sign({ sähköposti: annettuSähköposti, rooli: result.rows[0].rooli }, 'sonSALAisuus');
+        const token = jwt.sign({ sähköposti: annettuSähköposti, rooli: result.rows[0].rooli }, 'sonSALAisuus', {expiresIn: '4h'});
         //res.cookie('jwt', jwt, { httpOnly: true, secure: true });
         return res.send(token)
         }
@@ -399,30 +375,6 @@ app.post('/kirjaudu', (req, res, next) => {
 
 //--------------------------------------------PUT----------------------------------------------
 
-
-
-
-//päivitä tentin aloitusaika
-app.put('/paivitatenttialoitusaika', (req, res, next) => {
-  db.query("UPDATE tentti SET tentin_aloitusaika = $2 WHERE tentti_id=$1 RETURNING tentin_aloitusaika;", 
-  [req.body.tentti_id, req.body.päiväjaaika], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(result.rows[0].tentin_aloitusaika)
-  })
-})
-
-//päivitä tentin lopetusaika
-app.put('/paivitatenttilopetusaika', (req, res, next) => {
-  db.query("UPDATE tentti SET tentin_lopetusaika = $2 WHERE tentti_id=$1 RETURNING tentin_lopetusaika;", 
-  [req.body.tentti_id, req.body.päiväjaaika], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(result.rows[0].tentin_lopetusaika)
-  })
-})
 
 
 

@@ -40,18 +40,6 @@ export default function Login(props) {
     event.preventDefault();
   }
 
-  // useEffect(()=>{
-  //   const tarkistaKirjautuminen = async () => {
-  //     if(käyttäjänSalasana != ""){
-  //       console.log("Salasanan tarkistukseen tullaan")
-  //       let tietokantaSalasana = await axios.get("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti +"/"+käyttäjänSalasana)
-  //       //let tietokantaSalasana = await axios.get("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti +"/"+käyttäjänSalasana)
-  //       setSalasananTarkistus(tietokantaSalasana.data[0].salasana)
-  //     }
-  //   }
-  //   tarkistaKirjautuminen()
-  //   },[tarkistaSalasana])
-
 
   const tarkistaKirjautuminen = async () => {
     if(käyttäjänSalasana != ""){

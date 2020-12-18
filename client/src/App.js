@@ -362,7 +362,7 @@ function App() {
   }
 
 
-  const käyttäjäOnAdmin = () => {
+  const käyttäjäOnAdmin = async () => {
     let onkoAdmin = false;
     if (käyttäjänToken != null && kirjauduttu){
       tarkistaKäyttäjänRooli(käyttäjänToken).then((result) =>{
@@ -386,10 +386,16 @@ function App() {
             <div>
             <Button color="inherit" edge="start" className={classes1.menuButton} onClick={() => setNäkymä(1)}>TENTIT</Button>
             <Button color="inherit" onClick={() => setNäkymä(5)}>Käyttäjä</Button>
-            <Button variant="contained" color="secondary" disabled={käyttäjäOnAdmin()} onClick={() => setNäkymä(2)}>Näytä kyselyn muokkaus</Button>
-            <Button variant="contained" color="secondary" onClick={() => setNäkymä(3)}>Demot</Button>
+
+            {käyttäjäOnAdmin() ?
+            <Button variant="contained" color="secondary" onClick={() => setNäkymä(2)}> Näytä kyselyn muokkaus</Button>
+             : null }
+            
+            {käyttäjäOnAdmin() ?
+            <Button variant="contained" color="secondary" onClick={() => setNäkymä(3)}> Demot</Button>
+            : null }
             <div className={classes1.spacer}/>
-            <Button color="inherit">POISTU</Button>
+            <Button color="inherit" onClick={() => (setKirjauduttuSisään(false), setKäyttäjänToken(null), setNäkymä(4))}>POISTU</Button>
             </div>
             : <div><Button color="inherit" edge="start" onClick={() => setNäkymä(4)}>Kirjaudu sisään</Button>
               <Button color="inherit" edge="start" onClick={() => setNäkymä(6)}>Luo käyttäjä</Button></div>}

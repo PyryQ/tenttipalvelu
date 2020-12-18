@@ -35,51 +35,52 @@ export default function MuokkaaKysymyksiä(props) {
     })
 }
 
-async function poistaTämäTentti() {
-  console.log("muokkaakysymyksiä" + token)
-  poistaTentti(dataM.tentti_id, token).then((result) => {
-    if (result != false){
-      props.dispatch({type: 'POISTA_TENTTI', data:{}});
-    }
-  }).catch((error) => {
-    console.log(error)
-  })
-}
-
-async function poistaTämäKysymys(kysymys_id, indexK) {
-
-  poistaKysymys(kysymys_id, token).then((result) => {
-    if (result != false){
-      props.dispatch({type: 'POISTA_KYSYMYS', data:{indexKy: indexK}});
-    }
-  }).catch((error) => {
-    console.log(error)
-  })
-}
-
-async function poistaTämäVastaus(vastaus_id, indexK, indexV) {
-
-  poistaVastaus(vastaus_id, token).then((result) => {
-    if (result != false){
-      props.dispatch({type: 'POISTA_VASTAUS', data:{indexKy: indexK, indexVa: indexV}});
-    }
-  }).catch((error) => {
-    console.log(error)
-  })
-}
-
-
-//Päivitetään tietokanta ja asetetaan vastauksen id staten päivittämistä varten
-async function lisääUusiKysymys(tentti_id) {
-  lisääKysymys(tentti_id, token).then((result) => {
-    if (result != false){
-      let kysymys_id = result
-      props.dispatch({type: 'LISÄÄ_KYSYMYS', data:{kysymys_id: kysymys_id}})
-    }
+  async function poistaTämäTentti() {
+    console.log("muokkaakysymyksiä" + token)
+    poistaTentti(dataM.tentti_id, token).then((result) => {
+      if (result != false){
+        props.asetaTentti(0)
+        props.dispatch({type: 'POISTA_TENTTI', data:{}});
+      }
     }).catch((error) => {
-    console.log(error)
-  })
-}
+      console.log(error)
+    })
+  }
+
+  async function poistaTämäKysymys(kysymys_id, indexK) {
+
+    poistaKysymys(kysymys_id, token).then((result) => {
+      if (result != false){
+        props.dispatch({type: 'POISTA_KYSYMYS', data:{indexKy: indexK}});
+      }
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
+
+  async function poistaTämäVastaus(vastaus_id, indexK, indexV) {
+
+    poistaVastaus(vastaus_id, token).then((result) => {
+      if (result != false){
+        props.dispatch({type: 'POISTA_VASTAUS', data:{indexKy: indexK, indexVa: indexV}});
+      }
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
+
+
+  //Päivitetään tietokanta ja asetetaan vastauksen id staten päivittämistä varten
+  async function lisääUusiKysymys(tentti_id) {
+    lisääKysymys(tentti_id, token).then((result) => {
+      if (result != false){
+        let kysymys_id = result
+        props.dispatch({type: 'LISÄÄ_KYSYMYS', data:{kysymys_id: kysymys_id}})
+      }
+      }).catch((error) => {
+      console.log(error)
+    })
+  }
 
   //Päivitetään tietokanta ja asetetaan vastauksen id staten päivittämistä varten
   async function lisääUusiVastaus(indexK, kysymys_id) {
@@ -95,12 +96,13 @@ async function lisääUusiKysymys(tentti_id) {
 
   async function muutaAloitusaika(päiväjaaika, tentti_id) {
 
-    päivitäTentinAloitusaika(päiväjaaika, tentti_id).then((result) => {
-      let uusiAika = result.data
-      uusiAika = asetaAika(uusiAika)
-      console.log(uusiAika)
-      props.dispatch({type: 'PÄIVITÄ_TENTIN_ALOITUSAIKA', data:{päiväjaaika: uusiAika}})
-    
+    päivitäTentinAloitusaika(päiväjaaika, tentti_id, token).then((result) => {
+      if (result != false){
+        let uusiAika = result.data
+        uusiAika = asetaAika(uusiAika)
+        console.log(uusiAika)
+        props.dispatch({type: 'PÄIVITÄ_TENTIN_ALOITUSAIKA', data:{päiväjaaika: uusiAika}})
+      }
     }).catch((error) => {
       console.log(error)
     })
@@ -108,12 +110,12 @@ async function lisääUusiKysymys(tentti_id) {
 
   async function muutaLopetusaika(päiväjaaika, tentti_id) {
 
-    päivitäTentinLopetusaika(päiväjaaika, tentti_id).then((result) => {
-      let uusiAika = result.data
-      uusiAika = asetaAika(uusiAika)
-      console.log(uusiAika)
-      props.dispatch({type: 'PÄIVITÄ_TENTIN_LOPETUSAIKA', data:{päiväjaaika: uusiAika}})
-    
+    päivitäTentinLopetusaika(päiväjaaika, tentti_id, token).then((result) => {
+      if (result != false){
+        let uusiAika = result.data
+        uusiAika = asetaAika(uusiAika)
+        props.dispatch({type: 'PÄIVITÄ_TENTIN_LOPETUSAIKA', data:{päiväjaaika: uusiAika}})
+      }
     }).catch((error) => {
       console.log(error)
     })

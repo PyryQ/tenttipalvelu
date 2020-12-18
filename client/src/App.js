@@ -46,7 +46,7 @@ function App() {
   const [dataAlustettu2, setDataAlustettu2] = useState(false) //Serveriä varten
 
   const [palautettu, setPalautettu] = useState(false) //Onko kysely palautettu
-  const [tenttiValinta, settenttiValinta] = useState(0) //Mikä tenteistä on valittu
+  const [tenttiValinta, setTenttiValinta] = useState(0) //Mikä tenteistä on valittu
   const [näkymä, setNäkymä] = useState(4) //Vastaus- vai muokkausnäkymä
   const [käyttäjänSähköposti, setKäyttäjänSähköposti] = useState(null)
   const [käyttäjänToken, setKäyttäjänToken] = useState(null)
@@ -329,7 +329,6 @@ function App() {
         }
         return syväKopioR
       case 'PÄIVITÄ_TENTIN_ALOITUSAIKA':
-        console.log(action.data.päiväjaaika)
         syväKopioR[tenttiValinta].tentin_aloitusaika = action.data.päiväjaaika
         return syväKopioR;
       case 'PÄIVITÄ_TENTIN_LOPETUSAIKA':
@@ -404,7 +403,7 @@ function App() {
         {näkymä === 1 || näkymä === 2 ? 
           <div>{state.map((arvo, index) => <BootstrapButton key={"kyselypainike" + index} variant="contained" color="primary" 
             disableRipple className={classesButton.margin} 
-            onClick={() => {settenttiValinta(index); setPalautettu(false);}}>{arvo.nimi}
+            onClick={() => {setTenttiValinta(index); setPalautettu(false);}}>{arvo.nimi}
             </BootstrapButton>)}
         <br/><br/>
         
@@ -423,6 +422,7 @@ function App() {
         {näkymä === 2 ?
           <Fade right><MuokkaaKysymyksiä 
             dispatch={dispatch}
+            asetaTentti={setTenttiValinta}
             tentti={state[tenttiValinta]}
             token = {käyttäjänToken}/>
             </Fade> : null}

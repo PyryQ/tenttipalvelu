@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 
+
 export async function paivitaTenttiNimi(tentti_id, nimi, token) {
     try{
       let result = await axios.put("http://localhost:4000/paivitys/paivitatenttiteksti", {tentti_id: tentti_id, nimi: nimi, token: token})
@@ -11,9 +12,9 @@ export async function paivitaTenttiNimi(tentti_id, nimi, token) {
     }
   }
 
-export async function päivitäTentinAloitusaika(päiväjaaika, tentti_id) {
+export async function päivitäTentinAloitusaika(päiväjaaika, tentti_id, token) {
   try{
-    let result = await axios.put("http://localhost:4000/paivitatenttialoitusaika", {päiväjaaika: päiväjaaika, tentti_id: tentti_id})
+    let result = await axios.put("http://localhost:4000/paivitys/paivitatenttialoitusaika", {päiväjaaika: päiväjaaika, tentti_id: tentti_id, token: token})
     return result;
   }
   catch(exception){
@@ -21,9 +22,9 @@ export async function päivitäTentinAloitusaika(päiväjaaika, tentti_id) {
   }
 }
 
-export async function päivitäTentinLopetusaika(päiväjaaika, tentti_id) {
+export async function päivitäTentinLopetusaika(päiväjaaika, tentti_id, token) {
   try{
-    let result = await axios.put("http://localhost:4000/paivitatenttilopetusaika", {päiväjaaika: päiväjaaika, tentti_id: tentti_id})
+    let result = await axios.put("http://localhost:4000/paivitys/paivitatenttilopetusaika", {päiväjaaika: päiväjaaika, tentti_id: tentti_id, token: token})
     return result;
   }
   catch(exception){

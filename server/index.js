@@ -108,13 +108,12 @@ app.post('/lisaakayttaja', (req, res, next) => {
 
   let annettuSähköposti = req.body.sahkoposti
   let annettuSalasana = req.body.salasana
-  console.log(req.body.rooli)
 
   try{
     db.query("INSERT INTO käyttäjä (etunimi, sukunimi, sähköposti, rooli) values ($1, $2, $3, $4) RETURNING sähköposti;", 
     [req.body.etunimi, req.body.sukunimi, req.body.sahkoposti, req.body.rooli], (err, result) => { 
       if (err) {
-        res.send(false) 
+        return res.send(false) 
       }
 
       bcrypt.hash(req.body.salasana, SALT_ROUNDS, (err, hash) => {
@@ -122,10 +121,10 @@ app.post('/lisaakayttaja', (req, res, next) => {
         [hash, annettuSähköposti], (err, result) => { 
           if (err) {
             // sähköposti on jo käytössä
-            res.send(false) 
+            return res.send(false) 
             //return next(error)
           }
-          res.send(result.rows[0].sähköposti) 
+          return res.send(true) 
         })
       });
 
@@ -426,17 +425,6 @@ app.put('/paivitatenttilopetusaika', (req, res, next) => {
 })
 
 
-//päivitä vastaus
-app.put('/paivitavastaus/:vastaus_id/:vastaus/:oikea_vastaus', (req, res, next) => {
-  db.query("UPDATE vastaus SET vastaus = $2, oikea_vastaus = 3$ WHERE vastaus_id = $1;", 
-  [req.params.vastaus_id, req.params.vastaus, req.params.oikea_vastaus], (err, result) => { 
-    if (err) {
-      return next(err)
-    }
-    res.send("Vastauksen päivitys onnistui")
-  })
-})
-
 
 //päivitä oikea vastaus
 app.put('/paivitaoikeavastaus', (req, res, next) => {
@@ -500,32 +488,6 @@ app.delete('/poistakayttaja/:sahkoposti', (req, res, next) => {
 })
 // http://localhost:4000/poistakayttaja/sahkopostit
 
-app.delete('/poistatentti/:tentti_id', (req, res, next) => {
-  db.query("DELETE FROM tentti WHERE tentti_id = $1;", [req.params.tentti_id], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(result)
-  })
-})
-
-app.delete('/poistakysymys/:kysymys_id', (req, res, next) => {
-  db.query("DELETE FROM kysymys WHERE kysymys_id=$1;", [req.params.kysymys_id], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(result)
-  })
-})
-
-app.delete('/poistavastaus/:vastaus_id', (req, res, next) => {
-  db.query("DELETE FROM vastaus WHERE vastaus_id =$1;", [req.params.vastaus_id], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(result)
-  })
-})
 
 app.delete('/poistakayttajantentti/:kayttaja_id/:tentti_id', (req, res, next) => {
   db.query("DELETE FROM kayttajantentti WHERE käyttäjä_id_fk = $2 AND tentti_id_fk = $1;", 

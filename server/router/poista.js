@@ -15,7 +15,6 @@ const SALT_ROUNDS = 9
 function vainAdmin (req, res, next){
     
     let onkoOikeidet = false
-    console.log("body ", req.body.token)
   
     jwt.verify(req.body.token, 'sonSALAisuus', function(err, decoded) {
       //voimassaoloaika

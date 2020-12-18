@@ -43,19 +43,18 @@ export default function Login(props) {
       alert("Salasanat eivät täsmää.");
     }
     else if (käyttäjänEtunimi != "" && käyttäjänSukunimi != "" &&  käyttäjänEtunimi.length > 0){
-      if (käyttäjänRooliTarkistus === "admin1234" || käyttäjänRooliTarkistus === "oppilas"){
-        if (käyttäjänRooliTarkistus === "admin1234"){
+      if (käyttäjänRooliTarkistus == "admin1234" || käyttäjänRooliTarkistus == "oppilas"){
+        if (käyttäjänRooliTarkistus == "admin1234"){
           setKäyttäjänRooli("admin")
         }
-        else setKäyttäjänRooli("oppilas")
+        else {setKäyttäjänRooli("oppilas")}
 
         let käyttäjänTiedot = {etunimi: käyttäjänEtunimi, sukunimi: käyttäjänSukunimi, sahkoposti: käyttäjänSähköposti, rooli: käyttäjänRooli, salasana: käyttäjänSalasana}
         let tietokantaKäyttäjä = await axios.post("http://localhost:4000/lisaakayttaja", käyttäjänTiedot)
         if (tietokantaKäyttäjä.data == null || tietokantaKäyttäjä.data == "" || tietokantaKäyttäjä.data == undefined || tietokantaKäyttäjä.data == false){
           alert("Jokin meni pieleen.")
         }
-        
-        alert("Käyttäjän luonti onnistui!")
+        else {alert("Käyttäjän luonti onnistui!")}
       }
       else alert("Roolin asettaminen ei onnistunut")
     }
@@ -84,7 +83,7 @@ export default function Login(props) {
   return (
     // Sisäänkirjautumisen form
     <div className="Login">
-      <Form onSubmit={handleSubmit}>
+      {/* <Form onSubmit={handleSubmit}>
         <Form.Group size="lg" controlId="text">
           <Form.Label>Etunimi: </Form.Label>
           <Form.Control
@@ -144,7 +143,7 @@ export default function Login(props) {
         <Button block size="lg" type="submit" onClick={() => luoKäyttäjä()}>
           Luo käyttäjä
         </Button>
-      </Form>
+      </Form> */}
 
 
       <div>

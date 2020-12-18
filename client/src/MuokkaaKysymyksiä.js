@@ -35,6 +35,40 @@ export default function MuokkaaKysymyksiä(props) {
     })
 }
 
+async function poistaTämäTentti() {
+  console.log("muokkaakysymyksiä" + token)
+  poistaTentti(dataM.tentti_id, token).then((result) => {
+    if (result != false){
+      props.dispatch({type: 'POISTA_TENTTI', data:{}});
+    }
+  }).catch((error) => {
+    console.log(error)
+  })
+}
+
+async function poistaTämäKysymys(kysymys_id, indexK) {
+
+  poistaKysymys(kysymys_id, token).then((result) => {
+    if (result != false){
+      props.dispatch({type: 'POISTA_KYSYMYS', data:{indexKy: indexK}});
+    }
+  }).catch((error) => {
+    console.log(error)
+  })
+}
+
+async function poistaTämäVastaus(vastaus_id, indexK, indexV) {
+
+  poistaVastaus(vastaus_id, token).then((result) => {
+    if (result != false){
+      props.dispatch({type: 'POISTA_VASTAUS', data:{indexKy: indexK, indexVa: indexV}});
+    }
+  }).catch((error) => {
+    console.log(error)
+  })
+}
+
+
 //Päivitetään tietokanta ja asetetaan vastauksen id staten päivittämistä varten
 async function lisääUusiKysymys(tentti_id) {
   lisääKysymys(tentti_id, token).then((result) => {
@@ -114,7 +148,7 @@ async function lisääUusiKysymys(tentti_id) {
 
           {/*Button vastauksen poistamiselle*/}
           <Button className="vastausPoisto" key={"poista_v" + itemV.vastaus_id}
-            onClick={() => (poistaVastaus(itemV.vastaus_id, token), props.dispatch({type: 'POISTA_VASTAUS', data:{indexKy: indexK, indexVa: indexV}}))}>
+            onClick={() => poistaTämäVastaus(itemV.vastaus_id, indexK, indexV)}>
           <DeleteIcon/></Button>
         </div>)}
 
@@ -163,8 +197,7 @@ async function lisääUusiKysymys(tentti_id) {
       <Button className="poistaTT" 
         onClick={() => {
           if (window.confirm("Poistetaanko " + dataM.nimi)){
-            poistaTentti(dataM.tentti_id, token);
-            props.dispatch({type: 'POISTA_TENTTI', data:{}});
+            poistaTämäTentti();
           }
         }}>
         <DeleteIcon/>Poista {dataM.nimi}</Button>
@@ -209,7 +242,7 @@ async function lisääUusiKysymys(tentti_id) {
               onBlur={(e) => (props.dispatch({type: 'MUOKKAA_KYSYMYSTÄ', data:{kysymys: e.target.value, indexKy: indexK}}), paivitaKysymysNimi(itemK.kysymys_id, e.target.value, token))}>
             </Input> 
 
-            <Button className="poistoM" onClick={() => (props.dispatch({type: 'POISTA_KYSYMYS', data:{indexKy: indexK}}), poistaKysymys(itemK.kysymys_id))}>
+            <Button className="poistoM" onClick={() => poistaTämäKysymys(itemK.kysymys_id, indexK)}>
               <DeleteIcon/></Button>
             
             {näytäVaihtoehdot(itemK, indexK)}

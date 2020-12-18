@@ -45,7 +45,6 @@ const BCRYPT_SALT_ROUNDS = 12;
 var lisays = require('./router/lisays.js');
 app.use('/lisays', lisays);
 
-
 var paivitys = require('./router/paivitys.js');
 app.use('/paivitys', paivitys);
 

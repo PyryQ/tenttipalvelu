@@ -59,7 +59,7 @@ router.post('/lisaatentti/:token', middleware.vainAdmin, (req, res, next) => {
       if (err) {
         return next(err)
       }
-      return es.send(result.rows[0].kysymys_id)
+      return res.send(result.rows[0].kysymys_id)
     })
   
   })

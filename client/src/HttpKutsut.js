@@ -64,18 +64,21 @@ export async function paivitaOikeaVastaus(vastaus_id, onkoOikein) {
 
 //-----------------------------------DELETE--------------------------------
 
-export async function poistaTentti(tentti_id) {
+export async function poistaTentti(tentti_id, token) {
+  console.log(token)
     try{
-      let result = await axios.delete("http://localhost:4000/poistatentti/" + tentti_id)
+      let result = await axios.delete("http://localhost:4000/poista/poistatentti", {data: {tentti_id: tentti_id, token: token}})
+      return result
     }
     catch(exception){
       console.log("Vastausta ei onnistuttu poistamaan.")
     }
   }
 
-export async function poistaKysymys(kysymys_id) {
+export async function poistaKysymys(kysymys_id, token) {
   try{
-    let result = await axios.delete("http://localhost:4000/poistakysymys/" + kysymys_id)
+    let result = await axios.delete("http://localhost:4000/poista/poistakysymys", {data: {kysymys_id: kysymys_id, token: token}})
+    return result
   }
   catch(exception){
     console.log("Vastausta ei onnistuttu poistamaan.")
@@ -84,7 +87,8 @@ export async function poistaKysymys(kysymys_id) {
 
 export async function poistaVastaus(vastaus_id, token) {
   try{
-    let result = await axios.delete("http://localhost:4000/poistavastaus/" + vastaus_id)
+    let result = await axios.delete("http://localhost:4000/poista/poistavastaus", {data: {vastaus_id: vastaus_id, token: token}})
+    return result
   }
   catch(exception){
     console.log("Vastausta ei onnistuttu poistamaan.")

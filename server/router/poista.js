@@ -12,29 +12,30 @@ const SALT_ROUNDS = 9
 
 
 
-var middleware = {
-    vainAdmin: function (req, res, next){
+function vainAdmin (req, res, next){
     
-      let onkoOikeidet = false;
-      console.log("tarkistustoken " + req.params.token)
+    let onkoOikeidet = false
+    console.log("body ", req.body.token)
   
-      jwt.verify(req.params.token, 'sonSALAisuus', function(err, decoded) {
-        //voimassaoloaika
-        if (decoded.rooli === "admin"){
-          onkoOikeidet = true;
-        }
-      });
-  
-      if (onkoOikeidet){
-        next()
+    jwt.verify(req.body.token, 'sonSALAisuus', function(err, decoded) {
+      //voimassaoloaika
+      if (decoded.rooli === "admin"){
+        onkoOikeidet = true;
       }
-      else return res.send(false)
+    });
+  
+    if (onkoOikeidet){
+      next()
     }
+    else return res.send(false)
   }
 
 
-router.delete('/poistatentti/:tentti_id', (req, res, next) => {
-    db.query("DELETE FROM tentti WHERE tentti_id = $1;", [req.params.tentti_id], (err, result) => {
+
+router.delete('/poistatentti', vainAdmin, (req, res, next) => {
+    
+    db.query("DELETE FROM tentti WHERE tentti_id = $1;", 
+    [req.body.tentti_id], (err, result) => {
       if (err) {
         return next(err)
       }
@@ -42,8 +43,9 @@ router.delete('/poistatentti/:tentti_id', (req, res, next) => {
     })
   })
   
-router.delete('/poistakysymys/:kysymys_id', (req, res, next) => {
-    db.query("DELETE FROM kysymys WHERE kysymys_id=$1;", [req.params.kysymys_id], (err, result) => {
+router.delete('/poistakysymys', vainAdmin, (req, res, next) => {
+    db.query("DELETE FROM kysymys WHERE kysymys_id=$1;", 
+    [req.body.kysymys_id], (err, result) => {
       if (err) {
         return next(err)
       }
@@ -51,8 +53,9 @@ router.delete('/poistakysymys/:kysymys_id', (req, res, next) => {
     })
   })
   
-router.delete('/poistavastaus/:vastaus_id', (req, res, next) => {
-    db.query("DELETE FROM vastaus WHERE vastaus_id =$1;", [req.params.vastaus_id], (err, result) => {
+router.delete('/poistavastaus', vainAdmin, (req, res, next) => {
+    db.query("DELETE FROM vastaus WHERE vastaus_id =$1;", 
+    [req.body.vastaus_id], (err, result) => {
       if (err) {
         return next(err)
       }

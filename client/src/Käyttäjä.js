@@ -3,20 +3,6 @@ import {useEffect, useState, useReducer} from 'react';
 import { Input } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 
-//useMemo-hahmottelua
-  // //https://www.digitalocean.com/community/tutorials/react-usememo
-  //https://www.robinwieruch.de/react-usememo-hook
-  //https://reactjs.org/docs/react-api.html#reactmemo
-  //https://dmitripavlutin.com/use-react-memo-wisely/
-  // const KysymysMemo = React.memo(Kysymys, vertaa) => {
-  //
-  //}
-  // vertaa(previousProps, nextProps){
-  //   a = previousProps.index == nextProps.index
-  //   b = previousProps.teksti == nextProps.teksti
-  //   return a&&b
-  // }
-
 export default function Käyttäjä(props) {
   const [käyttäjänEtunimi, setKäyttäjänEtunimi]=useState("") //Käytettiin datan käsittelyssä ennen statea
   const [käyttäjänSukunimi, setKäyttäjänSukunimi]=useState("") //Serveriä varten

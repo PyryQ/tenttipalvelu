@@ -40,82 +40,19 @@ import { tarkistaKäyttäjänRooli } from './HttpKutsut';
 
 function App() {
 
-  const [data1, setData]=useState([]) //Käytettiin datan käsittelyssä ennen statea
-  const [data2, setData2]=useState([]) //Serveriä varten
   const [dataAlustettu, setDataAlustettu] = useState(false) //Onko data alustettu
-  const [dataAlustettu2, setDataAlustettu2] = useState(false) //Serveriä varten
 
   const [palautettu, setPalautettu] = useState(false) //Onko kysely palautettu
   const [tenttiValinta, setTenttiValinta] = useState(0) //Mikä tenteistä on valittu
   const [näkymä, setNäkymä] = useState(4) //Vastaus- vai muokkausnäkymä
   const [käyttäjänSähköposti, setKäyttäjänSähköposti] = useState(null)
   const [käyttäjänToken, setKäyttäjänToken] = useState(null)
-  const [käyttäjänRooli, setKäyttäjänRooli] = useState(null)
+
 
   const [kirjauduttuSisään, setKirjauduttuSisään] = useState(false)
 
   //Alkuperäinen taulukko kyselyistä ja niiden vastauksista
   const kyselyt = []
-
-
-  const kyselytkopio = [
-    {uid: uuid(), nimi: "Numerovisa", kysely: [
-      {uid: uuid(), kysymys: "Kuinka monta ihmistä on käynyt kuussa?", vastaukset: [
-        {uid: uuid(), vastaus: "0", valittu: false, oikea_vastaus: false}, 
-        {uid: uuid(), vastaus: "12", valittu: false, oikea_vastaus: true}, 
-        {uid: uuid(), vastaus: "15", valittu: false, oikea_vastaus: false}
-        ]},
-      {uid: uuid(), kysymys: "Kuinka monta sanaa Potter-kirjasarjan suomennoksissa on yhteensä?", vastaukset: [
-        {uid: uuid(), vastaus: "857 911", valittu: false, oikea_vastaus: true}, 
-        {uid: uuid(), vastaus: "955 543", valittu: false, oikea_vastaus: false}, 
-        {uid: uuid(), vastaus: "1 100 438", valittu: false, oikea_vastaus: false}, 
-        {uid: uuid(), vastaus: "1 204 539", valittu: false, oikea_vastaus: false}
-        ]},
-      {uid: uuid(), kysymys: "Mikä seuraavista luvuista on lähinnä Tanskan asukasmäärää?", vastaukset: [
-        {uid: uuid(), vastaus: "5,2 miljoonaa", valittu: false, oikea_vastaus: false}, 
-        {uid: uuid(), vastaus: "5,6 miljoonaa", valittu: false, oikea_vastaus: false}, 
-        {uid: uuid(), vastaus: "5,8 miljoonaa", valittu: false, oikea_vastaus: true}
-        ]}]
-    },
-    {uid: uuid(), nimi: "Kirjainvisa", kysely: [
-      {uid: uuid(), kysymys: "Mikä YMCA on suomeksi?", vastaukset: [
-          {uid: uuid(), vastaus: "YMKY", valittu: false, oikea_vastaus: false}, 
-          {uid: uuid(), vastaus: "NMKY", valittu: false, oikea_vastaus: true}, 
-          {uid: uuid(), vastaus: "MNKY", valittu: false, oikea_vastaus: false}
-        ]},
-        {uid: uuid(), kysymys: "Mikä seuraavista on GIF?", vastaukset: [
-          {uid: uuid(), vastaus: "graph iteration format", valittu: false, oikea_vastaus: false}, 
-          {uid: uuid(), vastaus: "graphics interchange format", valittu: false, oikea_vastaus: true}, 
-          {uid: uuid(), vastaus: "george iliott format", valittu: false, oikea_vastaus: false}
-        ]},
-        {uid: uuid(), kysymys: "Kuka on oikea_vastaus Ben?", vastaukset: [
-          {uid: uuid(), vastaus: "Ben Zysgowicz", valittu: false, oikea_vastaus: false}, 
-          {uid: uuid(), vastaus: "Ben Zyscowicz", valittu: false, oikea_vastaus: true}, 
-          {uid: uuid(), vastaus: "Ben Zyskowicz", valittu: false, oikea_vastaus: false},
-          {uid: uuid(), vastaus: "Ben Zysćowicz", valittu: false, oikea_vastaus: false}
-        ]}]
-      },
-      {uid: uuid(), nimi: "Merkkivisa", kysely: [
-        {uid: uuid(), kysymys: "Mikä seuraavista shakkipelin merkinnöistä tarkoittaa 'arveluttava siirto, mutta ei suoraan osoitettavissa virheeksi'?", vastaukset: [
-            {uid: uuid(), vastaus: "?", valittu: false, oikea_vastaus: false}, 
-            {uid: uuid(), vastaus: "??", valittu: false, oikea_vastaus: false}, 
-            {uid: uuid(), vastaus: "?!", valittu: false, oikea_vastaus: true},
-            {uid: uuid(), vastaus: "!?", valittu: false, oikea_vastaus: false}
-           ]},
-          {uid: uuid(), kysymys: "Mikä ‽ on englanninkieliseltä nimeltään?", vastaukset: [
-            {uid: uuid(), vastaus: "Interrobang", valittu: false, oikea_vastaus: true}, 
-            {uid: uuid(), vastaus: "Sulivabang", valittu: false, oikea_vastaus: false}, 
-            {uid: uuid(), vastaus: "Guessbang", valittu: false, oikea_vastaus: false}
-          ]},
-          {uid: uuid(), kysymys: "Mitä matemaattinen merkki ∂ tarkoittaa?", vastaukset: [
-            {uid: uuid(), vastaus: "Tyhjä joukko", valittu: false, oikea_vastaus: false}, 
-            {uid: uuid(), vastaus: "Normaali aliryhmä", valittu: false, oikea_vastaus: true}, 
-            {uid: uuid(), vastaus: "Gradientti", valittu: false, oikea_vastaus: false},
-            {uid: uuid(), vastaus: "Osittaisderivaatta", valittu: false, oikea_vastaus: false}
-          ]}
-        ]
-      }
-    ]
 
   // Alustetaan state ja reducer kyselyn avulla
   const [state, dispatch] = useReducer(reducer, kyselyt);
@@ -125,16 +62,7 @@ function App() {
     ////////////////////////////POST
     const createData = async () => {
       try{
-        // let result = await axios.post("http://localhost:4000/tentit", result.data)
-        // console.log(result.data.nimi)
-        // if (result.data.length > 0)
-        // for (var i = 0; i < result.data.length; i++){
-        //   result.data[i].kysely = await axios.post("http://localhost:4000/kysymykset/" + result.data[i].tentti_id)
-        // }
-        // console.log(result.data)
-        // dispatch({type: "INIT_DATA", data: result.data})
-        // setData2(result.data)
-        // setDataAlustettu2(true)
+
       }
       catch(exception){
         alert("Tietokannan alustaminen epäonnistui (Post)")
@@ -231,56 +159,7 @@ function App() {
   }, [state])
 
 
-  ////////////////////////////////MUOTOILUA
-
-  //useStyles yläpalkin muotoilua varten
-  const useStyles = makeStyles((theme) => ({
-    root: {
-      flexGrow: 1,
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-    title: {
-      flexGrow: 1,
-    },
-    spacer: {
-      flexGrow: 1,
-    }
-  }));
-  const classes1 = useStyles();
-
-  //Valmis painike fokuksen testaamiseksi
-  const BootstrapButton = withStyles({
-    root: {
-      boxShadow: 'none',
-      textTransform: 'none',
-      fontSize: 16,
-      padding: '6px 12px',
-      border: '1px solid',
-      lineHeight: 1.5,
-      backgroundColor: '#3f51b5',
-      '&:hover': {
-        backgroundColor: '#0069d9',
-        borderColor: '#0062cc',
-      },
-      '&:active': {
-        backgroundColor: '#0062cc',
-        borderColor: '#005cbf',
-      },
-      '&:focus': {
-        boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
-      } 
-    },
-  })(Button);
-  const classesButton = useStyles();
-
-  
-
-    
-
-
-  ///////////////////////////REDUCER
+  //--------------------------------------REDUCER
   
   function reducer(state, action) { //data tai state
     //ReferenceError: Cannot access 'syväKopio' before initialization
@@ -340,25 +219,17 @@ function App() {
   }
 
   
-//Kirjautumisen, roolin ja käyttäjän tietojen hallinnointia
+//--------Kirjautumisen, roolin ja käyttäjän tietojen hallinnointia
 
+  // Tarkistaa onko kirjauduttu
   const kirjauduttu = (onkoKirjauduttu) => {
     setKirjauduttuSisään(onkoKirjauduttu)
     setNäkymä(1)
   }
 
-  const asetaSähköposti = (sähköposti) => {
-    setKäyttäjänSähköposti(sähköposti)
-  }
 
   const asetaToken = (token) => {
     setKäyttäjänToken(token)
-    console.log("käyttäjän token, " + token)
-  }
-
-  const asetaRooli = (rooli) => {
-    setKäyttäjänRooli(rooli)
-    console.log("käyttäjän rooli, " + rooli)
   }
 
 
@@ -376,6 +247,51 @@ function App() {
   }
 
 
+//------------------------------------------MUOTOILUA
+
+  //useStyles yläpalkin muotoilua varten
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      flexGrow: 1,
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+    },
+    title: {
+      flexGrow: 1,
+    },
+    spacer: {
+      flexGrow: 1,
+    }
+  }));
+  const classes1 = useStyles();
+
+  //Valmis painike fokuksen testaamiseksi
+  const BootstrapButton = withStyles({
+    root: {
+      boxShadow: 'none',
+      textTransform: 'none',
+      fontSize: 16,
+      padding: '6px 12px',
+      border: '1px solid',
+      lineHeight: 1.5,
+      backgroundColor: '#3f51b5',
+      '&:hover': {
+        backgroundColor: '#0069d9',
+        borderColor: '#0062cc',
+      },
+      '&:active': {
+        backgroundColor: '#0062cc',
+        borderColor: '#005cbf',
+      },
+      '&:focus': {
+        boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
+      } 
+    },
+  })(Button);
+  const classesButton = useStyles();
+
+
   return (
     <div>
       {/*Yläpalkki navigointipainikkeineen*/}
@@ -384,21 +300,36 @@ function App() {
           <Toolbar>
             {kirjauduttuSisään ?
             <div>
-            <Button color="inherit" edge="start" className={classes1.menuButton} onClick={() => setNäkymä(1)}>TENTIT</Button>
-            <Button color="inherit" onClick={() => setNäkymä(5)}>Käyttäjä</Button>
+            <Button color="inherit" 
+              edge="start" className={classes1.menuButton} 
+              onClick={() => setNäkymä(1)}>TENTIT</Button>
+
+            <Button color="inherit" 
+              onClick={() => setNäkymä(5)}>Käyttäjä</Button>
 
             {käyttäjäOnAdmin() ?
-            <Button variant="contained" color="secondary" onClick={() => setNäkymä(2)}> Näytä kyselyn muokkaus</Button>
+            <Button variant="contained" color="secondary" 
+              onClick={() => setNäkymä(2)}> Näytä kyselyn muokkaus</Button>
              : null }
             
             {käyttäjäOnAdmin() ?
-            <Button variant="contained" color="secondary" onClick={() => setNäkymä(3)}> Demot</Button>
+              <Button variant="contained" color="secondary" 
+                onClick={() => setNäkymä(3)}> Demot</Button>
             : null }
             <div className={classes1.spacer}/>
-            <Button color="inherit" onClick={() => (setKirjauduttuSisään(false), setKäyttäjänToken(null), setNäkymä(4))}>POISTU</Button>
+
+            <Button color="inherit" 
+              onClick={() => (setKirjauduttuSisään(false), 
+                              setKäyttäjänToken(null), 
+                              setNäkymä(4))}>POISTU</Button>
             </div>
-            : <div><Button color="inherit" edge="start" onClick={() => setNäkymä(4)}>Kirjaudu sisään</Button>
-              <Button color="inherit" edge="start" onClick={() => setNäkymä(6)}>Luo käyttäjä</Button></div>}
+            : <div>
+              <Button color="inherit" edge="start" 
+                onClick={() => setNäkymä(4)}>Kirjaudu sisään</Button>
+
+              <Button color="inherit" edge="start" 
+              onClick={() => setNäkymä(6)}>Luo käyttäjä</Button>
+            </div>}
           </Toolbar>
       </AppBar>
       </div>
@@ -407,9 +338,13 @@ function App() {
       <div>
         {/*Painikkeet kyselyn valintaa varten*/}
         {näkymä === 1 || näkymä === 2 ? 
-          <div>{state.map((arvo, index) => <BootstrapButton key={"kyselypainike" + index} variant="contained" color="primary" 
-            disableRipple className={classesButton.margin} 
-            onClick={() => {setTenttiValinta(index); setPalautettu(false);}}>{arvo.nimi}
+          <div>{state.map((arvo, index) => 
+            <BootstrapButton 
+              key={"kyselypainike" + index} 
+              variant="contained" 
+              color="primary" 
+              disableRipple className={classesButton.margin} 
+              onClick={() => {setTenttiValinta(index); setPalautettu(false);}}>{arvo.nimi}
             </BootstrapButton>)}
         <br/><br/>
         
@@ -446,14 +381,14 @@ function App() {
         </div> : null}
 
         {näkymä === 4 ?
-          <Login kirjautuminen = {kirjauduttu} käyttäjänOsoite = {asetaSähköposti} asetaToken = {asetaToken} käyttäjänRooli = {asetaRooli}/> : null
+          <Login kirjautuminen = {kirjauduttu} asetaToken = {asetaToken}/> : null
         }
 
         {näkymä === 5 ?
-        <Käyttäjä sähköposti = {käyttäjänSähköposti} käyttäjänToken = {käyttäjänToken}/> : null}
+        <Käyttäjä käyttäjänToken = {käyttäjänToken}/> : null}
 
         {näkymä === 6 ?
-        <LuoKäyttäjä kirjautuminen = {kirjauduttu} käyttäjänOsoite = {asetaSähköposti}/> : null}
+        <LuoKäyttäjä/> : null}
         <br></br>
         </div>
       </div>

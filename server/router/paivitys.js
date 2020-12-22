@@ -68,6 +68,39 @@ router.put('/paivitavastausteksti', middleware.vainAdmin, (req, res, next) => {
     })
   })
 
+  //Päivitä käyttäjän vastaus
+router.put('/paivitakayttajanvastaus', middleware.vainAdmin, (req, res, next) => {
+  
+  let käyttäjänSähköposti
+  let käyttäjän_id
+
+  jwt.verify(req.body.token, 'sonSALAisuus', function(err, decoded) {
+    //voimassaoloaika
+    if (err){
+      return res.send(false)
+    }
+    käyttäjänSähköposti = decoded.sähköposti
+  });
+
+  db.query("SELECT käyttäjä_id WHERE sähköposti = $1", 
+  [käyttäjänSähköposti], (err, result) => { 
+      if (err) {
+        return res.send(false)
+    }
+    console.log("käyttäjä_id: " + result.rows[0].käyttäjä_id)
+    käyttäjän_id = result.rows[0].käyttäjä_id
+  })
+
+  
+  db.query("INSERT INTO käyttäjänvastaus (käyttäjä_id_fk, vastaus_id_fk, käyttäjän_valinta) values ($1, $2, $3)", 
+  [käyttäjän_id, req.body.vastaus_id, req.body.vastaus], (err, result) => { 
+      if (err) {
+        return res.send(false)
+    }
+    res.send("Vastauksen päivitys onnistui.")
+  })
+})
+
 
 //päivitä oikea vastaus
 router.put('/paivitaoikeavastaus', middleware.vainAdmin, (req, res, next) => {

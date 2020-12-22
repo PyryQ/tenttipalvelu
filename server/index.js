@@ -325,7 +325,6 @@ app.post('/tarkistasalasana', (req, res, next) => {
     bcrypt.compare(annettuSalasana, result.rows[0].salasana, function(err, resultB) {
       if (resultB){
         const token = jwt.sign({ sähköposti: annettuSähköposti, rooli: result.rows[0].rooli }, 'sonSALAisuus', {expiresIn: '4h'});
-        //res.cookie('jwt', jwt, { httpOnly: true, secure: true });
         return res.send(token)
         }
       });

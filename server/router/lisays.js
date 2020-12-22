@@ -75,5 +75,55 @@ router.post('/lisaatentti/:token', middleware.vainAdmin, (req, res, next) => {
   
   })
 
+  router.post('/lisaakayttajanvastaus/:vastaus_id/:vastaus/:token', middleware.vainAdmin, (req, res, next) => {
+  
+    console.log("käyttäjän vastauksen lisäys")
+    let käyttäjänSähköposti
+    var käyttäjänId
+  
+    //Käyttäjän sähköposti tokenista
+    jwt.verify(req.params.token, 'sonSALAisuus', function(err, decoded) {
+      //voimassaoloaika
+      if (err){
+        return res.send(false)
+      }
+      console.log(decoded.sähköposti)
+      käyttäjänSähköposti = decoded.sähköposti
+    });
+
+  
+    db.query("SELECT käyttäjä_id FROM käyttäjä WHERE sähköposti = $1", 
+    [käyttäjänSähköposti], (err, result) => { 
+        if (err) {
+          return res.send(false)
+      }
+      console.log("käyttäjä_id query: " + result.rows[0].käyttäjä_id)
+      käyttäjänId = result.rows[0].käyttäjä_id
+
+
+      db.query("INSERT INTO käyttäjänvastaus (käyttäjä_id_fk, vastaus_id_fk, käyttäjän_valinta) values ($1, $2, $3)", 
+      [käyttäjänId, req.params.vastaus_id, req.params.vastaus], (err, result) => { 
+          if (err) {
+            return res.send(false)
+        }
+        res.send("Vastauksen päivitys onnistui.")
+      })
+
+    })
+
+  
+    
+    // db.query("INSERT INTO käyttäjänvastaus (käyttäjä_id_fk, vastaus_id_fk, käyttäjän_valinta) values ($1, $2, $3)", 
+    // [käyttäjänId, req.params.vastaus_id, req.params.vastaus], (err, result) => { 
+    //     if (err) {
+    //       return res.send(false)
+    //   }
+    //   res.send("Vastauksen päivitys onnistui.")
+    // })
+  })
+
+
+
+
 
   module.exports = router;

@@ -52,6 +52,16 @@ export async function päivitäVastausNimi(vastaus_id, vastaus, token) {
   }
 }
 
+export async function lisääKäyttäjänVastaus(vastaus_id, vastaus, token) {
+  try{
+    let result = await axios.post("http://localhost:4000/lisays/lisaakayttajanvastaus/" + vastaus_id + "/" + vastaus + "/" + token)
+    return result;
+  }
+  catch(exception){
+    console.log("Vastausta ei onnistuttu päivittämään.")
+  }
+}
+
 export async function päivitäOikeaVastaus(vastaus_id, onkoOikein, token) {
   try{
     let result = await axios.put("http://localhost:4000/paivitaoikeavastaus", {vastaus_id: vastaus_id, oikein: onkoOikein, token: token})

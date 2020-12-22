@@ -5,6 +5,7 @@ import { green } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
+import {lisääKäyttäjänVastaus} from './HttpKutsut'
 
 //Luodaan GreenCheckBox oikeita vastauksia varten
 const GreenCheckbox = withStyles({
@@ -47,15 +48,15 @@ export default function TulostaKysymykset(props) {
     }
   }
 
-  const päivitäKäyttäjänVastaus = (vastaus, indexV) =>{
-    try{
-      //käyttäjäid, vastaus
+  const lisääTämäKäyttäjänVastaus = (vastaus, vastaus_id, indexK, indexV) =>{
 
-  }
-    catch{
-      alert("Vastausten tarkistus epäonnistui")
-      return null
-    }
+      lisääKäyttäjänVastaus(vastaus_id, vastaus, token).then((result) => {
+        if (result != false){
+          props.dispatch({type: 'VASTAUS_VALITTU', data:{valittuV: vastaus, indexKy: indexK, indexVa: indexV}})
+        }
+      }).catch((error) => {
+        console.log(error)
+      })
   }
 
   //Tulostetaan vaihtoehdot sen mukaan, onko vastaukset palautettu
@@ -73,7 +74,7 @@ export default function TulostaKysymykset(props) {
             className="kysymys" 
             key={"checkbox" +  itemV.vastaus_id} 
             checked={itemV.valittu} 
-            onChange={(e) => (päivitäKäyttäjänVastaus(), props.dispatch({type: 'VASTAUS_VALITTU', data:{valittuV:e.target.checked, indexKy: indexK, indexVa: indexV}}))}/>
+            onChange={(e) => (lisääTämäKäyttäjänVastaus(e.target.checked, itemV.vastaus_id, indexK, indexV))}/>
           {itemV.vastaus} 
         </label>
 

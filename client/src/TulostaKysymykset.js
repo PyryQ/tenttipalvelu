@@ -5,7 +5,7 @@ import { green } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
-import {lisääKäyttäjänVastaus} from './HttpKutsut'
+import {lisääKäyttäjänVastaus, lisääKäyttäjänKysymyksenTulos} from './HttpKutsut'
 
 //Luodaan GreenCheckBox oikeita vastauksia varten
 const GreenCheckbox = withStyles({
@@ -24,24 +24,28 @@ export default function TulostaKysymykset(props) {
   //Alustetaan kysymysten tulostusta varten dataT
   let dataT = props.kysymys
   //Tarkistetaan, ettei appia käynnistettäessä kartoiteta tyhjää listaa
-  if (dataT.kysely == null){
+  if (dataT.kysely === null || dataT.kysely === undefined){
     dataT.kysely = [];
   }
   let palautettu = props.palautettu;
 
-  const vastaustenTarkistus = (index) =>{
+  const vastaustenTarkistus = (kysymys_id, indexK) =>{
+
+    console.log("kysymys id " + kysymys_id)
     try{
-      let tarkistus = dataT.kysely[index].vastaukset
-      console.log(tarkistus.length)
+      let tarkistus = dataT.kysely[indexK].vastaukset
       if (tarkistus.length !== 0){
-      for (var i = 0; i < tarkistus.length; i++){
-        if (tarkistus[i].oikea_vastaus !== tarkistus[i].valittu){
-          return (<CloseIcon/>);
+        for (var i = 0; i < tarkistus.length; i++){
+          if (tarkistus[i].oikea_vastaus !== tarkistus[i].valittu){
+
+            lisääKäyttäjänKysymyksenTulos(kysymys_id, false, token)
+            return (<CloseIcon/>);
+          }
         }
-      }
-      return (<CheckIcon/>);
+        lisääKäyttäjänKysymyksenTulos(kysymys_id, true, token)
+        return (<CheckIcon/>);
+      } 
     }
-  }
     catch{
       alert("Vastausten tarkistus epäonnistui")
       return null
@@ -101,14 +105,14 @@ export default function TulostaKysymykset(props) {
 
   return (dataT.kysely !== undefined ? (
   <div className="tulostusosio">
-      {dataT.kysely.map((item, index) => 
-      <Card key={"kortti" + item.kysymys_id} 
+      {dataT.kysely.map((itemK, indexK) => 
+      <Card key={"kortti" + itemK.kysymys_id} 
         className="kortti" 
         elevation={3}>
         <div className="kysymys">
-          {item.kysymys}
-          {palautettu ? vastaustenTarkistus(index) : null}
-          </div> {näytäVaihtoehdot(index)}
+          {itemK.kysymys}
+          {palautettu ? vastaustenTarkistus(itemK.kysymys_id, indexK) : null}
+          </div> {näytäVaihtoehdot(indexK)}
       </Card>)}
     </div>) : null
   );

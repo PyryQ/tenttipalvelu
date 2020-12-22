@@ -140,6 +140,22 @@ export async function lisääVastaus(kysymys_id, token) {
 }
 
 
+export async function lisääKäyttäjänKysymyksenTulos(kysymys_id, tulos, token) {
+  try{
+    console.log("käyttäjän vastaus")
+    console.log(kysymys_id)
+    console.log(tulos)
+    console.log(token)
+    let result = await axios.post("http://localhost:4000/lisays/lisaakysymystulos/" + kysymys_id + "/" + tulos + "/" + token)
+    return(result.data)
+  }
+  catch(exception){
+    console.log("Vastausta ei onnistuttu lisäämään.")
+  }
+}
+
+
+
 
 //------------------------------------GET---------------------------------
 

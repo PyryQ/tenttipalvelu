@@ -1,24 +1,12 @@
 import axios from 'axios';
 import React, { useState } from "react";
 import Button from '@material-ui/core/Button';
-//'@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@material-ui/core/styles';
 import "./App.css";
 
 
-import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/core/styles';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    '& .MuiTextField-root': {
-      margin: theme.spacing(1),
-      width: '25ch',
-    },
-  },
-}));
-
 export default function Login(props) {
-  const classes = useStyles();
   const [käyttäjänSähköposti, setKäyttäjänSähköposti] = useState("");
   const [käyttäjänSalasana, setKäyttäjänSalasana] = useState("");
   const [käyttäjänSalasana2, setKäyttäjänSalasana2] = useState("");
@@ -30,17 +18,21 @@ export default function Login(props) {
 
 
   const luoKäyttäjä = async () => {
-    console.log("validointiin tullaan")
+
     if (!tarkistaSalasana(käyttäjänSalasana)){
       alert("Salasanassa tulee olla vähintään: \n - kuusi merkkiä \n - yksi numero \n - yksi pieni kirjain \n - yksi iso kirjain.");
     }
+
     else if(!tarkistaSähköposti(käyttäjänSähköposti)){
       alert("Sähköposti ei käy.");
     }
+
     else if(käyttäjänSalasana !== käyttäjänSalasana2){
       alert("Salasanat eivät täsmää.");
     }
+
     else if (käyttäjänEtunimi !== "" && käyttäjänSukunimi !== "" &&  käyttäjänEtunimi.length > 0){
+      
       if (käyttäjänRooliTarkistus === "admin1234" || käyttäjänRooliTarkistus === "oppilas"){
         if (käyttäjänRooliTarkistus === "admin1234"){
           setKäyttäjänRooli("admin")
@@ -52,7 +44,7 @@ export default function Login(props) {
         if (tietokantaKäyttäjä.data === null || tietokantaKäyttäjä.data === "" || tietokantaKäyttäjä.data === undefined || tietokantaKäyttäjä.data === false){
           alert("Jokin meni pieleen.")
         }
-        else {alert("Käyttäjän luonti onnistui!")}
+        else alert("Käyttäjän luonti onnistui!")
       }
       else alert("Roolin asettaminen ei onnistunut")
     }
@@ -75,69 +67,6 @@ export default function Login(props) {
   return (
     // Sisäänkirjautumisen form
     <div className="rekisteröidy">
-      {/* <Form onSubmit={handleSubmit}>
-        <Form.Group size="lg" controlId="text">
-          <Form.Label>Etunimi: </Form.Label>
-          <Form.Control
-            type="text"
-            value={käyttäjänEtunimi}
-            onChange={(e) => setKäyttäjänEtunimi(e.target.value)}
-          />
-
-        </Form.Group>
-        <Form.Group size="lg" controlId="text">
-          <Form.Label>Sukunimi: </Form.Label>
-          <Form.Control
-            type="text"
-            value={käyttäjänSukunimi}
-            onChange={(e) => setKäyttäjänSukunimi(e.target.value)}
-          />
-        </Form.Group>
-
-        <Form.Group size="lg" controlId="email">
-          <Form.Label>Sähköposti: </Form.Label>
-          <Form.Control
-            autoFocus
-            type="email"
-            name="sähköposti"
-            value={käyttäjänSähköposti}
-            onChange={(e) => setKäyttäjänSähköposti(e.target.value)}
-          />
-
-        </Form.Group>
-        <Form.Group size="lg" controlId="password">
-          <Form.Label>Salasana: </Form.Label>
-          <Form.Control
-            type="password"
-            value={käyttäjänSalasana}
-            onChange={(e) => setKäyttäjänSalasana(e.target.value)}
-          />
-          </Form.Group>
-          <Form.Group size="lg" controlId="password">
-          <Form.Label>Salasana uudelleen: </Form.Label>
-          <Form.Control
-            type="password"
-            value={käyttäjänSalasana2}
-            onChange={(e) => setKäyttäjänSalasana2(e.target.value)}
-          />
-        </Form.Group>
-        <br></br>
-        Adminsalasana käyttöoikeuksille.
-        Jos olet oppilas, kirjoita "oppilas".
-        <Form.Group size="lg" controlId="password">
-          <Form.Label>Salasana: </Form.Label>
-          <Form.Control
-            type="password"
-            value={käyttäjänRooliTarkistus}
-            onChange={(e) => (setKäyttäjänRooliTarkistus(e.target.value))}
-          />
-        </Form.Group>
-        <Button block size="lg" type="submit" onClick={() => luoKäyttäjä()}>
-          Luo käyttäjä
-        </Button>
-      </Form> */}
-
-
       <div className ="kirjautuminen-kohdat">
         <p><TextField
           id="kirjaudu-etunimi"
@@ -145,8 +74,8 @@ export default function Login(props) {
           type="text"
           variant="outlined"
           onChange={(e) => setKäyttäjänEtunimi(e.target.value)}
-        />
-        </p>
+        /></p>
+
         <p><TextField
           id="kirjaudu-sukunimi"
           label="Sukunimi"

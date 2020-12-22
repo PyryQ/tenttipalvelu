@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {useEffect, useState, useReducer} from 'react';
 import Fade from 'react-reveal/Fade';
-import uuid from 'react-uuid';
 import axios from 'axios'; //serverin käyttöä varten
 //Muotoilua
 import { makeStyles, withStyles } from '@material-ui/core/styles';
@@ -44,14 +43,9 @@ function App() {
   const [palautettu, setPalautettu] = useState(false) //Onko kysely palautettu
   const [tenttiValinta, setTenttiValinta] = useState(0) //Mikä tenteistä on valittu
   const [näkymä, setNäkymä] = useState(4) //Vastaus- vai muokkausnäkymä
-  const [käyttäjänSähköposti, setKäyttäjänSähköposti] = useState(null)
-  const [käyttäjänToken, setKäyttäjänToken] = useState(null)
-
-
-  const [kirjauduttuSisään, setKirjauduttuSisään] = useState(false)
-
-  //Alkuperäinen taulukko kyselyistä ja niiden vastauksista
-  const kyselyt = []
+  const [käyttäjänToken, setKäyttäjänToken] = useState(null) //Token tietokannasta
+  const [kirjauduttuSisään, setKirjauduttuSisään] = useState(false) //Onko kirjauduttu
+  const kyselyt = []  //Pohja kyselyn muodostamiseksi
 
   // Alustetaan state ja reducer kyselyn avulla
   const [state, dispatch] = useReducer(reducer, kyselyt);
@@ -59,14 +53,14 @@ function App() {
   //Post, get ja put serverin datan testaamista varten. Ei käytössä ohjelmassa.
   useEffect(()=>{
     ////////////////////////////POST
-    const createData = async () => {
-      try{
+    // const createData = async () => {
+    //   try{
 
-      }
-      catch(exception){
-        alert("Tietokannan alustaminen epäonnistui (Post)")
-      }
-    }
+    //   }
+    //   catch(exception){
+    //     alert("Tietokannan alustaminen epäonnistui (Post)")
+    //   }
+    // }
     /////////////////////////////GET
     const fetchData = async () => {
       try{
@@ -95,7 +89,7 @@ function App() {
         }
       }
       catch(exception){
-        createData();
+        //createData();
         console.log(exception)
       }
     }
@@ -121,8 +115,8 @@ function App() {
               result.data[i].kysely[j].vastaukset = vastaukset.data
             }
           }
-          setData2(result.data);
-          setDataAlustettu2(true)
+          // setData2(result.data);
+          // setDataAlustettu2(true)
         }
         dispatch({type: "INIT_DATA", data: result.data})
         console.log(result.data)

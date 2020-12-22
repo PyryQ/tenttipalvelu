@@ -1,36 +1,29 @@
 import axios from 'axios';
 import React, { useState } from "react";
 import Button from '@material-ui/core/Button';
-//'@material-ui/core/Button';
 import "./App.css";
 
 import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/core/styles';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    '& .MuiTextField-root': {
-      margin: theme.spacing(1),
-      width: '25ch',
-    },
-  },
-}));
 
 
-
-
+//Käyttäjältä pyydetään sähköposti ja salasana
+//Mikäli kirjautuminen onnistuu, asetetaan käyttäjälle token 
+//ja asetetaan kirjautuminen onnistuneeksi
 export default function Login(props) {
+
+  //Alustetaan muuttujat käyttäjän salasanalle 
   const [käyttäjänSähköposti, setKäyttäjänSähköposti] = useState("");
   const [käyttäjänSalasana, setKäyttäjänSalasana] = useState("");
 
 
+  //Tarkistetaan onko käyttäjän kirjatumisyritys validi
   const tarkistaKirjautuminen = async () => {
-    if(käyttäjänSalasana !== ""){
-      console.log("Salasanan tarkistukseen tullaan")
+    if(käyttäjänSalasana !== "" && käyttäjänSähköposti !== ""){
       try {
+        //Verrataan sähköpostia ja salasanaa tietokantaa vasten
         let tietokantaToken = await axios.post("http://localhost:4000/tarkistasalasana", {sahkoposti: käyttäjänSähköposti, salasana: käyttäjänSalasana})
-        //let tietokantaSalasana = await axios.get("http://localhost:4000/kayttajansalasana/" + käyttäjänSähköposti +"/"+käyttäjänSalasana)
-
+        
+        //Mikäli token on validi, tallennetaan token ja merkitään kirjautuminen onnistuneeksi
         if (tietokantaToken.data !== "" && tietokantaToken.data !== undefined && tietokantaToken.data != null){
           alert("Kirjautuminen onnistui")
           props.asetaToken(tietokantaToken.data)
@@ -44,12 +37,8 @@ export default function Login(props) {
     }
   }
 
-
-  //https://www.npmjs.com/package/bcrypt
-  //https://www.npmjs.com/package/jsonwebtoken
-
   return (
-    // Sisäänkirjautumisen form
+    // Sisäänkirjautumisen kohdat
     <div>
       <div className="kirjaudu">
         <TextField

@@ -1,6 +1,5 @@
 import axios from 'axios';
-import React, { useState, useEffect } from "react";
-import Form from "react-bootstrap/Form";
+import React, { useState } from "react";
 import Button from '@material-ui/core/Button';
 //'@material-ui/core/Button';
 import "./App.css";
@@ -38,19 +37,19 @@ export default function Login(props) {
     else if(!tarkistaSähköposti(käyttäjänSähköposti)){
       alert("Sähköposti ei käy.");
     }
-    else if(käyttäjänSalasana != käyttäjänSalasana2){
+    else if(käyttäjänSalasana !== käyttäjänSalasana2){
       alert("Salasanat eivät täsmää.");
     }
-    else if (käyttäjänEtunimi != "" && käyttäjänSukunimi != "" &&  käyttäjänEtunimi.length > 0){
-      if (käyttäjänRooliTarkistus == "admin1234" || käyttäjänRooliTarkistus == "oppilas"){
-        if (käyttäjänRooliTarkistus == "admin1234"){
+    else if (käyttäjänEtunimi !== "" && käyttäjänSukunimi !== "" &&  käyttäjänEtunimi.length > 0){
+      if (käyttäjänRooliTarkistus === "admin1234" || käyttäjänRooliTarkistus === "oppilas"){
+        if (käyttäjänRooliTarkistus === "admin1234"){
           setKäyttäjänRooli("admin")
         }
         else {setKäyttäjänRooli("oppilas")}
 
         let käyttäjänTiedot = {etunimi: käyttäjänEtunimi, sukunimi: käyttäjänSukunimi, sahkoposti: käyttäjänSähköposti, rooli: käyttäjänRooli, salasana: käyttäjänSalasana}
         let tietokantaKäyttäjä = await axios.post("http://localhost:4000/lisaakayttaja", käyttäjänTiedot)
-        if (tietokantaKäyttäjä.data == null || tietokantaKäyttäjä.data == "" || tietokantaKäyttäjä.data == undefined || tietokantaKäyttäjä.data == false){
+        if (tietokantaKäyttäjä.data === null || tietokantaKäyttäjä.data === "" || tietokantaKäyttäjä.data === undefined || tietokantaKäyttäjä.data === false){
           alert("Jokin meni pieleen.")
         }
         else {alert("Käyttäjän luonti onnistui!")}
@@ -59,12 +58,6 @@ export default function Login(props) {
     }
     else alert("Jokin kohta puuttuu.");
   }
-
-
-  function handleSubmit(event) {
-    event.preventDefault();
-  }
-
 
   function tarkistaSähköposti(email) {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -145,10 +138,9 @@ export default function Login(props) {
       </Form> */}
 
 
-      <div>
+      <div className ="kirjautuminen-kohdat">
         <p><TextField
-          className="rekisteröinti-kohta"
-          id="outlined-required"
+          id="kirjaudu-etunimi"
           label="Etunimi"
           type="text"
           variant="outlined"
@@ -156,7 +148,7 @@ export default function Login(props) {
         />
         </p>
         <p><TextField
-          id="outlined-required"
+          id="kirjaudu-sukunimi"
           label="Sukunimi"
           type="text"
           variant="outlined"
@@ -164,7 +156,7 @@ export default function Login(props) {
         /></p>
 
         <p><TextField
-          id="outlined-required"
+          id="kirjaudu-sähköposti"
           label="Sähköposti"
           type="email"
           variant="outlined"
@@ -172,7 +164,7 @@ export default function Login(props) {
         /></p>
 
         <p><TextField
-          id="outlined-required"
+          id="kirjaudu-salasana"
           label="Salasana"
           type="password"
           variant="outlined"
@@ -180,7 +172,7 @@ export default function Login(props) {
         /></p>
 
         <p><TextField
-          id="outlined-required"
+          id="kirjaudu-salasana2"
           label="Salasana uudelleen"
           type="password"
           variant="outlined"
@@ -191,7 +183,7 @@ export default function Login(props) {
         Jos olet oppilas, kirjoita "oppilas".
         <br className="lomake-br"/>
         <p><TextField
-          id="outlined-required"
+          id="kirjaudu-rooli"
           label="Roolisalasana"
           type="password"
           variant="outlined"
@@ -204,13 +196,6 @@ export default function Login(props) {
 
       </div>
 
-
-
-
-
-
-
-      
     </div>
   );
 }

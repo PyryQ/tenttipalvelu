@@ -300,7 +300,7 @@ async function päivitäTämäVastausNimi(vastaus_id, teksti, indexK, indexV) {
           <div>
             <Input className="kysymysM" 
               defaultValue={itemK.kysymys}
-              onBlur={(e) => päivitäTämäKysymysNimi(itemK.kysymys_id, e.target.value, token)}>
+              onBlur={(e) => päivitäTämäKysymysNimi(itemK.kysymys_id, e.target.value, indexK)}>
             </Input> 
 
             <Button className="poistoM" onClick={() => poistaTämäKysymys(itemK.kysymys_id, indexK)}>

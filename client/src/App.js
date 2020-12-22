@@ -16,7 +16,6 @@ import KaavioVaaka from './KaavioVaaka';
 import Käyttäjä from './Käyttäjä';
 import LuoKäyttäjä from './LuoKäyttäjä';
 import Login from './Login'
-import Kaavio from './Kaavio';
 import { tarkistaKäyttäjänRooli } from './HttpKutsut';
 
 //import parsiToken from'/server/index.js'
@@ -346,9 +345,12 @@ function App() {
               key={"kyselypainike" + index} 
               variant="contained" 
               color="primary" 
+              role="button"
               disableRipple className={classesButton.margin} 
-              onClick={() => {setTenttiValinta(index); setPalautettu(false);}}>{arvo.nimi}
+              onClick={() => (setTenttiValinta(index),  setPalautettu(false))}>{arvo.nimi}
             </BootstrapButton>)}
+
+            
         <br/><br/>
         
         {/*Tarkistetaan, ettei state ole undefined*/}

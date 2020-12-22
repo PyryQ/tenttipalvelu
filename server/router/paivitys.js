@@ -16,7 +16,6 @@ var middleware = {
     vainAdmin: function (req, res, next){
     
       let onkoOikeidet = false;
-      console.log("tarkistustoken " + req.body.token)
   
       jwt.verify(req.body.token, 'sonSALAisuus', function(err, decoded) {
         //voimassaoloaika

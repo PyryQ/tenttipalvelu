@@ -5,6 +5,7 @@ import { green } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
+import Button from '@material-ui/core/Button';
 import {lisääKäyttäjänVastaus, lisääKäyttäjänKysymyksenTulos} from './HttpKutsut'
 
 //Luodaan GreenCheckBox oikeita vastauksia varten
@@ -28,6 +29,8 @@ export default function TulostaKysymykset(props) {
     dataT.kysely = [];
   }
   let palautettu = props.palautettu;
+
+
 
   const vastaustenTarkistus = (kysymys_id, indexK) =>{
 
@@ -114,6 +117,14 @@ export default function TulostaKysymykset(props) {
           {palautettu ? vastaustenTarkistus(itemK.kysymys_id, indexK) : null}
           </div> {näytäVaihtoehdot(indexK)}
       </Card>)}
+
+      <Button color="primary" variant="contained" disabled={palautettu}
+        onClick={() => {
+          if (window.confirm("Palautetaanko " + dataT.nimi)){
+            props.asetaPalautettu(true);
+          }}}> 
+        Palauta vastaukset
+      </Button>
     </div>) : null
   );
 }

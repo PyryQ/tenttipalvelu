@@ -354,10 +354,10 @@ function App() {
             dispatch={dispatch}
             kysymys={state[tenttiValinta]} 
             palautettu= {palautettu}
+            asetaPalautettu= {setPalautettu}
             token = {käyttäjänToken}/>
           </Fade>
           <br/>
-          <Button variant={"contained"} color="primary" onClick={() => {setPalautettu(true);}}>Näytä vastaukset</Button>
           </div> : null}
 
         {näkymä === 2 ?

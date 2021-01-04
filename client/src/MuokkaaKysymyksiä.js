@@ -1,13 +1,12 @@
 import React from 'react';
+
 //Material-ui -komponentteja
 import Checkbox from '@material-ui/core/Checkbox';
 import Card from '@material-ui/core/Card';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import { Input } from '@material-ui/core';
+import { Input, TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import axios from 'axios';
-import { TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import {päivitäTenttiNimi, päivitäKysymysNimi, päivitäVastausNimi, poistaVastaus, 
@@ -29,19 +28,19 @@ export default function MuokkaaKysymyksiä(props) {
   //Lisää uusi tentti
   async function lisääUusiTentti() {
     lisääTentti(token).then((result) => {
-      if (result != false){
+      if (result !== false){
         let tentti_id = result
         props.dispatch({type: 'LISÄÄ_TENTTI', data:{tentti_id: tentti_id}})
       }
     }).catch((error) => {
       console.log(error)
     })
-}
+  }
 
   //Lisää uusi kysymys
   async function lisääUusiKysymys(tentti_id) {
     lisääKysymys(tentti_id, token).then((result) => {
-      if (result != false){
+      if (result !== false){
         let kysymys_id = result
         props.dispatch({type: 'LISÄÄ_KYSYMYS', data:{kysymys_id: kysymys_id}})
       }
@@ -53,7 +52,7 @@ export default function MuokkaaKysymyksiä(props) {
   //Lisää uusi vastaus
   async function lisääUusiVastaus(indexK, kysymys_id) {
     lisääVastaus(kysymys_id, token).then((result) => {
-      if (result != false){
+      if (result !== false){
         let vastaus_id = result
         props.dispatch({type: 'LISÄÄ_VASTAUS', data:{indexKy: indexK, kysymys_id: kysymys_id, vastaus_id: vastaus_id}})
       }
@@ -67,7 +66,7 @@ export default function MuokkaaKysymyksiä(props) {
 async function päivitäTämäTenttiNimi(vastaus_id, teksti) {
 
   päivitäTenttiNimi(vastaus_id, teksti, token).then((result) => {
-    if (result != false){
+    if (result !== false){
       props.dispatch({type: 'MUOKKAA_TENTTI', data:{nimi: teksti}})
     }
   }).catch((error) => {
@@ -78,7 +77,7 @@ async function päivitäTämäTenttiNimi(vastaus_id, teksti) {
 async function päivitäTämäKysymysNimi(kysymys_id, teksti, indexK) {
 
   päivitäKysymysNimi(kysymys_id, teksti, token).then((result) => {
-    if (result != false){
+    if (result !== false){
       props.dispatch({type: 'MUOKKAA_KYSYMYSTÄ', data:{kysymys: teksti, indexKy: indexK}})
     }
   }).catch((error) => {
@@ -89,7 +88,7 @@ async function päivitäTämäKysymysNimi(kysymys_id, teksti, indexK) {
 async function päivitäTämäVastausNimi(vastaus_id, teksti, indexK, indexV) {
 
   päivitäVastausNimi(vastaus_id, teksti, token).then((result) => {
-    if (result != false){
+    if (result !== false){
       props.dispatch({type: 'MUOKKAA_VASTAUSTA', data:{vastaus: teksti, indexKy: indexK, indexVa: indexV}})
     }
   }).catch((error) => {
@@ -101,7 +100,7 @@ async function päivitäTämäVastausNimi(vastaus_id, teksti, indexK, indexV) {
   async function päivitäTämäOikeaVastaus(vastaus_id, valittu, indexK, indexV) {
 
     päivitäOikeaVastaus(vastaus_id, valittu, token).then((result) => {
-      if (result != false){
+      if (result !== false){
         props.dispatch({type: 'MUUTA_OIKEA_VASTAUS', data:{valittuV: valittu, indexKy: indexK, indexVa: indexV}})
       }
     }).catch((error) => {
@@ -113,7 +112,7 @@ async function päivitäTämäVastausNimi(vastaus_id, teksti, indexK, indexV) {
   async function muutaAloitusaika(päiväjaaika, tentti_id) {
 
     päivitäTentinAloitusaika(päiväjaaika, tentti_id, token).then((result) => {
-      if (result != false){
+      if (result !== false){
         let uusiAika = result.data
         uusiAika = asetaAika(uusiAika)
         props.dispatch({type: 'PÄIVITÄ_TENTIN_ALOITUSAIKA', data:{päiväjaaika: uusiAika}})
@@ -126,7 +125,7 @@ async function päivitäTämäVastausNimi(vastaus_id, teksti, indexK, indexV) {
   async function muutaLopetusaika(päiväjaaika, tentti_id) {
 
     päivitäTentinLopetusaika(päiväjaaika, tentti_id, token).then((result) => {
-      if (result != false){
+      if (result !== false){
         let uusiAika = result.data
         uusiAika = asetaAika(uusiAika)
         props.dispatch({type: 'PÄIVITÄ_TENTIN_LOPETUSAIKA', data:{päiväjaaika: uusiAika}})
@@ -143,7 +142,7 @@ async function päivitäTämäVastausNimi(vastaus_id, teksti, indexK, indexV) {
   async function poistaTämäTentti() {
     console.log("muokkaakysymyksiä" + token)
     poistaTentti(dataM.tentti_id, token).then((result) => {
-      if (result != false){
+      if (result !== false){
         props.asetaTentti(0)
         props.dispatch({type: 'POISTA_TENTTI', data:{}});
       }
@@ -155,7 +154,7 @@ async function päivitäTämäVastausNimi(vastaus_id, teksti, indexK, indexV) {
   async function poistaTämäKysymys(kysymys_id, indexK) {
 
     poistaKysymys(kysymys_id, token).then((result) => {
-      if (result != false){
+      if (result !== false){
         props.dispatch({type: 'POISTA_KYSYMYS', data:{indexKy: indexK}});
       }
     }).catch((error) => {
@@ -166,7 +165,7 @@ async function päivitäTämäVastausNimi(vastaus_id, teksti, indexK, indexV) {
   async function poistaTämäVastaus(vastaus_id, indexK, indexV) {
 
     poistaVastaus(vastaus_id, token).then((result) => {
-      if (result != false){
+      if (result !== false){
         props.dispatch({type: 'POISTA_VASTAUS', data:{indexKy: indexK, indexVa: indexV}});
       }
     }).catch((error) => {
@@ -179,7 +178,7 @@ async function päivitäTämäVastausNimi(vastaus_id, teksti, indexK, indexV) {
   let dataM = props.tentti; //Alustetaan dataM kysymyksen mukaan
 
   function asetaAika(aika) {
-    if (aika != null){
+    if (aika !== null){
       aika = aika.replace(/\.\d+/, "");
       aika = aika.replace('Z', "");
       return aika;

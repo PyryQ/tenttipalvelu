@@ -59,11 +59,6 @@ app.use('/poista', poista);
 
 
 
-
-
-
-
-
 //-----------------------Token- ja hashesimerkkejä
 
 
@@ -314,24 +309,32 @@ app.get('/tarkistarooli/:token', (req, res, next) => {
 app.post('/tarkistasalasana', (req, res, next) => {
   let annettuSalasana = req.body.salasana
   let annettuSähköposti = req.body.sahkoposti
-  db.query("SELECT salasana, rooli FROM käyttäjä WHERE sähköposti = $1", 
-  [req.body.sahkoposti], (err, result) => {
+  try {
+    db.query("SELECT salasana, rooli FROM käyttäjä WHERE sähköposti = $1", 
+    [req.body.sahkoposti], (err, result) => {
 
-    if (err) {
-      return next(err)
-    }
+      if (result.rows.length === 0){
+        console.log("Käyttäjää ei löydy.")
+        return res.send(null)
+      }
 
-    try {
-    bcrypt.compare(annettuSalasana, result.rows[0].salasana, function(err, resultB) {
-      if (resultB){
-        const token = jwt.sign({ sähköposti: annettuSähköposti, rooli: result.rows[0].rooli }, 'sonSALAisuus', {expiresIn: '4h'});
-        return res.send(token)
-        }
-      });
-    }
-    catch {"Salasanan tarkistus ei onnistunut"}
+      if (err) {
+        return res.send(null)
+      }
 
-  })
+      try {
+      bcrypt.compare(annettuSalasana, result.rows[0].salasana, function(err, resultB) {
+        if (resultB){
+          const token = jwt.sign({ sähköposti: annettuSähköposti, rooli: result.rows[0].rooli }, 'sonSALAisuus', {expiresIn: '4h'});
+          return res.send(token)
+          }
+          else {"Salasanan tarkistus ei onnistunut."}
+        });
+      }
+      catch {"Salasanan tarkistus ei onnistunut."}
+
+    })
+  } catch {"Salasanan tarkistus ei onnistunut."}  
 })
 
 app.get('/kayttajansalasana/:sahkoposti/:salasana', (req, res, next) => {

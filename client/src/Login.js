@@ -22,19 +22,21 @@ export default function Login(props) {
       try {
         //Verrataan sähköpostia ja salasanaa tietokantaa vasten
         let tietokantaToken = await axios.post("http://localhost:4000/tarkistasalasana", {sahkoposti: käyttäjänSähköposti, salasana: käyttäjänSalasana})
-        
+        console.log(tietokantaToken.data)
         //Mikäli token on validi, tallennetaan token ja merkitään kirjautuminen onnistuneeksi
-        if (tietokantaToken.data !== "" && tietokantaToken.data !== undefined && tietokantaToken.data != null){
-          alert("Kirjautuminen onnistui")
+        if (tietokantaToken.data !== "" && tietokantaToken.data !== undefined && tietokantaToken.data !== null){
+          alert("Kirjautuminen onnistui.")
           props.asetaToken(tietokantaToken.data)
           props.kirjautuminen(true)
         }
+        else alert("Kirjautuminen ei onnistunut. (try)")
       
       }catch {
-        alert("Kirjautuminen ei onnistunut.")
+        alert("Kirjautuminen ei onnistunut. (catch)")
         console.log("Tokenin asettamisessa jotain pielessä.")
       }
     }
+    else alert("Kirjautuminen ei onnistunut.")
   }
 
   return (

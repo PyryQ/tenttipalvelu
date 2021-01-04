@@ -84,7 +84,7 @@ router.post('/lisaakayttajanvastaus/:vastaus_id/:vastaus/:token', middleware.vai
     jwt.verify(req.params.token, 'sonSALAisuus', function(err, decoded) {
       //voimassaoloaika
       if (err){
-        return res.send(false)
+        return res.send(null)
       }
       käyttäjänSähköposti = decoded.sähköposti
     });
@@ -93,7 +93,7 @@ router.post('/lisaakayttajanvastaus/:vastaus_id/:vastaus/:token', middleware.vai
     db.query("SELECT käyttäjä_id FROM käyttäjä WHERE sähköposti = $1", 
     [käyttäjänSähköposti], (err, result) => { 
         if (err) {
-          return res.send(false)
+          return res.send(null)
       }
 
       käyttäjänId = result.rows[0].käyttäjä_id
@@ -101,7 +101,7 @@ router.post('/lisaakayttajanvastaus/:vastaus_id/:vastaus/:token', middleware.vai
       db.query("INSERT INTO käyttäjänvastaus (käyttäjä_id_fk, vastaus_id_fk, käyttäjän_valinta) values ($1, $2, $3)", 
       [käyttäjänId, req.params.vastaus_id, req.params.vastaus], (err, result) => { 
           if (err) {
-            return res.send(false)
+            return res.send(null)
         }
         return res.send("Vastauksen päivitys onnistui.")
       })

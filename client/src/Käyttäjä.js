@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {useEffect, useState, useReducer} from 'react';
+import {useEffect, useState } from 'react';
 import { Input } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 

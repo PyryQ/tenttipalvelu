@@ -52,16 +52,7 @@ function App() {
         
   //Post, get ja put serverin datan testaamista varten. Ei käytössä ohjelmassa.
   useEffect(()=>{
-    ////////////////////////////POST
-    // const createData = async () => {
-    //   try{
-
-    //   }
-    //   catch(exception){
-    //     alert("Tietokannan alustaminen epäonnistui (Post)")
-    //   }
-    // }
-    /////////////////////////////GET
+    
     const fetchData = async () => {
       try{
         let result = await axios.get("http://localhost:4000/tentit")
@@ -115,8 +106,6 @@ function App() {
               result.data[i].kysely[j].vastaukset = vastaukset.data
             }
           }
-          // setData2(result.data);
-          // setDataAlustettu2(true)
         }
         dispatch({type: "INIT_DATA", data: result.data})
         console.log(result.data)
@@ -360,7 +349,7 @@ function App() {
           <br/>
           </div> : null}
 
-        {näkymä === 2 ?
+        {näkymä === 2 && käyttäjäOnAdmin() ?
           <Fade right><MuokkaaKysymyksiä 
             dispatch={dispatch}
             asetaTentti={setTenttiValinta}

@@ -60,7 +60,7 @@ export default function TulostaKysymykset(props) {
   const lisääTämäKäyttäjänVastaus = (vastaus, vastaus_id, indexK, indexV) =>{
 
       lisääKäyttäjänVastaus(vastaus_id, vastaus, token).then((result) => {
-        if (result != false){
+        if (result !== false){
           props.dispatch({type: 'VASTAUS_VALITTU', data:{valittuV: vastaus, indexKy: indexK, indexVa: indexV}})
         }
       }).catch((error) => {
@@ -71,7 +71,7 @@ export default function TulostaKysymykset(props) {
   //Tulostetaan vaihtoehdot sen mukaan, onko vastaukset palautettu
   const näytäVaihtoehdot = (indexK) => { //Kysymyksen index
     //Tarkistetaan, ettei appia käynnistettäessä kartoiteta tyhjää listaa
-    if (dataT.kysely[indexK].vastaukset == null){
+    if (dataT.kysely[indexK].vastaukset === null){
       dataT.kysely[indexK].vastaukset = [];
     }
     //Mikäli tuloksia ei ole palautettu, tulostetaan vain yksi checkbox

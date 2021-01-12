@@ -38,6 +38,7 @@ let strings = new LocalizedStrings({
 
    //Alerts
   LoginSuccessful: "Login succeeded.",
+  exit: "Do you want to exit the program?",
 
 
   returnAnswers:"Return answers"
@@ -74,8 +75,9 @@ let strings = new LocalizedStrings({
   endingTime: "Lopetusaika",
 
 
-  //Alerts
+  //Alerts and messages
   LoginSuccessful: "Kirjautuminen onnistui.",
+  exit: "Poistutaanko ohjelmasta?",
    
    
   returnAnswers:"Palauta vastaukset"

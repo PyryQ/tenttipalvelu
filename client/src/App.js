@@ -61,7 +61,7 @@ function App() {
   // Alustetaan state ja reducer kyselyn avulla
   const [state, dispatch] = useReducer(reducer, kyselyt);
 
-  //const [kieli, setKieli] = useState('fi')
+  const [kieli, setKieli] = useState('fi')
 
 
   
@@ -102,6 +102,13 @@ function App() {
     }
     fetchData();
   },[])
+
+
+  useEffect(()=>{
+    strings.setLanguage(kieli);
+
+  },[kieli])
+
 
 
   const updateData = async () => {
@@ -176,7 +183,7 @@ function App() {
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].oikea_vastaus = action.data.valittuV
         return syväKopioR
       case 'LISÄÄ_VASTAUS':
-        let uusiVastaus = {vastaus: "Uusi vastaus", valittu: false, oikea_vastaus: false, vastaus_id: action.data.vastaus_id}
+        let uusiVastaus = {vastaus: strings.newA, valittu: false, oikea_vastaus: false, vastaus_id: action.data.vastaus_id}
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset.push(uusiVastaus)
         return syväKopioR
       case 'POISTA_VASTAUS':
@@ -186,7 +193,7 @@ function App() {
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].kysymys = action.data.kysymys
         return syväKopioR
       case 'LISÄÄ_KYSYMYS':
-        let uusiKysymys =  {kysymys: "Uusi kysymys", vastaukset: [], kysymys_id: action.data.kysymys_id}
+        let uusiKysymys =  {kysymys: strings.newQ, vastaukset: [], kysymys_id: action.data.kysymys_id}
         syväKopioR[tenttiValinta].kysely.push(uusiKysymys)
         return syväKopioR
       case 'POISTA_KYSYMYS':
@@ -196,7 +203,7 @@ function App() {
         syväKopioR[tenttiValinta].nimi = action.data.nimi
         return syväKopioR
       case 'LISÄÄ_TENTTI':
-        let uusiTentti = {tentti_id: action.data.tentti_id, nimi: "Uusi tentti", kysely: []}
+        let uusiTentti = {tentti_id: action.data.tentti_id, nimi: strings.newE, kysely: []}
         syväKopioR.push(uusiTentti)
         return syväKopioR
       case 'POISTA_TENTTI':
@@ -231,7 +238,7 @@ function App() {
 
   //Poistutaan kirjautumisnäkymään, tyhjätään token
   const poistu = () => {
-    if (window.confirm("Poistutaanko ohjelmasta?")){
+    if (window.confirm(strings.exit)){
       setKirjauduttuSisään(false)
       setKäyttäjänToken(null)
       setNäkymä(4)
@@ -354,10 +361,10 @@ function App() {
               onClick={() => setNäkymä(6)}>{strings.register}</Button>
 
             <Button color="inherit" 
-              onClick={() => (vaihdaKieli('fi'), forceUpdate(), handleRefresh)}><img className="kieliPainike" src={finland} alt="Finland" /></Button>
+              onClick={() => (vaihdaKieli('fi'), setKieli('fi'))}><img className="kieliPainike" src={finland} alt="Finland" /></Button>
 
             <Button color="inherit" 
-              onClick={() => (vaihdaKieli('en'), forceUpdate(), handleRefresh)}><img className="kieliPainike" src={unitedkingdom} alt="Finland" /></Button>
+              onClick={() => (vaihdaKieli('en'), setKieli('en'))}><img className="kieliPainike" src={unitedkingdom} alt="Finland" /></Button>
             </div>}
           </Toolbar>
       </AppBar>

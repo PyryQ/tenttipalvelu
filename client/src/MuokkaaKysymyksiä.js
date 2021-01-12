@@ -258,7 +258,7 @@ async function päivitäTämäVastausNimi(vastaus_id, teksti, indexK, indexV) {
       {/*Button tentin poistamiseksi*/}
       <Button className="poistaTT" 
         onClick={() => {
-          if (window.confirm("Poistetaanko " + dataM.nimi)){
+          if (window.confirm(strings.delete + " " + dataM.nimi + "?")){
             poistaTämäTentti();
           }
         }}>
@@ -272,7 +272,7 @@ async function päivitäTämäVastausNimi(vastaus_id, teksti, indexK, indexV) {
         <TextField
           key={"aloitusaika" + dataM.tentti_id}
           id="datetime-local"
-          label="Tentin aloitusaika"
+          label={strings.startingTime}
           type="datetime-local"
           defaultValue={asetaAika(dataM.tentin_aloitusaika)}
           className={classes.textField}
@@ -283,7 +283,7 @@ async function päivitäTämäVastausNimi(vastaus_id, teksti, indexK, indexV) {
         <TextField
           key={"lopetusaika" + dataM.tentti_id}
           id="datetime-local"
-          label="Tentin lopetusaika"
+          label={strings.endingTime}
           type="datetime-local"
           defaultValue ={asetaAika(dataM.tentin_lopetusaika)}
           className={classes.textField}

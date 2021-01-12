@@ -40,7 +40,7 @@ export default function Käyttäjä(props) {
 
   console.log(käyttäjänTiedot)
   //let käyttäjä = await axios.get("http://localhost:4000/kayttajantiedot/" + k_sähköposti)
-  if (käyttäjänTiedot != null || käyttäjänTiedot != undefined){
+  if (käyttäjänTiedot !== null || käyttäjänTiedot !== undefined){
     return <Card>
       {strings.email}: {käyttäjänTiedot.sähköposti}
       <br></br>

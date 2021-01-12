@@ -25,7 +25,7 @@ import unitedkingdom from './unitedkingdom.png';
 import {setLanguage} from 'react-localization';
 //const strings = require('./Localization.js');
 import strings from './Localization.js'
-strings.setLanguage('fi');
+//strings.setLanguage('fi');
 
 //import parsiToken from'/server/index.js'
 
@@ -40,6 +40,7 @@ strings.setLanguage('fi');
 // käyttäjän sitominen vastauksiin
 // pisteytys
 // style omaan jsään?
+// tokenin säilyminen?
 
 
 
@@ -59,6 +60,8 @@ function App() {
 
   // Alustetaan state ja reducer kyselyn avulla
   const [state, dispatch] = useReducer(reducer, kyselyt);
+
+  //const [kieli, setKieli] = useState('fi')
 
 
   
@@ -226,6 +229,7 @@ function App() {
     setKäyttäjänToken(token)
   }
 
+  //Poistutaan kirjautumisnäkymään, tyhjätään token
   const poistu = () => {
     if (window.confirm("Poistutaanko ohjelmasta?")){
       setKirjauduttuSisään(false)
@@ -234,6 +238,7 @@ function App() {
     }
   }
 
+  //Tarkistetaan, onko käyttäjä admin
   const käyttäjäOnAdmin = async () => {
     let onkoAdmin = false;
     if (käyttäjänToken != null && kirjauduttu){
@@ -247,11 +252,23 @@ function App() {
     return onkoAdmin;
   }
 
+  //Vaihdetaan teksti kielen mukaan
   const vaihdaKieli = (kieli) => {
     strings.setLanguage(kieli);
     console.log(kieli)
     
   }
+
+  const forceUpdate = React.useCallback(() => setNäkymä(4), []);
+
+  const handleRefresh = () => {
+    // by calling this method react re-renders the component
+    this.setState({});
+  };
+
+
+
+
 
 
 //------------------------------------------MUOTOILUA
@@ -327,6 +344,8 @@ function App() {
             <Button color="inherit" 
               onClick={() => poistu()}>{strings.signof}</Button>
             </div>
+
+
             : <div>
               <Button color="inherit" edge="start" 
                 onClick={() => setNäkymä(4)}>{strings.login}</Button>
@@ -335,10 +354,10 @@ function App() {
               onClick={() => setNäkymä(6)}>{strings.register}</Button>
 
             <Button color="inherit" 
-              onClick={() => vaihdaKieli('fi')}><img className="kieliPainike" src={finland} alt="Finland" /></Button>
+              onClick={() => (vaihdaKieli('fi'), forceUpdate(), handleRefresh)}><img className="kieliPainike" src={finland} alt="Finland" /></Button>
 
             <Button color="inherit" 
-              onClick={() => vaihdaKieli('en')}><img className="kieliPainike" src={unitedkingdom} alt="Finland" /></Button>
+              onClick={() => (vaihdaKieli('en'), forceUpdate(), handleRefresh)}><img className="kieliPainike" src={unitedkingdom} alt="Finland" /></Button>
             </div>}
           </Toolbar>
       </AppBar>

@@ -262,11 +262,11 @@ async function päivitäTämäVastausNimi(vastaus_id, teksti, indexK, indexV) {
             poistaTämäTentti();
           }
         }}>
-        <DeleteIcon/>Poista {dataM.nimi}</Button>
+        <DeleteIcon/>{strings.delete} {dataM.nimi}</Button>
 
       {/*Button tentin lisäämiseksi*/}
       <Button className="lisääUT" onClick={() => lisääUusiTentti()}>
-        <AddCircleOutlineIcon/>Lisää uusi tentti</Button>
+        <AddCircleOutlineIcon/>{strings.addE}</Button>
 
         <form className={classes.container} noValidate>
         <TextField

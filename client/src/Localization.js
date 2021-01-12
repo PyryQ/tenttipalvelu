@@ -15,6 +15,7 @@ let strings = new LocalizedStrings({
    admin: "Admin",
    role: "Role",
 
+
    //Navigation buttons
    exams:"Exams",
    user:"User",
@@ -24,6 +25,19 @@ let strings = new LocalizedStrings({
 
    //Muokkaus
    addQ: "Add question",
+   delete: "Delete",
+   addE: "Add new Exam",
+
+   newE: "New exam",
+   newQ: "New question",
+   newA:"New answer",
+
+   startingTime: "Starting time",
+   endingTime: "Ending time",
+
+
+   //Alerts
+  LoginSuccessful: "Login succeeded.",
 
 
   returnAnswers:"Return answers"
@@ -48,7 +62,20 @@ let strings = new LocalizedStrings({
   demo: "Demot",
 
   //Muokkaus
-  addQ: "Lisää kysymys",
+  addQ:"Lisää kysymys",
+  delete:"Poista",
+  addE:"Lisää uusi tentti",   
+
+  newE:"Uusi tentti",
+  newQ:"Uusi kysymys",
+  newA:"Uusi vastaus",
+
+  startingTime: "Aloitusaika",
+  endingTime: "Lopetusaika",
+
+
+  //Alerts
+  LoginSuccessful: "Kirjautuminen onnistui.",
    
    
   returnAnswers:"Palauta vastaukset"

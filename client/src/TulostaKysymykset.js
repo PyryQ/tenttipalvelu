@@ -8,6 +8,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import Button from '@material-ui/core/Button';
 import {lisääKäyttäjänVastaus, lisääKäyttäjänKysymyksenTulos} from './HttpKutsut'
 
+import strings from './Localization';
+
 //Luodaan GreenCheckBox oikeita vastauksia varten
 const GreenCheckbox = withStyles({
   root: {
@@ -123,7 +125,7 @@ export default function TulostaKysymykset(props) {
           if (window.confirm("Palautetaanko " + dataT.nimi)){
             props.asetaPalautettu(true);
           }}}> 
-        Palauta vastaukset
+        {strings.returnAnswers}
       </Button>
     </div>) : null
   );

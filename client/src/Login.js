@@ -26,7 +26,7 @@ export default function Login(props) {
         console.log(tietokantaToken.data)
         //Mikäli token on validi, tallennetaan token ja merkitään kirjautuminen onnistuneeksi
         if (tietokantaToken.data !== "" && tietokantaToken.data !== undefined && tietokantaToken.data !== null){
-          alert("Kirjautuminen onnistui.")
+          alert(strings.LoginSuccessful)
           props.asetaToken(tietokantaToken.data)
           props.kirjautuminen(true)
         }

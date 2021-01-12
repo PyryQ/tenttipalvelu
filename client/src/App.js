@@ -17,6 +17,16 @@ import LuoKäyttäjä from './LuoKäyttäjä';
 import Login from './Login'
 import { tarkistaKäyttäjänRooli } from './HttpKutsut';
 
+//Kuvat
+import finland from './finland.png';
+import unitedkingdom from './unitedkingdom.png';
+
+//localization
+import {setLanguage} from 'react-localization';
+//const strings = require('./Localization.js');
+import strings from './Localization.js'
+strings.setLanguage('fi');
+
 //import parsiToken from'/server/index.js'
 
 
@@ -49,6 +59,9 @@ function App() {
 
   // Alustetaan state ja reducer kyselyn avulla
   const [state, dispatch] = useReducer(reducer, kyselyt);
+
+
+  
         
   //Post, get ja put serverin datan testaamista varten. Ei käytössä ohjelmassa.
   useEffect(()=>{
@@ -208,6 +221,7 @@ function App() {
     setNäkymä(1)
   }
 
+  //Asetetaan talteen käyttäjän token
   const asetaToken = (token) => {
     setKäyttäjänToken(token)
   }
@@ -231,6 +245,12 @@ function App() {
       })
     }
     return onkoAdmin;
+  }
+
+  const vaihdaKieli = (kieli) => {
+    strings.setLanguage(kieli);
+    console.log(kieli)
+    
   }
 
 
@@ -289,31 +309,36 @@ function App() {
             <div>
             <Button color="inherit" 
               edge="start" className={classes1.menuButton} 
-              onClick={() => setNäkymä(1)}>TENTIT</Button>
+              onClick={() => setNäkymä(1)}>{strings.exams}</Button>
 
             <Button color="inherit" 
-              onClick={() => setNäkymä(5)}>Käyttäjä</Button>
+              onClick={() => setNäkymä(5)}>{strings.user}</Button>
 
             {käyttäjäOnAdmin() ?
             <Button variant="contained" color="secondary" 
-              onClick={() => setNäkymä(2)}> Näytä kyselyn muokkaus</Button>
+              onClick={() => setNäkymä(2)}> {strings.editExams} </Button>
              : null }
             
             {käyttäjäOnAdmin() ?
               <Button variant="contained" color="secondary" 
-                onClick={() => setNäkymä(3)}> Demot</Button>
+                onClick={() => setNäkymä(3)}> {strings.demo}</Button>
             : null }
-            <div className={classes1.spacer}/>
 
             <Button color="inherit" 
-              onClick={() => poistu()}>POISTU</Button>
+              onClick={() => poistu()}>{strings.signof}</Button>
             </div>
             : <div>
               <Button color="inherit" edge="start" 
-                onClick={() => setNäkymä(4)}>Kirjaudu sisään</Button>
+                onClick={() => setNäkymä(4)}>{strings.login}</Button>
 
               <Button color="inherit" edge="start" 
-              onClick={() => setNäkymä(6)}>Luo käyttäjä</Button>
+              onClick={() => setNäkymä(6)}>{strings.register}</Button>
+
+            <Button color="inherit" 
+              onClick={() => vaihdaKieli('fi')}><img className="kieliPainike" src={finland} alt="Finland" /></Button>
+
+            <Button color="inherit" 
+              onClick={() => vaihdaKieli('en')}><img className="kieliPainike" src={unitedkingdom} alt="Finland" /></Button>
             </div>}
           </Toolbar>
       </AppBar>

@@ -3,6 +3,9 @@ import {useEffect, useState } from 'react';
 import { Input } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 
+
+import strings from './Localization.js'
+
 export default function Käyttäjä(props) {
   const [käyttäjänEtunimi, setKäyttäjänEtunimi]=useState("") //Käytettiin datan käsittelyssä ennen statea
   const [käyttäjänSukunimi, setKäyttäjänSukunimi]=useState("") //Serveriä varten
@@ -39,13 +42,13 @@ export default function Käyttäjä(props) {
   //let käyttäjä = await axios.get("http://localhost:4000/kayttajantiedot/" + k_sähköposti)
   if (käyttäjänTiedot != null || käyttäjänTiedot != undefined){
     return <Card>
-      Käyttäjän sähköposti: {käyttäjänTiedot.sähköposti}
+      {strings.email}: {käyttäjänTiedot.sähköposti}
       <br></br>
-      Käyttäjän etunimi: <Input defaultValue={käyttäjänTiedot.etunimi} onChange={(e) => päivitäEtunimi(e.target.value)}></Input>
+      {strings.firstname}: <Input defaultValue={käyttäjänTiedot.etunimi} onChange={(e) => päivitäEtunimi(e.target.value)}></Input>
       <br></br>
-      Käyttäjän sukunimi: <Input defaultValue={käyttäjänTiedot.sukunimi} onChange={(e) => päivitäSukunimi(e.target.value)}></Input>
+      {strings.lastname}: <Input defaultValue={käyttäjänTiedot.sukunimi} onChange={(e) => päivitäSukunimi(e.target.value)}></Input>
       <br></br>
-      Käyttäjän rooli: {käyttäjänTiedot.rooli}
+      {strings.role}: {käyttäjänTiedot.rooli}
     </Card>
   } else return null
 }

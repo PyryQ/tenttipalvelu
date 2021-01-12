@@ -9,6 +9,8 @@ import { Input, TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 
+import strings from './Localization.js'
+
 import {päivitäTenttiNimi, päivitäKysymysNimi, päivitäVastausNimi, poistaVastaus, 
   poistaKysymys, lisääKysymys, lisääVastaus, lisääTentti, poistaTentti, päivitäOikeaVastaus, päivitäTentinAloitusaika, päivitäTentinLopetusaika} from './HttpKutsut';
 // Kehitettävää: 
@@ -312,7 +314,7 @@ async function päivitäTämäVastausNimi(vastaus_id, teksti, indexK, indexV) {
         {/*Button kysymyksen lisäämiseksi*/}
         <Button className="lisääK" key={"lisää_k"}
           onClick={() => lisääUusiKysymys(dataM.tentti_id)}>
-          <AddCircleOutlineIcon/>{"Lisää kysymys"}
+          <AddCircleOutlineIcon/>{strings.addQ}
         </Button>
       </div>
     </div>

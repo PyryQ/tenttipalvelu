@@ -4,6 +4,8 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import "./App.css";
 
+import strings from './Localization';
+
 
 export default function Login(props) {
   const [käyttäjänSähköposti, setKäyttäjänSähköposti] = useState("");
@@ -69,7 +71,7 @@ export default function Login(props) {
       <div className ="kirjautuminen-kohdat">
         <p><TextField
           id="kirjaudu-etunimi"
-          label="Etunimi"
+          label={strings.firstname}
           type="text"
           variant="outlined"
           onChange={(e) => setKäyttäjänEtunimi(e.target.value)}
@@ -77,7 +79,7 @@ export default function Login(props) {
 
         <p><TextField
           id="kirjaudu-sukunimi"
-          label="Sukunimi"
+          label={strings.lastname}
           type="text"
           variant="outlined"
           onChange={(e) => setKäyttäjänSukunimi(e.target.value)}
@@ -85,7 +87,7 @@ export default function Login(props) {
 
         <p><TextField
           id="kirjaudu-sähköposti"
-          label="Sähköposti"
+          label={strings.email}
           type="email"
           variant="outlined"
           onChange={(e) => setKäyttäjänSähköposti(e.target.value)}
@@ -93,7 +95,7 @@ export default function Login(props) {
 
         <p><TextField
           id="kirjaudu-salasana"
-          label="Salasana"
+          label={strings.password}
           type="password"
           variant="outlined"
           onChange={(e) => setKäyttäjänSalasana(e.target.value)}
@@ -101,7 +103,7 @@ export default function Login(props) {
 
         <p><TextField
           id="kirjaudu-salasana2"
-          label="Salasana uudelleen"
+          label={strings.passwordAgain}
           type="password"
           variant="outlined"
           onChange={(e) => setKäyttäjänSalasana2(e.target.value)}
@@ -112,14 +114,14 @@ export default function Login(props) {
         <br className="lomake-br"/>
         <p><TextField
           id="kirjaudu-rooli"
-          label="Roolisalasana"
+          label={strings.rolePassword}
           type="password"
           variant="outlined"
           onChange={(e) => (setKäyttäjänRooliTarkistus(e.target.value))}
         /></p>
         <br className="lomake-br"/>
         <Button block size="lg" onClick={() => luoKäyttäjä()}>
-          Luo käyttäjä
+          {strings.register}
         </Button>
 
       </div>

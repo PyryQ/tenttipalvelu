@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import "./App.css";
 
 import TextField from '@material-ui/core/TextField';
+import strings from './Localization';
 
 
 //Käyttäjältä pyydetään sähköposti ja salasana
@@ -45,20 +46,20 @@ export default function Login(props) {
       <div className="kirjaudu">
         <TextField
           id="login-sähköposti"
-          label="Sähköposti"
+          label={strings.email}
           variant="outlined"
           onChange={(e) => setKäyttäjänSähköposti(e.target.value)}
         />
         <TextField
           id="login-salasana"
-          label="Salasana"
+          label={strings.password}
           type="password"
           variant="outlined"
           onChange={(e) => setKäyttäjänSalasana(e.target.value)}
         />
         <br></br>
         <Button block size="lg" onClick={() => tarkistaKirjautuminen()}>
-          Kirjaudu
+        {strings.login}
         </Button>
 
       </div>

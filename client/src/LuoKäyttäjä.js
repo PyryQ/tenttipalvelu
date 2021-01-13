@@ -21,15 +21,15 @@ export default function Login(props) {
   const luoKäyttäjä = async () => {
 
     if (!tarkistaSalasana(käyttäjänSalasana)){
-      alert("Salasanassa tulee olla vähintään: \n - kuusi merkkiä \n - yksi numero \n - yksi pieni kirjain \n - yksi iso kirjain.");
+      alert(strings.passwordNotice);
     }
 
     else if(!tarkistaSähköposti(käyttäjänSähköposti)){
-      alert("Sähköposti ei käy.");
+      alert(strings.invalidEmail);
     }
 
     else if(käyttäjänSalasana !== käyttäjänSalasana2){
-      alert("Salasanat eivät täsmää.");
+      alert(strings.unmatchPassword);
     }
 
     else if (käyttäjänEtunimi !== "" && käyttäjänSukunimi !== "" &&  käyttäjänEtunimi.length > 0){
@@ -43,13 +43,13 @@ export default function Login(props) {
         let käyttäjänTiedot = {etunimi: käyttäjänEtunimi, sukunimi: käyttäjänSukunimi, sahkoposti: käyttäjänSähköposti, rooli: käyttäjänRooli, salasana: käyttäjänSalasana}
         let tietokantaKäyttäjä = await axios.post("http://localhost:4000/lisaakayttaja", käyttäjänTiedot)
         if (tietokantaKäyttäjä.data === null || tietokantaKäyttäjä.data === "" || tietokantaKäyttäjä.data === undefined || tietokantaKäyttäjä.data === false){
-          alert("Jokin meni pieleen.")
+          alert(strings.somethingWrong)
         }
-        else alert("Käyttäjän luonti onnistui!")
+        else alert(strings.userSuccesful)
       }
-      else alert("Roolin asettaminen ei onnistunut")
+      else alert(strings.incorrectRolePW)
     }
-    else alert("Jokin kohta puuttuu.");
+    else alert(strings.unfilledForm);
   }
 
   function tarkistaSähköposti(email) {
@@ -109,8 +109,7 @@ export default function Login(props) {
           onChange={(e) => setKäyttäjänSalasana2(e.target.value)}
         /></p>
 
-        Adminsalasana käyttöoikeuksille.
-        Jos olet oppilas, kirjoita "oppilas".
+        {strings.adminPasswordQuide}
         <br className="lomake-br"/>
         <p><TextField
           id="kirjaudu-rooli"

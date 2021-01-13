@@ -41,6 +41,7 @@ import strings from './Localization.js'
 // pisteytys
 // style omaan jsään?
 // tokenin säilyminen?
+// Käyttäjän tiedot
 
 
 

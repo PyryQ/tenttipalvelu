@@ -30,14 +30,14 @@ export default function Login(props) {
           props.asetaToken(tietokantaToken.data)
           props.kirjautuminen(true)
         }
-        else alert("Kirjautuminen ei onnistunut. (try)")
+        else alert(strings.LoginFailed)
       
       }catch {
-        alert("Kirjautuminen ei onnistunut. (catch)")
+        alert(strings.LoginFailed)
         console.log("Tokenin asettamisessa jotain pielessä.")
       }
     }
-    else alert("Kirjautuminen ei onnistunut.")
+    else alert(strings.LoginFailed)
   }
 
   return (

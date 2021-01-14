@@ -11,7 +11,7 @@ let strings = new LocalizedStrings({
    lastname:"Last name",
    password:"Password",
    passwordAgain:"Password again",
-   rolePassword:"Rolepassword",
+   rolePassword:"Role password",
    admin: "Admin",
    role: "Role",
 

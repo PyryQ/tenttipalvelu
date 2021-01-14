@@ -14,8 +14,11 @@ import MuokkaaKysymyksiä from './MuokkaaKysymyksiä';
 import KaavioVaaka from './KaavioVaaka';
 import Käyttäjä from './Käyttäjä';
 import LuoKäyttäjä from './LuoKäyttäjä';
-import Login from './Login'
+import Login from './Login';
 import { tarkistaKäyttäjänRooli } from './HttpKutsut';
+import Dropzone from './Dropzone';
+
+import {useDropzone} from 'react-dropzone';
 
 //Kuvat
 import finland from './finland.png';
@@ -43,6 +46,8 @@ import strings from './Localization.js'
 // tokenin säilyminen?
 // Käyttäjän tiedot
 
+//Ohjelman päivitys? /token
+
 
 
 function App() {
@@ -63,6 +68,8 @@ function App() {
   const [state, dispatch] = useReducer(reducer, kyselyt);
 
   const [kieli, setKieli] = useState('fi')
+
+  //const lang ) navigator.language
 
 
   
@@ -267,12 +274,9 @@ function App() {
     
   }
 
-  const forceUpdate = React.useCallback(() => setNäkymä(4), []);
 
-  const handleRefresh = () => {
-    // by calling this method react re-renders the component
-    this.setState({});
-  };
+
+
 
 
 
@@ -338,6 +342,9 @@ function App() {
 
             <Button color="inherit" 
               onClick={() => setNäkymä(5)}>{strings.user}</Button>
+
+            <Button color="inherit" 
+              onClick={() => setNäkymä(7)}>Dropzone</Button>
 
             {käyttäjäOnAdmin() ?
             <Button variant="contained" color="secondary" 
@@ -426,10 +433,14 @@ function App() {
         }
 
         {näkymä === 5 ?
-        <Käyttäjä käyttäjänToken = {käyttäjänToken}/> : null}
+          <Käyttäjä käyttäjänToken = {käyttäjänToken}/> : null}
 
         {näkymä === 6 ?
-        <LuoKäyttäjä/> : null}
+          <LuoKäyttäjä/> : null}
+
+
+        {näkymä === 7 ?
+          <Dropzone/> : null}
         <br></br>
         </div>
       </div>

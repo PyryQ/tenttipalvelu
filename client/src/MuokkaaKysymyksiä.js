@@ -297,7 +297,7 @@ async function päivitäTämäVastausNimi(vastaus_id, teksti, indexK, indexV) {
 
       {/*Tulostetaan kysymys, sen poistobutton ja vastausvaihtoehdot*/}
       {dataM.kysely.map((itemK, indexK) => 
-        <Card className="korttiM" elevation={3} key={"kortti" + itemK.kysymys_id}>
+        <Card className="korttiM" l={2} elevation={3} key={"kortti" + itemK.kysymys_id}>
           <div>
             <Input className="kysymysM" 
               defaultValue={itemK.kysymys}

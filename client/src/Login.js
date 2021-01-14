@@ -42,27 +42,25 @@ export default function Login(props) {
 
   return (
     // Sisäänkirjautumisen kohdat
-    <div>
-      <div className="kirjaudu">
-        <TextField
-          id="login-sähköposti"
-          label={strings.email}
-          variant="outlined"
-          onChange={(e) => setKäyttäjänSähköposti(e.target.value)}
-        />
-        <TextField
-          id="login-salasana"
-          label={strings.password}
-          type="password"
-          variant="outlined"
-          onChange={(e) => setKäyttäjänSalasana(e.target.value)}
-        />
-        <br></br>
-        <Button block size="lg" onClick={() => tarkistaKirjautuminen()}>
+    <div className="kirjaudu">
+      <p><TextField
+        id="login-sähköposti"
+        label={strings.email}
+        variant="outlined"
+        onChange={(e) => setKäyttäjänSähköposti(e.target.value)}
+      /></p>
+      <TextField
+        id="login-salasana"
+        label={strings.password}
+        type="password"
+        variant="outlined"
+        onChange={(e) => setKäyttäjänSalasana(e.target.value)}
+      />
+      <br></br>
+      <Button block size="lg" onClick={() => tarkistaKirjautuminen()}>
         {strings.login}
-        </Button>
+      </Button>
 
-      </div>
     </div>
   );
 }

@@ -48,12 +48,18 @@
   position: center;
 }
 
+.korttiM {
+  margin-right: 100px;
+  margin-left: 5px;
+} 
+
 
 
 
 /* LuoKäyttäjä */
 .rekisteröidy {
-  margin-left: 20px;
+  width:230px;
+  margin: auto;
 }
 
 .lomake-br {
@@ -72,8 +78,25 @@
 
 /* Login */
 .kirjaudu {
-  margin-left: 20px;
+  width:230px;
+  margin: auto;
 }
+
+
+
+/* Dropzone */
+.dropzone {
+  margin-left: 20px;
+  margin-right: 100px;
+  outline-color: black;
+}
+
+.dropcontainer {
+  margin-left: 20px;
+  margin-right: 100px;
+}
+
+
 
 
 

@@ -183,6 +183,17 @@ export async function haeKäyttäjänTiedot(sähköposti) {
   }
 }
 
+export async function haeKäyttäjät() {
+  try{
+    let result = await axios.get("http://localhost:4000/kayttajat")
+    console.log(result.data)
+    return(result.data)
+  }
+  catch(exception){
+    console.log("Käyttäjien tietoja ei saatu.")
+  }
+}
+
 
 export async function tarkistaKäyttäjänRooli(käyttäjänToken) {
   try{

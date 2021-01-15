@@ -13,6 +13,7 @@ import TulostaKysymykset from './TulostaKysymykset';
 import MuokkaaKysymyksiä from './MuokkaaKysymyksiä';
 import KaavioVaaka from './KaavioVaaka';
 import Käyttäjä from './Käyttäjä';
+import Käyttäjät from './Käyttäjät';
 import LuoKäyttäjä from './LuoKäyttäjä';
 import Login from './Login';
 import { tarkistaKäyttäjänRooli } from './HttpKutsut';
@@ -45,6 +46,9 @@ import strings from './Localization.js'
 // style omaan jsään?
 // tokenin säilyminen?
 // Käyttäjän tiedot
+
+//Käyttäjän  tentti
+//Lista käyttäjistä
 
 //Ohjelman päivitys? /token
 
@@ -349,6 +353,11 @@ function App() {
               onClick={() => setNäkymä(2)}> {strings.editExams} </Button>
              : null }
 
+            {käyttäjäOnAdmin() ?
+            <Button color="inherit" 
+              onClick={() => setNäkymä(8)}> Käyttäjät!!! </Button>
+             : null }
+
             <Button 
               onClick={() => setNäkymä(7)}>{strings.dropdemo}</Button>
             
@@ -435,6 +444,9 @@ function App() {
 
         {näkymä === 5 ?
           <Käyttäjä käyttäjänToken = {käyttäjänToken}/> : null}
+
+        {näkymä === 8 ?
+          <Käyttäjät käyttäjänToken = {käyttäjänToken}/> : null}
 
         {näkymä === 6 ?
           <LuoKäyttäjä/> : null}

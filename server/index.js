@@ -295,6 +295,16 @@ app.get('/kayttajanvastaukset/:kayttaja_id/:vastaus_id', (req, res, next) => {
   })
 })
 
+//Käyttäjät
+app.get('/kayttajat', (req, res, next) => {
+  db.query('SELECT käyttäjä_id AS id, etunimi, sukunimi, sähköposti, rooli FROM käyttäjä', (err, result) => {
+    if (err) {
+      return next(err)
+    }
+    res.send(result.rows)
+  })
+})
+
 
 
 app.get('/kayttajantiedottokenista/:token', (req, res, next) => {

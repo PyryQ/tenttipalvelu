@@ -57,9 +57,9 @@ export default function TulostaKysymykset(props) {
     }
   }
 
-  const lisääTämäKäyttäjänVastaus = (vastaus, vastaus_id, indexK, indexV) =>{
+  const lisääTämäKäyttäjänVastaus = (vastaus, vastaus_id, oikea_vastaus, indexK, indexV) =>{
 
-      lisääKäyttäjänVastaus(vastaus_id, vastaus, token).then((result) => {
+      lisääKäyttäjänVastaus(vastaus_id, vastaus, oikea_vastaus, token).then((result) => {
         if (result !== false){
           props.dispatch({type: 'VASTAUS_VALITTU', data:{valittuV: vastaus, indexKy: indexK, indexVa: indexV}})
         }
@@ -83,7 +83,7 @@ export default function TulostaKysymykset(props) {
             className="kysymys" 
             key={"checkbox" +  itemV.vastaus_id} 
             checked={itemV.valittu} 
-            onChange={(e) => (lisääTämäKäyttäjänVastaus(e.target.checked, itemV.vastaus_id, indexK, indexV))}/>
+            onChange={(e) => (lisääTämäKäyttäjänVastaus(e.target.checked, itemV.vastaus_id, itemV.oikea_vastaus, indexK, indexV))}/>
           {itemV.vastaus} 
         </label>
 

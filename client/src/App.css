@@ -30,9 +30,14 @@
 
 
 /* MuokkaaKysymyksiä */
+.tenttiM{
+  margin-left: 20px;
+  width: 400px;
+}
+
 .kysymysM{
   margin-left: 20px;
-  width: 80%;
+  width: 84%;
 }
 
 .lisääM {
@@ -49,7 +54,8 @@
 }
 
 .korttiM {
-  margin-right: 100px;
+  min-width: 600px;
+  width: 70%;
   margin-left: 5px;
 } 
 
@@ -100,6 +106,12 @@
 
 .files{
   margin-left: 10px;
+}
+
+
+
+.kaavio{
+  width: 50%;
 }
 
 

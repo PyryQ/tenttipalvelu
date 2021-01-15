@@ -3,6 +3,8 @@ import { useCallback } from 'react'
 import './App.css';
 import Card from '@material-ui/core/Card';
 import axios from 'axios';
+import Button from '@material-ui/core/Button';
+
 
 
 //Superagent
@@ -54,12 +56,13 @@ superagent.post('/api/pet').then(console.log).catch(console.error);
       <Card className="dropcontainer">
         <div {...getRootProps({className: 'dropzone'})}>
           <input {...getInputProps()} />
-          <p>Drag 'n' drop some files here, or click to select files</p>
+          <p>Lisää vastaustiedostosi tähän.</p>
         </div>
         <aside>
           <h4 className="files">Files</h4>
           <ul>{files}</ul>
         </aside>
       </Card>
+      
     );
   }

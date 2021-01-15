@@ -40,9 +40,9 @@ export default function KaavioVaaka(props){
 
   //displayName: 'BarExample',
     return (
-      <div>
+      <div className="kaavio">
         <h2>Tulokset aiheittain</h2>
-        <HorizontalBar
+        <HorizontalBar 
           data={data}
           width={100}
           height={60}

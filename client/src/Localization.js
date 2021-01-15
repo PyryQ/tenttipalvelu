@@ -21,11 +21,12 @@ let strings = new LocalizedStrings({
    user:"User",
    signof:"Sign off",
    editExams:"Edit exams",
-   demo: "Demos",
+   chartdemo: "Chart demo",
+   dropdemo: "Dropzone demo",
 
    //Changes to exams
    addQ: "Add question",
-   delete: "Delete",
+   deleteE: "Delete exam",
    addE: "Add new Exam",
 
    //Additions to database
@@ -69,16 +70,17 @@ let strings = new LocalizedStrings({
    admin: "Admin",
    role: "Rooli",
 
-  //Navigation buttons
+  //Navikointipainikkeet
   exams:"Tentit",
   user:"Käyttäjä",
   signof:"Kirjaudu ulos",
   editExams:"Muokkaa tenttejä",
-  demo: "Demot",
+  chartdemo: "Kaaviodemo",
+  dropdemo: "Dropzonedemo",
 
   //Muokkaus
   addQ:"Lisää kysymys",
-  delete:"Poista",
+  deleteE: "Poista tentti",
   addE:"Lisää uusi tentti",   
 
   //Tietokantalisäykset

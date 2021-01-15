@@ -249,7 +249,7 @@ async function päivitäTämäVastausNimi(vastaus_id, teksti, indexK, indexV) {
     <div>
 
       {/*Input tentin nimen muokkaamiseksi*/}
-      <Input key={"tentti_input" + dataM.tentti_id} className="kysymysM" defaultValue={dataM.nimi} 
+      <Input key={"tentti_input" + dataM.tentti_id} className="tenttiM" defaultValue={dataM.nimi} 
         onChange={(e) => päivitäTämäTenttiNimi(dataM.tentti_id, e.target.value)}>
       </Input>
       <br></br>
@@ -262,7 +262,7 @@ async function päivitäTämäVastausNimi(vastaus_id, teksti, indexK, indexV) {
             poistaTämäTentti();
           }
         }}>
-        <DeleteIcon/>{strings.delete} {dataM.nimi}</Button>
+        <DeleteIcon/>{strings.deleteE}</Button>
 
       {/*Button tentin lisäämiseksi*/}
       <Button className="lisääUT" onClick={() => lisääUusiTentti()}>

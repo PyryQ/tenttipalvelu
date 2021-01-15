@@ -343,17 +343,18 @@ function App() {
             <Button color="inherit" 
               onClick={() => setNäkymä(5)}>{strings.user}</Button>
 
-            <Button color="inherit" 
-              onClick={() => setNäkymä(7)}>Dropzone</Button>
 
             {käyttäjäOnAdmin() ?
-            <Button variant="contained" color="secondary" 
+            <Button color="inherit" 
               onClick={() => setNäkymä(2)}> {strings.editExams} </Button>
              : null }
+
+            <Button 
+              onClick={() => setNäkymä(7)}>{strings.dropdemo}</Button>
             
             {käyttäjäOnAdmin() ?
-              <Button variant="contained" color="secondary" 
-                onClick={() => setNäkymä(3)}> {strings.demo}</Button>
+              <Button 
+                onClick={() => setNäkymä(3)}> {strings.chartdemo}</Button>
             : null }
 
             <Button color="inherit" 
@@ -440,7 +441,7 @@ function App() {
 
 
         {näkymä === 7 ?
-          <Dropzone/> : null}
+          <div>Demo  <Dropzone/></div> : null}
         <br></br>
         </div>
       </div>

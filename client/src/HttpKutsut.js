@@ -52,9 +52,9 @@ export async function päivitäVastausNimi(vastaus_id, vastaus, token) {
   }
 }
 
-export async function lisääKäyttäjänVastaus(vastaus_id, vastaus, token) {
+export async function lisääKäyttäjänVastaus(vastaus_id, vastaus, oikea_vastaus, token) {
   try{
-    let result = await axios.post("http://localhost:4000/lisays/lisaakayttajanvastaus/" + vastaus_id + "/" + vastaus + "/" + token)
+    let result = await axios.post("http://localhost:4000/lisays/lisaakayttajanvastaus/" + vastaus_id + "/" + vastaus + "/" + oikea_vastaus + "/" + token)
     return result;
   }
   catch(exception){

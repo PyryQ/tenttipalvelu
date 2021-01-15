@@ -91,7 +91,7 @@ router.post('/lisaakayttajanvastaus/:vastaus_id/:vastaus/:oikea_vastaus/:token',
       käyttäjänSähköposti = decoded.sähköposti
     });
 
-  
+    //Haetaan käyttäjän id sähköpostin perusteella
     db.query("SELECT käyttäjä_id FROM käyttäjä WHERE sähköposti = $1", 
     [käyttäjänSähköposti], (err, result) => { 
         if (err) {
@@ -106,21 +106,18 @@ router.post('/lisaakayttajanvastaus/:vastaus_id/:vastaus/:oikea_vastaus/:token',
       //"SELECT COUNT(DISTINCT vastaus_id) FROM käyttäjänvastaus WHERE käyttäjä_id_fk = $1 AND vastaus_id_fk = $2)"
       //Tutkitaan, onko vastaukseen jo vastattu
       db.query("SELECT CASE WHEN EXISTS (SELECT 1 FROM käyttäjänvastaus WHERE käyttäjä_id_fk = $1 AND vastaus_id_fk = $2) THEN 1 ELSE 0 END", 
-      [käyttäjänId, req.params.vastaus_id], (err, result) => { 
-        
-        console.log("result, " + JSON.stringify(result.rows[0].case))
+      [käyttäjänId, req.params.vastaus_id], (err, result2) => { 
+
         
         if (err) {
           return res.send(null)
         }
 
-        else if (result.rows[0].case === 1){ // Jos vastaava vastaus löytyy, päivitetään se
+        else if (result2.rows[0].case === 1){ // Jos vastaava vastaus löytyy, päivitetään se
           
-          console.log("vastaus löytyy, se on:" + req.params.vastaus)
-          console.log("käyttäjän id:" + käyttäjänId)
-          console.log("vastaus id:" + req.params.vastaus_id)
+          
           db.query("UPDATE käyttäjänvastaus SET käyttäjän_valinta = $3, vastaus_oikein = $4 WHERE käyttäjä_id_fk = $1 AND vastaus_id_fk = $2", 
-          [käyttäjänId, req.params.vastaus_id, req.params.vastaus, onkoVastausOikein], (err, result2) => { 
+          [käyttäjänId, req.params.vastaus_id, req.params.vastaus, onkoVastausOikein], (err, result) => { 
             if (err) {
               return res.send(null)
             }
@@ -128,10 +125,10 @@ router.post('/lisaakayttajanvastaus/:vastaus_id/:vastaus/:oikea_vastaus/:token',
           })
         }
 
-        else if (result.rows[0].case === 0){ //Jos vastaavaa vastausta ei löydy, lisätään se
+        else if (result2.rows[0].case === 0){ //Jos vastaavaa vastausta ei löydy, lisätään se
           
           db.query("INSERT INTO käyttäjänvastaus (käyttäjä_id_fk, vastaus_id_fk, käyttäjän_valinta, vastaus_oikein) values ($1, $2, $3, $4)", 
-          [käyttäjänId, req.params.vastaus_id, req.params.vastaus, onkoVastausOikein], (err, result2) => { 
+          [käyttäjänId, req.params.vastaus_id, req.params.vastaus, onkoVastausOikein], (err, result) => { 
             console.log("vastausta ei löydy")
             if (err) {
               return res.send(null)

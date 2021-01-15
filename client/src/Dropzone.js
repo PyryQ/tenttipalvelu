@@ -50,6 +50,10 @@ superagent.post('/api/pet').then(console.log).catch(console.error);
         </li>
       ));
 
+        //Anssin linkkaama pätkä
+      //let url = file && URL.createObjectURL(file)
+      //<img src={url} width={150} height={150} />
+
 
   
     return (

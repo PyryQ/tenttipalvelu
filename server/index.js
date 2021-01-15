@@ -8,6 +8,13 @@ app.use(cors({
      optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
    }))
 
+const fileUpload = require('express-fileupload');
+
+app.use(fileUpload({
+  limits: { fileSize: 2 * 1024 * 1024 * 1024 },
+}));
+  
+
 
 var bodyParser = require("body-parser")
 app.use(bodyParser.json())
@@ -163,10 +170,13 @@ app.post('/lisaakayttajantentti/:k_id/:t_id/:pm/:arvos/:t_tehty', (req, res, nex
 
 
 
+
+//-----------------TIEDOSTOT----------------
+
+
 app.post('/upload', function (req, res) {
-  /* if (!req.files || Object.keys(req.files).length === 0) {
-    return res.status(400).send('No files were uploaded.');
-  } */
+  console.log("upload")
+
   if (!req.files || Object.keys(req.files).length === 0) {
       return res.status(400).send('No files were uploaded.');
   }
@@ -174,8 +184,11 @@ app.post('/upload', function (req, res) {
   // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
   let newFile = req.files.file;
 
+
+  //ESIMERKKIKOODIN TIEDOSTONKÄSITTELYÄ
+
   let date = Date.now().toString();
-  let fileName = 'bankStatements/newTransactions' + date + '.pdf'
+  let fileName = 'Vastaus' + date + '.pdf'
   newFile.mv(fileName, function (err) {
       if (err) {
           return res.status(500).send(err)
@@ -188,7 +201,6 @@ app.post('/upload', function (req, res) {
           });
       }
   });
-  console.log("hereweare")
 });
 
 

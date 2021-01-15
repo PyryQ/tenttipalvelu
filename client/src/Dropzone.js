@@ -26,11 +26,10 @@ superagent.post('/api/pet').then(console.log).catch(console.error);
   export default function Dropzone(props) {
 
     
-
-    const onDrop = useCallback(files => {
+    const onDrop = useCallback(async files => {
         console.log(files);
     
-        const req = axios.post('http://localhost:4000/upload');
+        const req = await axios.post('http://localhost:4000/upload');
     
         files.forEach(file => {
           req.attach('file', file);
@@ -58,7 +57,7 @@ superagent.post('/api/pet').then(console.log).catch(console.error);
           <p>Drag 'n' drop some files here, or click to select files</p>
         </div>
         <aside>
-          <h4>Files</h4>
+          <h4 className="files">Files</h4>
           <ul>{files}</ul>
         </aside>
       </Card>

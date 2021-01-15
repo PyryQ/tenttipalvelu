@@ -88,12 +88,18 @@
 .dropzone {
   margin-left: 20px;
   margin-right: 100px;
-  outline-color: black;
+  outline-color:black;
+  height: 50px;
+  margin: auto;
 }
 
 .dropcontainer {
   margin-left: 20px;
-  margin-right: 100px;
+  margin-right: 200px;
+}
+
+.files{
+  margin-left: 10px;
 }
 
 

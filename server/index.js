@@ -40,6 +40,35 @@ opts.secretOrKey = 'sonSALAisuus';
 
 
 
+//-----------------NOTIFICATION---------------------------
+
+
+//var io = require('socket.io');
+//var Server = require('socket.io')
+//const io = new Server(4000);
+const io = require('socket.io')(5556);
+
+var pg = require ('pg');
+
+var con_string = 'tcp://postgres:MnoP1994@localhost:5433/Tenttikanta';
+
+var pg_client = new pg.Client(con_string);
+pg_client.connect();
+var query = pg_client.query('LISTEN aikapaivittyi');
+var query2 = pg_client.query('LISTEN uusikäyttäjä');
+
+io.sockets.on('connection', function (socket) {
+    socket.emit('connected', { connected: true });
+    console.log("socket connected")
+    socket.on('ready for data', function (data) {
+        pg_client.on('notification', function(title) {
+            socket.emit('update', { message: title });
+        });
+    });
+});  
+
+//{tentti:id: NEW.kurssi_tentti_id}
+
 const BCRYPT_SALT_ROUNDS = 12;
 //app.use(passport.initialize());
 //app.use(passport.session());
@@ -74,31 +103,6 @@ var jwt = require('jsonwebtoken');
 
 // console.log(token)
 const SALT_ROUNDS = 9
-
-
-
-// var middleware = {
-//   vainAdmin: function (req, res, next){
-  
-//     let onkoOikeidet = false;
-//     console.log("tarkistustoken " + req)
-
-//     jwt.verify(req, 'sonSALAisuus', function(err, decoded) {
-//       console.log(decoded.rooli)
-//       //voimassaoloaika
-//       if (decoded.rooli === "admin"){
-//         onkoOikeidet = true;
-//       }
-//     });
-
-//     if (onkoOikeidet){
-//       next()
-//     }
-//     else return "ei onnistu"
-//   }
-// }
-
-// app.use(middleware.vainAdmin)
 
 
 
@@ -520,3 +524,7 @@ app.delete('/poistakayttajanvastaus/:kayttaja_id/:vastaus_id', (req, res, next) 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
+
+
+
+

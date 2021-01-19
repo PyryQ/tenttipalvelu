@@ -34,11 +34,13 @@ export default function Login(props) {
 
     else if (käyttäjänEtunimi !== "" && käyttäjänSukunimi !== "" &&  käyttäjänEtunimi.length > 0){
       
-      if (käyttäjänRooliTarkistus === "admin1234" || käyttäjänRooliTarkistus === "oppilas"){
-        if (käyttäjänRooliTarkistus === "admin1234"){
+      if (käyttäjänRooliTarkistus == "admin1234" || käyttäjänRooliTarkistus == "oppilas"){
+        if (käyttäjänRooliTarkistus == "admin1234"){
           setKäyttäjänRooli("admin")
+          console.log(käyttäjänRooli)
         }
         else {setKäyttäjänRooli("oppilas")}
+
 
         let käyttäjänTiedot = {etunimi: käyttäjänEtunimi, sukunimi: käyttäjänSukunimi, sahkoposti: käyttäjänSähköposti, rooli: käyttäjänRooli, salasana: käyttäjänSalasana}
         let tietokantaKäyttäjä = await axios.post("http://localhost:4000/lisaakayttaja", käyttäjänTiedot)

@@ -49,6 +49,7 @@ import strings from './Localization.js'
 
 //Käyttäjän  tentti
 //Lista käyttäjistä
+//adminluonti?
 
 //Ohjelman päivitys? /token
 

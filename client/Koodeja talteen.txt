@@ -284,4 +284,38 @@
         ]
       }
     ]
+
+
+
+
+CREATE TABLE ilmoitukset()
+CREATE FUNCTION notifyUpdate() RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+PERFORM pg_notify(’recordUpdated’, NEW.title);
+RETURN NULL;
+END;
+$$;
+CREATE TRIGGER updated_trigger AFTER UPDATE on ilmoitukset
+FOR EACH ROW EXECUTE PROCEDURE notifyUpdate()
+
+
+
+CREATE TABLE realtime(
+    id SERIAL NOT NULL PRIMARY KEY,
+    title character varying(128)
+);
+
+CREATE FUNCTION notify_realtime() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    PERFORM pg_notify('addedrecord', NEW.title);
+    RETURN NULL;
+END;
+$$;
+
+CREATE TRIGGER updated_realtime_trigger AFTER INSERT ON realtime
+FOR EACH ROW EXECUTE PROCEDURE notify_realtime();
     

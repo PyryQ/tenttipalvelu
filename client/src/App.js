@@ -19,6 +19,8 @@ import Login from './Login';
 import { tarkistaKäyttäjänRooli } from './HttpKutsut';
 import Dropzone from './Dropzone';
 
+
+
 import {useDropzone} from 'react-dropzone';
 
 //Kuvat
@@ -46,6 +48,8 @@ import strings from './Localization.js'
 // style omaan jsään?
 // tokenin säilyminen?
 // Käyttäjän tiedot
+
+//Session
 
 //Käyttäjän  tentti
 //Lista käyttäjistä
@@ -122,37 +126,6 @@ function App() {
 
   },[kieli])
 
-
-
-  const updateData = async () => {
-    try{
-      let result = await axios.get("http://localhost:4000/tentit")
-
-      //state pohjustetaan
-      if (result.data.length > 0){
-        for (var i = 0; i < result.data.length; i++){ //käydään läpi tentit
-          result.data[i].kysely = []
-          let kysymykset = await axios.get("http://localhost:4000/kysymykset/" + result.data[i].tentti_id)
-          result.data[i].kysely = kysymykset.data
-
-          if (result.data[i].kysely.length > 0){
-            for (var j = 0; j < result.data[i].kysely.length; j++){ // käydään kysymykset
-              result.data[i].kysely[j].vastaukset = []
-              let vastaukset = await axios.get("http://localhost:4000/vastaukset/" + result.data[i].kysely[j].kysymys_id)
-              result.data[i].kysely[j].vastaukset = vastaukset.data
-            }
-          }
-        }
-        dispatch({type: "INIT_DATA", data: result.data})
-        console.log(result.data)
-      }else{
-        throw("Tietokannan alustaminen epäonnistui (Get)") 
-      }
-      }
-      catch(exception){
-        console.log(exception)
-      }
-    }
     
 
   // localStoragen data-avaimena on "data", joka alustetaan tässä
@@ -279,6 +252,14 @@ function App() {
     
   }
 
+  const socketilmoitus = (title) => {
+    window.alert(title);
+  }
+
+  // socket.onmessage = function (title) {
+  //   window.alert(title);
+  // }
+
 
 
 
@@ -356,7 +337,7 @@ function App() {
 
             {käyttäjäOnAdmin() ?
             <Button color="inherit" 
-              onClick={() => setNäkymä(8)}> Käyttäjät!!! </Button>
+              onClick={() => setNäkymä(8)}> {strings.users} </Button>
              : null }
 
             <Button 
@@ -457,6 +438,13 @@ function App() {
           <div>Demo  <Dropzone/></div> : null}
         <br></br>
         </div>
+
+          
+
+
+
+
+
       </div>
   );
 }

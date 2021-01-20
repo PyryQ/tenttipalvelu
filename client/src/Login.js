@@ -23,7 +23,7 @@ export default function Login(props) {
       try {
         //Verrataan sähköpostia ja salasanaa tietokantaa vasten
         let tietokantaToken = await axios.post("http://localhost:4000/tarkistasalasana", {sahkoposti: käyttäjänSähköposti, salasana: käyttäjänSalasana})
-        console.log(tietokantaToken.data)
+
         //Mikäli token on validi, tallennetaan token ja merkitään kirjautuminen onnistuneeksi
         if (tietokantaToken.data !== "" && tietokantaToken.data !== undefined && tietokantaToken.data !== null){
           alert(strings.LoginSuccessful)

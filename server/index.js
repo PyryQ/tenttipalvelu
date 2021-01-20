@@ -1,19 +1,21 @@
+
 const express = require('express')
 var cors = require("cors")
 var app = express()
 var router = express.Router();
 
+
 app.use(cors({
-     origin: 'http://localhost:3000',
-     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-   }))
+  origin: 'http://localhost:3000',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}))
 
 const fileUpload = require('express-fileupload');
 
 app.use(fileUpload({
   limits: { fileSize: 2 * 1024 * 1024 * 1024 },
 }));
-  
+
 
 
 var bodyParser = require("body-parser")
@@ -30,10 +32,13 @@ const bcrypt = require('bcrypt')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 var JwtStrategy = require('passport-jwt').Strategy,
-    ExtractJwt = require('passport-jwt').ExtractJwt;
+  ExtractJwt = require('passport-jwt').ExtractJwt;
 var opts = {}
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme("jwt")
 opts.secretOrKey = 'sonSALAisuus';
+
+
+
 // use passport session
 // var session = require("express-session"),
 //     bodyParser = require("body-parser");
@@ -44,28 +49,108 @@ opts.secretOrKey = 'sonSALAisuus';
 
 
 //var io = require('socket.io');
-//var Server = require('socket.io')
+var Server = require('socket.io')
 //const io = new Server(4000);
-const io = require('socket.io')(5556);
 
-var pg = require ('pg');
+
+app.use('/socket.io', express.static(__dirname + '/node_modules/socket.io')) //static socket.io
+
+
+const httpServer = require('http').createServer()
+const io = require('socket.io')(httpServer, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"]
+  }
+})
+
+httpServer.listen(5556)
+
+app.use('/socket.io', express.static(__dirname + '/node_modules/soclet.io'))
+
+//Esim 1
+
+var pg = require('pg');
 
 var con_string = 'tcp://postgres:MnoP1994@localhost:5433/Tenttikanta';
 
 var pg_client = new pg.Client(con_string);
 pg_client.connect();
-var query = pg_client.query('LISTEN aikapaivittyi');
-var query2 = pg_client.query('LISTEN uusikäyttäjä');
+//var query = pg_client.query('LISTEN aikapaivittyi');
+//var query2 = pg_client.query('LISTEN uusikayttaja');
+var query = pg_client.query('LISTEN tenttilisatty');
 
-io.sockets.on('connection', function (socket) {
-    socket.emit('connected', { connected: true });
-    console.log("socket connected")
-    socket.on('ready for data', function (data) {
-        pg_client.on('notification', function(title) {
-            socket.emit('update', { message: title });
-        });
+var query2 = pg_client.query('LISTEN uusikayttaja');
+
+var query3 = pg_client.query('LISTEN aikamuuttui');
+
+// pg_client.on('notification', async (data) => {
+//   console.log(data.payload)
+//   //const payload = JSON.parse(data);
+//   console.log('tentti lisätty', data.payload)
+// })
+
+
+io.on('connection', function (socket) {
+  socket.emit('connected', { connected: true });
+  console.log("socket connected")
+  socket.on('ready for data', function (data) {
+
+    console.log("socket ready for data")
+
+    pg_client.on('notification', function (title) {
+      socket.emit('update', { message: title });
+      socket.send(title)
     });
-});  
+  });
+});
+
+
+
+// //-----------------------------ESIM 2
+// const socketIo = require("socket.io");
+
+// const port2 = process.env.PORT || 5556;
+// //const index = require("./routes/index");
+
+// const server = http.createServer(app);
+
+// const io = socketIo(server); // < Interesting!
+
+// const getApiAndEmit = "TODO";
+
+// server.listen(port2, () => console.log(`Listening on port ${port}`));
+
+
+// io.on("connection", (socket) => {
+//   console.log("New client connected");
+//   if (interval) {
+//     clearInterval(interval);
+//   }
+//   interval = setInterval(() => getApiAndEmit(socket), 1000);
+//   socket.on("disconnect", () => {
+//     console.log("Client disconnected");
+//     clearInterval(interval);
+//   });
+// });
+
+
+//-----------------------ESIM 3 -----------------
+
+
+// const webSocketsServerPort = 5556;
+// const webSocketServer = require('websocket').server;
+// const http = require('http');
+// // Spinning the http server and the websocket server.
+// const server = http.createServer();
+// server.listen(webSocketsServerPort);
+// const wsServer = new webSocketServer({
+//   httpServer: server
+// });
+
+
+
+
 
 //{tentti:id: NEW.kurssi_tentti_id}
 
@@ -115,61 +200,61 @@ app.post('/lisaakayttaja', (req, res, next) => {
   let annettuSähköposti = req.body.sahkoposti
   let annettuSalasana = req.body.salasana
 
-  try{
-    db.query("INSERT INTO käyttäjä (etunimi, sukunimi, sähköposti, rooli) values ($1, $2, $3, $4) RETURNING sähköposti;", 
-    [req.body.etunimi, req.body.sukunimi, req.body.sahkoposti, req.body.rooli], (err, result) => { 
-      if (err) {
-        return res.send(false) 
-      }
+  try {
+    db.query("INSERT INTO käyttäjä (etunimi, sukunimi, sähköposti, rooli) values ($1, $2, $3, $4) RETURNING sähköposti;",
+      [req.body.etunimi, req.body.sukunimi, req.body.sahkoposti, req.body.rooli], (err, result) => {
+        if (err) {
+          return res.send(false)
+        }
 
-      bcrypt.hash(req.body.salasana, SALT_ROUNDS, (err, hash) => {
-        db.query("UPDATE käyttäjä SET salasana = $1 WHERE sähköposti = $2", 
-        [hash, annettuSähköposti], (err, result) => { 
-          if (err) {
-            // sähköposti on jo käytössä
-            return res.send(false) 
-            //return next(error)
-          }
-          return res.send(true) 
-        })
-      });
+        bcrypt.hash(req.body.salasana, SALT_ROUNDS, (err, hash) => {
+          db.query("UPDATE käyttäjä SET salasana = $1 WHERE sähköposti = $2",
+            [hash, annettuSähköposti], (err, result) => {
+              if (err) {
+                // sähköposti on jo käytössä
+                return res.send(false)
+                //return next(error)
+              }
+              return res.send(true)
+            })
+        });
 
-    }) 
-  } catch {console.log("Käyttäjän lisääminen ei onnistunut")}
+      })
+  } catch { console.log("Käyttäjän lisääminen ei onnistunut") }
 
 })
 
 app.post('/lisaakayttaja2', (req, res, next) => {
-  db.query("INSERT INTO käyttäjä (etunimi, sukunimi, sähköposti, rooli, salasana) values ($1, $2, $3, $4, $5);", 
-  [req.body.etunimi, req.body.sukunimi, req.body.sahkoposti, req.body.rooli, req.body.salasana], (err, result) => { 
-    if (err) {
-      return next(err)
-    }
-    res.send(result) 
-  }) 
+  db.query("INSERT INTO käyttäjä (etunimi, sukunimi, sähköposti, rooli, salasana) values ($1, $2, $3, $4, $5);",
+    [req.body.etunimi, req.body.sukunimi, req.body.sahkoposti, req.body.rooli, req.body.salasana], (err, result) => {
+      if (err) {
+        return next(err)
+      }
+      res.send(result)
+    })
 })
 //http://localhost:4000/lisaakayttaja/testi/testinen/testaus/kayttaja/salasana12345
 
 //Lisää käyttäjän vastaus
 app.post('/lisaakayttajanvastaus/:k_id/:v_id/:k_valinta/:v_oikein', (req, res, next) => {
-  db.query("INSERT INTO käyttäjänvastaus (käyttäjä_id_fk, vastaus_id_fk, käyttäjän_valinta, vastaus_oikein) VALUES ($1, $2, $3, $4);", 
-  [req.params.k_id, req.params.v_id, req.params.k_valinta, req.params.v_oikein], (err, result) => { 
-    if (err) {
-      return next(err)
-    }
-    res.send("onnistui")
-  }) 
+  db.query("INSERT INTO käyttäjänvastaus (käyttäjä_id_fk, vastaus_id_fk, käyttäjän_valinta, vastaus_oikein) VALUES ($1, $2, $3, $4);",
+    [req.params.k_id, req.params.v_id, req.params.k_valinta, req.params.v_oikein], (err, result) => {
+      if (err) {
+        return next(err)
+      }
+      res.send("onnistui")
+    })
 })
 
 //Lisää käyttäjän tentti
 app.post('/lisaakayttajantentti/:k_id/:t_id/:pm/:arvos/:t_tehty', (req, res, next) => {
-  db.query("INSERT INTO käyttäjäntentti (käyttäjä_id_fk, tentti_id_fk, pistemäärä, arvosana, tentti_tehty) VALUES ($1, $2, $3, $4, $5);", 
-  [req.params.k_id, req.params.v_id, req.params.pm, req.params.arvos, req.params.t_tehty], (err, result) => { 
-    if (err) {
-      return next(err)
-    }
-    res.send("onnistui")
-  }) 
+  db.query("INSERT INTO käyttäjäntentti (käyttäjä_id_fk, tentti_id_fk, pistemäärä, arvosana, tentti_tehty) VALUES ($1, $2, $3, $4, $5);",
+    [req.params.k_id, req.params.v_id, req.params.pm, req.params.arvos, req.params.t_tehty], (err, result) => {
+      if (err) {
+        return next(err)
+      }
+      res.send("onnistui")
+    })
 })
 
 
@@ -182,7 +267,7 @@ app.post('/upload', function (req, res) {
   console.log("upload")
 
   if (!req.files || Object.keys(req.files).length === 0) {
-      return res.status(400).send('No files were uploaded.');
+    return res.status(400).send('No files were uploaded.');
   }
 
   // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
@@ -194,16 +279,16 @@ app.post('/upload', function (req, res) {
   let date = Date.now().toString();
   let fileName = 'Vastaus' + date + '.pdf'
   newFile.mv(fileName, function (err) {
-      if (err) {
-          return res.status(500).send(err)
-      } else {
+    if (err) {
+      return res.status(500).send(err)
+    } else {
 
-          parser.parseBankTransactions(fileName, (items) => {
+      parser.parseBankTransactions(fileName, (items) => {
 
-              return res.json(items);
+        return res.json(items);
 
-          });
-      }
+      });
+    }
   });
 });
 
@@ -237,12 +322,12 @@ app.get('/tentit', (req, res, next) => {
 //Kaikki tentin kysymykset
 app.get('/kysymykset/:tentti_id', (req, res, next) => {
   db.query('SELECT * FROM kysymys WHERE tentti_id_fk = $1',
-  [req.params.tentti_id], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(result.rows)
-  })
+    [req.params.tentti_id], (err, result) => {
+      if (err) {
+        return next(err)
+      }
+      res.send(result.rows)
+    })
 })
 
 //Kaikki kysymykset
@@ -258,45 +343,45 @@ app.get('/kysymykset', (req, res, next) => {
 //Kaikki kysymyksen vastaukset
 app.get('/vastaukset/:kysymys_id', (req, res, next) => {
   db.query('SELECT * FROM vastaus WHERE kysymys_id_fk = $1',
-  [req.params.kysymys_id], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(result.rows)
-  })
+    [req.params.kysymys_id], (err, result) => {
+      if (err) {
+        return next(err)
+      }
+      res.send(result.rows)
+    })
 })
 
 //Käyttäjän tentit
 app.get('/kayttajantentit/:kayttaja_id', (req, res, next) => {
-  db.query('SELECT * FROM käyttäjäntentti WHERE käyttäjä_id_fk = $1', 
-  [req.params.kayttaja_id], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(result.rows)
-  })
+  db.query('SELECT * FROM käyttäjäntentti WHERE käyttäjä_id_fk = $1',
+    [req.params.kayttaja_id], (err, result) => {
+      if (err) {
+        return next(err)
+      }
+      res.send(result.rows)
+    })
 })
 
 //Käyttäjän tentti
 app.get('/kayttajantentit/:kayttaja_id', (req, res, next) => {
-  db.query('SELECT * FROM käyttäjäntentti WHERE käyttäjä_id_fk = $1', 
-  [req.params.kayttaja_id], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(result.rows8)
-  })
+  db.query('SELECT * FROM käyttäjäntentti WHERE käyttäjä_id_fk = $1',
+    [req.params.kayttaja_id], (err, result) => {
+      if (err) {
+        return next(err)
+      }
+      res.send(result.rows8)
+    })
 })
 
 //Käyttäjän tentin vastaukset
 app.get('/kayttajanvastaukset/:kayttaja_id/:vastaus_id', (req, res, next) => {
-  db.query('SELECT * FROM käyttäjänvastaus WHERE käyttäjä_id_fk = $1 AND vastaus_id_fk = $2', 
-  [req.params.kayttaja_id, req.params.vastaus_id], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(result.rows)
-  })
+  db.query('SELECT * FROM käyttäjänvastaus WHERE käyttäjä_id_fk = $1 AND vastaus_id_fk = $2',
+    [req.params.kayttaja_id, req.params.vastaus_id], (err, result) => {
+      if (err) {
+        return next(err)
+      }
+      res.send(result.rows)
+    })
 })
 
 //Käyttäjät
@@ -314,16 +399,16 @@ app.get('/kayttajat', (req, res, next) => {
 app.get('/kayttajantiedottokenista/:token', (req, res, next) => {
   let käyttäjänToken = req.params.token
   let tokenSähköposti
-  jwt.verify(käyttäjänToken, 'sonSALAisuus', function(err, decoded) {
+  jwt.verify(käyttäjänToken, 'sonSALAisuus', function (err, decoded) {
     tokenSähköposti = decoded.sähköposti
   })
-  db.query("SELECT etunimi, sukunimi, sähköposti, rooli FROM käyttäjä WHERE sähköposti = $1", 
-  [tokenSähköposti], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(result.rows)
-  })
+  db.query("SELECT etunimi, sukunimi, sähköposti, rooli FROM käyttäjä WHERE sähköposti = $1",
+    [tokenSähköposti], (err, result) => {
+      if (err) {
+        return next(err)
+      }
+      res.send(result.rows)
+    })
 })
 
 
@@ -331,27 +416,27 @@ app.get('/kayttajantiedottokenista/:token', (req, res, next) => {
 
 app.get('/tarkistarooli/:token', (req, res, next) => {
 
-  let käyttäjänToken = req.params.token  
+  let käyttäjänToken = req.params.token
   let tokenRooli;
   let tokenSähköposti;
 
-  jwt.verify(käyttäjänToken, 'sonSALAisuus', function(err, decoded) {
+  jwt.verify(käyttäjänToken, 'sonSALAisuus', function (err, decoded) {
     tokenRooli = decoded.rooli
     tokenSähköposti = decoded.sähköposti
   })
 
-  db.query("SELECT rooli FROM käyttäjä WHERE sähköposti = $1", 
+  db.query("SELECT rooli FROM käyttäjä WHERE sähköposti = $1",
     [tokenSähköposti], (err, result) => {
 
       if (err) {
         return next(err)
       }
-      if (tokenRooli === "admin" && result.rows[0].rooli === "admin"){
+      if (tokenRooli === "admin" && result.rows[0].rooli === "admin") {
         res.send(true)
       }
       else res.send(false)
 
-  })
+    })
 })
 
 
@@ -367,68 +452,68 @@ app.post('/tarkistasalasana', (req, res, next) => {
   let annettuSalasana = req.body.salasana
   let annettuSähköposti = req.body.sahkoposti
   try {
-    db.query("SELECT salasana, rooli FROM käyttäjä WHERE sähköposti = $1", 
-    [req.body.sahkoposti], (err, result) => {
+    db.query("SELECT salasana, rooli FROM käyttäjä WHERE sähköposti = $1",
+      [req.body.sahkoposti], (err, result) => {
 
-      if (result.rows.length === 0){
-        console.log("Käyttäjää ei löydy.")
-        return res.send(null)
-      }
+        if (result.rows.length === 0) {
+          console.log("Käyttäjää ei löydy.")
+          return res.send(null)
+        }
 
-      if (err) {
-        return res.send(null)
-      }
+        if (err) {
+          return res.send(null)
+        }
 
-      try {
-      bcrypt.compare(annettuSalasana, result.rows[0].salasana, function(err, resultB) {
-        if (resultB){
-          const token = jwt.sign({ sähköposti: annettuSähköposti, rooli: result.rows[0].rooli }, 'sonSALAisuus', {expiresIn: '4h'});
-          return res.send(token)
-          }
-          else {"Salasanan tarkistus ei onnistunut."}
-        });
-      }
-      catch {"Salasanan tarkistus ei onnistunut."}
+        try {
+          bcrypt.compare(annettuSalasana, result.rows[0].salasana, function (err, resultB) {
+            if (resultB) {
+              const token = jwt.sign({ sähköposti: annettuSähköposti, rooli: result.rows[0].rooli }, 'sonSALAisuus', { expiresIn: '4h' });
+              return res.send(token)
+            }
+            else { "Salasanan tarkistus ei onnistunut." }
+          });
+        }
+        catch { "Salasanan tarkistus ei onnistunut." }
 
-    })
-  } catch {"Salasanan tarkistus ei onnistunut."}  
+      })
+  } catch { "Salasanan tarkistus ei onnistunut." }
 })
 
 app.get('/kayttajansalasana/:sahkoposti/:salasana', (req, res, next) => {
-  db.query("SELECT salasana FROM käyttäjä WHERE sähköposti = $1", 
-  [req.params.sahkoposti], (err, result) => {
-    //console.log(req.params.salasana)
-    console.log(result.rows[0])
+  db.query("SELECT salasana FROM käyttäjä WHERE sähköposti = $1",
+    [req.params.sahkoposti], (err, result) => {
+      //console.log(req.params.salasana)
+      console.log(result.rows[0])
 
-    if (err) {
-      return next(err)
-    }
+      if (err) {
+        return next(err)
+      }
 
-    res.send(result.rows)
-  })
+      res.send(result.rows)
+    })
 })
 
 
 //Käyttäjän salasana
 app.get('/kirjautuminen/:sahkoposti', (req, res, next) => {
-  db.query("SELECT salasana FROM käyttäjä WHERE sähköposti = $1", 
-  [req.params.sahkoposti], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(result.rows)
-  })
+  db.query("SELECT salasana FROM käyttäjä WHERE sähköposti = $1",
+    [req.params.sahkoposti], (err, result) => {
+      if (err) {
+        return next(err)
+      }
+      res.send(result.rows)
+    })
 })
 
 app.post('/kirjaudu', (req, res, next) => {
-  db.query("SELECT salasana FROM käyttäjä WHERE sähköposti = $1", 
-  [req.body.sähköposti, req.body.salasana], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    console.log(result.rows)
-    res.send(result.rows)
-  })
+  db.query("SELECT salasana FROM käyttäjä WHERE sähköposti = $1",
+    [req.body.sähköposti, req.body.salasana], (err, result) => {
+      if (err) {
+        return next(err)
+      }
+      console.log(result.rows)
+      res.send(result.rows)
+    })
 });
 
 
@@ -439,46 +524,46 @@ app.post('/kirjaudu', (req, res, next) => {
 
 //päivitä oikea vastaus
 app.put('/paivitaoikeavastaus', (req, res, next) => {
-  db.query("UPDATE vastaus SET oikea_vastaus = $2 WHERE vastaus_id = $1;", 
-  [req.body.vastaus_id, req.body.oikein], (err, result) => { 
-    if (err) {
-      return next(err)
-    }
-    res.send(req.body)
-  })
+  db.query("UPDATE vastaus SET oikea_vastaus = $2 WHERE vastaus_id = $1;",
+    [req.body.vastaus_id, req.body.oikein], (err, result) => {
+      if (err) {
+        return next(err)
+      }
+      res.send(req.body)
+    })
 })
 
 app.put('/paivitaetunimi', (req, res, next) => {
-  db.query("UPDATE käyttäjä SET etunimi = $2 WHERE sähköposti = $1;", 
-  [req.body.sähköposti, req.body.etunimi], (err, result) => { 
-    if (err) {
-      return next(err)
-    }
-    res.send(req.body)
-  })
+  db.query("UPDATE käyttäjä SET etunimi = $2 WHERE sähköposti = $1;",
+    [req.body.sähköposti, req.body.etunimi], (err, result) => {
+      if (err) {
+        return next(err)
+      }
+      res.send(req.body)
+    })
 })
 
 app.put('/paivitasukunimi', (req, res, next) => {
-  db.query("UPDATE käyttäjä SET sukunimi = $2 WHERE sähköposti = $1;", 
-  [req.body.sähköposti, req.body.sukunimi], (err, result) => { 
-    if (err) {
-      return next(err)
-    }
-    res.send(req.body)
-  })
+  db.query("UPDATE käyttäjä SET sukunimi = $2 WHERE sähköposti = $1;",
+    [req.body.sähköposti, req.body.sukunimi], (err, result) => {
+      if (err) {
+        return next(err)
+      }
+      res.send(req.body)
+    })
 })
 
 
 
 //päivitä käyttäjän vastaus
 app.put('/paivitakayttajanvastaus/:k_id/:v_id/:k_valinta/:v_oikein', (req, res, next) => {
-  db.query("UPDATE käyttäjänvastaus SET käyttäjän_valinta = $3, vastaus_oikein = $4 WHERE käyttäjä_id_fk = $1 AND vastaus_id_fk = $2;", 
-  [req.params.k_id, req.params.v_id, req.params.k_valinta, req.params.v_oikein], (err, result) => { 
-    if (err) {
-      return next(err)
-    }
-    res.send("Käyttäjän vastauksen päivitys onnistui")
-  }) 
+  db.query("UPDATE käyttäjänvastaus SET käyttäjän_valinta = $3, vastaus_oikein = $4 WHERE käyttäjä_id_fk = $1 AND vastaus_id_fk = $2;",
+    [req.params.k_id, req.params.v_id, req.params.k_valinta, req.params.v_oikein], (err, result) => {
+      if (err) {
+        return next(err)
+      }
+      res.send("Käyttäjän vastauksen päivitys onnistui")
+    })
 })
 
 
@@ -501,23 +586,23 @@ app.delete('/poistakayttaja/:sahkoposti', (req, res, next) => {
 
 
 app.delete('/poistakayttajantentti/:kayttaja_id/:tentti_id', (req, res, next) => {
-  db.query("DELETE FROM kayttajantentti WHERE käyttäjä_id_fk = $2 AND tentti_id_fk = $1;", 
-  [req.params.kayttaja_id, req.params.tentti_id], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(result)
-  })
+  db.query("DELETE FROM kayttajantentti WHERE käyttäjä_id_fk = $2 AND tentti_id_fk = $1;",
+    [req.params.kayttaja_id, req.params.tentti_id], (err, result) => {
+      if (err) {
+        return next(err)
+      }
+      res.send(result)
+    })
 })
 
 app.delete('/poistakayttajanvastaus/:kayttaja_id/:vastaus_id', (req, res, next) => {
-  db.query("DELETE FROM vastaus WHERE käyttäjä_id_fk = $2 AND vastaus_id_fk = $1;", 
-  [req.params.kayttaja_id, req.params.vastaus_id], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(result)
-  })
+  db.query("DELETE FROM vastaus WHERE käyttäjä_id_fk = $2 AND vastaus_id_fk = $1;",
+    [req.params.kayttaja_id, req.params.vastaus_id], (err, result) => {
+      if (err) {
+        return next(err)
+      }
+      res.send(result)
+    })
 })
 
 

@@ -19,6 +19,7 @@ let strings = new LocalizedStrings({
    //Navigation buttons
    exams:"Exams",
    user:"User",
+   users:"Users",
    signof:"Sign off",
    editExams:"Edit exams",
    chartdemo: "Chart demo",
@@ -26,6 +27,7 @@ let strings = new LocalizedStrings({
 
    //Changes to exams
    addQ: "Add question",
+   delete: "Delete",
    deleteE: "Delete exam",
    addE: "Add new Exam",
 
@@ -73,6 +75,7 @@ let strings = new LocalizedStrings({
   //Navikointipainikkeet
   exams:"Tentit",
   user:"Käyttäjä",
+  users:"Käyttäjät",
   signof:"Kirjaudu ulos",
   editExams:"Muokkaa tenttejä",
   chartdemo: "Kaaviodemo",
@@ -80,6 +83,7 @@ let strings = new LocalizedStrings({
 
   //Muokkaus
   addQ:"Lisää kysymys",
+  delete: "Poista",
   deleteE: "Poista tentti",
   addE:"Lisää uusi tentti",   
 

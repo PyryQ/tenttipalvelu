@@ -76,7 +76,6 @@ export async function päivitäOikeaVastaus(vastaus_id, onkoOikein, token) {
 //-----------------------------------DELETE--------------------------------
 
 export async function poistaTentti(tentti_id, token) {
-  console.log(token)
     try{
       let result = await axios.delete("http://localhost:4000/poista/poistatentti", {data: {tentti_id: tentti_id, token: token}})
       return result
@@ -142,10 +141,6 @@ export async function lisääVastaus(kysymys_id, token) {
 
 export async function lisääKäyttäjänKysymyksenTulos(kysymys_id, tulos, token) {
   try{
-    console.log("käyttäjän vastaus")
-    console.log(kysymys_id)
-    console.log(tulos)
-    console.log(token)
     let result = await axios.post("http://localhost:4000/lisays/lisaakysymystulos/" + kysymys_id + "/" + tulos + "/" + token)
     return(result.data)
   }
@@ -175,7 +170,6 @@ export async function lisääKäyttäjänKysymyksenTulos(kysymys_id, tulos, toke
 export async function haeKäyttäjänTiedot(sähköposti) {
   try{
     let result = await axios.get("http://localhost:4000/kayttajantiedot/" + sähköposti)
-    console.log(result.data)
     return(result.data[0])
   }
   catch(exception){
@@ -186,7 +180,6 @@ export async function haeKäyttäjänTiedot(sähköposti) {
 export async function haeKäyttäjät() {
   try{
     let result = await axios.get("http://localhost:4000/kayttajat")
-    console.log(result.data)
     return(result.data)
   }
   catch(exception){

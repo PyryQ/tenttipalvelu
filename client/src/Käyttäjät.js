@@ -1,7 +1,4 @@
-import axios from 'axios';
 import {useEffect, useState } from 'react';
-import { Input } from '@material-ui/core';
-import Card from '@material-ui/core/Card';
 import { DataGrid, RowsProp, ColDef } from '@material-ui/data-grid';
 
 import {haeKäyttäjät} from './HttpKutsut';
@@ -15,10 +12,10 @@ export default function Käyttäjä(props) {
 
 
   const sarakkeet = [
-      { field: 'etunimi', headerName: 'Etunimi', width: 150 },
-      { field: 'sukunimi', headerName: 'Sukunimi', width: 150 },
-      { field: 'sähköposti', headerName: 'Sähköposti', width: 150 },
-      { field: 'rooli', headerName: 'Rooli', width: 150 }
+      { field: 'etunimi', headerName: strings.firstname, width: 150 },
+      { field: 'sukunimi', headerName: strings.lastname, width: 150 },
+      { field: 'sähköposti', headerName: strings.email, width: 150 },
+      { field: 'rooli', headerName: strings.role, width: 150 }
   ];
 
   const rivit = käyttäjät
@@ -35,9 +32,7 @@ export default function Käyttäjä(props) {
     async function haeKaikkiKäyttäjät() {
         haeKäyttäjät().then((result) => {
           if (result !== false){
-              console.log(result)
             setKäyttäjät(result)
-            console.log(käyttäjät)
           }
         }).catch((error) => {
           console.log(error)

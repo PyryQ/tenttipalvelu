@@ -142,7 +142,6 @@ async function päivitäTämäVastausNimi(vastaus_id, teksti, indexK, indexV) {
   //---------------------POISTA
 
   async function poistaTämäTentti() {
-    console.log("muokkaakysymyksiä" + token)
     poistaTentti(dataM.tentti_id, token).then((result) => {
       if (result !== false){
         props.asetaTentti(0)
@@ -180,7 +179,7 @@ async function päivitäTämäVastausNimi(vastaus_id, teksti, indexK, indexV) {
   let dataM = props.tentti; //Alustetaan dataM kysymyksen mukaan
 
   function asetaAika(aika) {
-    if (aika !== null){
+    if (aika != null){
       aika = aika.replace(/\.\d+/, "");
       aika = aika.replace('Z', "");
       return aika;
@@ -271,7 +270,7 @@ async function päivitäTämäVastausNimi(vastaus_id, teksti, indexK, indexV) {
         <form className={classes.container} noValidate>
         <TextField
           key={"aloitusaika" + dataM.tentti_id}
-          id="datetime-local"
+          id={"aloitusaika" + dataM.tentti_id}
           label={strings.startingTime}
           type="datetime-local"
           defaultValue={asetaAika(dataM.tentin_aloitusaika)}
@@ -282,7 +281,7 @@ async function päivitäTämäVastausNimi(vastaus_id, teksti, indexK, indexV) {
         }}/>
         <TextField
           key={"lopetusaika" + dataM.tentti_id}
-          id="datetime-local"
+          id={"lopetusaika" + dataM.tentti_id}
           label={strings.endingTime}
           type="datetime-local"
           defaultValue ={asetaAika(dataM.tentin_lopetusaika)}

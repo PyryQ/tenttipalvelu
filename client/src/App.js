@@ -7,6 +7,7 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+
 //Muut komponentit js css
 import './App.css';
 import TulostaKysymykset from './TulostaKysymykset';
@@ -19,24 +20,17 @@ import Login from './Login';
 import { tarkistaKäyttäjänRooli } from './HttpKutsut';
 import Dropzone from './Dropzone';
 
-import { SnackbarProvider, useSnackbar } from 'notistack';
-
-
+import { useSnackbar } from 'notistack';
 import socketIOClient from 'socket.io-client';
 
-
-//notistac
 
 //Kuvat
 import finland from './finland.png';
 import unitedkingdom from './unitedkingdom.png';
 
-//const strings = require('./Localization.js');
 import strings from './Localization.js'
 
-//strings.setLanguage('fi');
 
-//import parsiToken from'/server/index.js'
 
 
 // Kehitettävää: 
@@ -73,22 +67,17 @@ function App() {
   const [näkymä, setNäkymä] = useState(4) //Vastaus- vai muokkausnäkymä
   const [käyttäjänToken, setKäyttäjänToken] = useState(null) //Token tietokannasta
   const [kirjauduttuSisään, setKirjauduttuSisään] = useState(false) //Onko kirjauduttu
+  const [kieli, setKieli] = useState('fi')
+
   const kyselyt = []  //Pohja kyselyn muodostamiseksi
 
   // Alustetaan state ja reducer kyselyn avulla
   const [state, dispatch] = useReducer(reducer, kyselyt);
 
-  const [kieli, setKieli] = useState('fi')
-
+  //Socket ja ilmoitusbaari
   const sIOEndpoint = 'ws://localhost:5556';
   const { enqueueSnackbar } = useSnackbar();
 
-
-
-  //const lang ) navigator.language
-
-
-  
         
   //Post, get ja put serverin datan testaamista varten. Ei käytössä ohjelmassa.
   useEffect(()=>{
@@ -128,9 +117,9 @@ function App() {
   },[])
 
 
+  //Kielen asettaminen
   useEffect(()=>{
     strings.setLanguage(kieli);
-
   },[kieli])
 
     
@@ -166,8 +155,8 @@ function App() {
     });
 
     socket.on('update', function (data) {
-      console.log(data.message.payload);
-      enqueueSnackbar(data.message.payload)
+
+      enqueueSnackbar(data.message, 'success');        
       
     });
   }, [])
@@ -274,21 +263,6 @@ function App() {
     console.log(kieli)
     
   }
-
-  const socketilmoitus = (title) => {
-    window.alert(title);
-  }
-
-  // socket.onmessage = function (title) {
-  //   window.alert(title);
-  // }
-
-
-
-
-
-
-
 
 
 

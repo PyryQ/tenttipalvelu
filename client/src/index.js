@@ -9,7 +9,7 @@ strings.setLanguage('fi');
 
 ReactDOM.render(
   <React.StrictMode>
-    <SnackbarProvider maxSnack={3}>
+    <SnackbarProvider maxSnack={3} variant="success">
       <App />
     </SnackbarProvider>
   </React.StrictMode>,

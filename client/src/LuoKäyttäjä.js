@@ -20,34 +20,37 @@ export default function Login(props) {
 
   const luoKäyttäjä = async () => {
 
-    if (!tarkistaSalasana(käyttäjänSalasana)){
+    if (!tarkistaSalasana(käyttäjänSalasana)) {
       alert(strings.passwordNotice);
     }
 
-    else if(!tarkistaSähköposti(käyttäjänSähköposti)){
+    else if (!tarkistaSähköposti(käyttäjänSähköposti)) {
       alert(strings.invalidEmail);
     }
 
-    else if(käyttäjänSalasana !== käyttäjänSalasana2){
+    else if (käyttäjänSalasana !== käyttäjänSalasana2) {
       alert(strings.unmatchPassword);
     }
 
-    else if (käyttäjänEtunimi !== "" && käyttäjänSukunimi !== "" &&  käyttäjänEtunimi.length > 0){
-      
-      if (käyttäjänRooliTarkistus == "admin1234" || käyttäjänRooliTarkistus == "oppilas"){
-        if (käyttäjänRooliTarkistus == "admin1234"){
+    else if (käyttäjänEtunimi !== "" && käyttäjänSukunimi !== "" && käyttäjänEtunimi.length > 0) {
+
+      if (käyttäjänRooliTarkistus == "admin1234" || käyttäjänRooliTarkistus == "oppilas") {
+        if (käyttäjänRooliTarkistus == "admin1234") {
           setKäyttäjänRooli("admin")
           console.log(käyttäjänRooli)
         }
-        else {setKäyttäjänRooli("oppilas")}
+        else { setKäyttäjänRooli("oppilas") }
 
-
-        let käyttäjänTiedot = {etunimi: käyttäjänEtunimi, sukunimi: käyttäjänSukunimi, sahkoposti: käyttäjänSähköposti, rooli: käyttäjänRooli, salasana: käyttäjänSalasana}
-        let tietokantaKäyttäjä = await axios.post("http://localhost:4000/lisaakayttaja", käyttäjänTiedot)
-        if (tietokantaKäyttäjä.data === null || tietokantaKäyttäjä.data === "" || tietokantaKäyttäjä.data === undefined || tietokantaKäyttäjä.data === false){
-          alert(strings.somethingWrong)
+        if (käyttäjänRooli != "") {
+          console.log("oppilas?" + käyttäjänRooli)
+          let käyttäjänTiedot = { etunimi: käyttäjänEtunimi, sukunimi: käyttäjänSukunimi, sahkoposti: käyttäjänSähköposti, rooli: käyttäjänRooli, salasana: käyttäjänSalasana }
+          let tietokantaKäyttäjä = await axios.post("http://localhost:4000/lisaakayttaja", käyttäjänTiedot)
+          if (tietokantaKäyttäjä.data === null || tietokantaKäyttäjä.data === "" || tietokantaKäyttäjä.data === undefined || tietokantaKäyttäjä.data === false) {
+            alert(strings.somethingWrong)
+          }
+          else alert(strings.userSuccesful)
         }
-        else alert(strings.userSuccesful)
+        else alert(strings.somethingWrong)
       }
       else alert(strings.incorrectRolePW)
     }
@@ -59,7 +62,7 @@ export default function Login(props) {
     return re.test(String(email).toLowerCase());
   }
 
-  function tarkistaSalasana(str){
+  function tarkistaSalasana(str) {
     // at least one number, one lowercase and one uppercase letter
     // at least six characters
     var res = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
@@ -70,7 +73,7 @@ export default function Login(props) {
   return (
     // Sisäänkirjautumisen form
     <div className="rekisteröidy">
-      <div className ="kirjautuminen-kohdat">
+      <div className="kirjautuminen-kohdat">
         <p><TextField
           id="kirjaudu-etunimi"
           label={strings.firstname}
@@ -112,7 +115,7 @@ export default function Login(props) {
         /></p>
 
         {strings.adminPasswordQuide}
-        <br className="lomake-br"/>
+        <br className="lomake-br" />
         <p><TextField
           id="kirjaudu-rooli"
           label={strings.rolePassword}
@@ -120,7 +123,7 @@ export default function Login(props) {
           variant="outlined"
           onChange={(e) => (setKäyttäjänRooliTarkistus(e.target.value))}
         /></p>
-        <br className="lomake-br"/>
+        <br className="lomake-br" />
         <Button block size="lg" onClick={() => luoKäyttäjä()}>
           {strings.register}
         </Button>

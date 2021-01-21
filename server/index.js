@@ -9,34 +9,30 @@ app.use(cors({
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }))
 
-const fileUpload = require('express-fileupload');
 
+var bodyParser = require("body-parser")
+app.use(bodyParser.json())
+module.exports = app
+const db = require('./db')
+const port = 4000
+
+// Salaus
+const bcrypt = require('bcrypt')
+const BCRYPT_SALT_ROUNDS = 12;
+var jwt = require('jsonwebtoken');
+const SALT_ROUNDS = 9
+
+
+const fileUpload = require('express-fileupload');
 app.use(fileUpload({
   limits: { fileSize: 2 * 1024 * 1024 * 1024 },
 }));
 
 
-var bodyParser = require("body-parser")
-app.use(bodyParser.json())
-
-module.exports = app
-const db = require('./db')
-
-const port = 4000
-
-const bcrypt = require('bcrypt')
-const BCRYPT_SALT_ROUNDS = 12;
 
 
 
-
-
-//-----------------NOTIFICATION---------------------------
-
-
-//var io = require('socket.io');
-var Server = require('socket.io')
-//const io = new Server(4000);
+//-----------------WEBSOCKET---------------------------
 
 
 app.use('/socket.io', express.static(__dirname + '/node_modules/socket.io')) //static socket.io
@@ -77,8 +73,18 @@ io.on('connection', function (socket) {
     console.log("socket ready for data")
 
     pg_client.on('notification', function (title) {
-      socket.emit('update', { message: title });
-      socket.send(title)
+
+      console.log(title)
+      if (title.channel == 'aikamuuttui'){
+        var viesti = JSON.parse(title.payload);
+        socket.emit('update', { message: viesti.row.nimi + ", Aloitusaika: " + viesti.row.tentin_aloitusaika + ", Lopetusaika: " + viesti.row.tentin_aloitusaika});
+        //socket.send(viesti.row.nimi)
+      }
+      else {
+        var viesti = JSON.parse(title.payload);
+        socket.emit('update', { message: viesti.viesti });
+        //socket.send(title)
+      }
     });
   });
 });
@@ -101,14 +107,7 @@ app.use('/poista', poista);
 
 
 
-//-----------------------Token- ja hashesimerkkejä
 
-
-var jwt = require('jsonwebtoken');
-
-
-// console.log(token)
-const SALT_ROUNDS = 9
 
 
 

@@ -4,7 +4,6 @@ var cors = require("cors")
 var app = express()
 var router = express.Router();
 
-
 app.use(cors({
   origin: 'http://localhost:3000',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
@@ -17,7 +16,6 @@ app.use(fileUpload({
 }));
 
 
-
 var bodyParser = require("body-parser")
 app.use(bodyParser.json())
 
@@ -27,21 +25,9 @@ const db = require('./db')
 const port = 4000
 
 const bcrypt = require('bcrypt')
-
-//passport
-const passport = require('passport')
-const LocalStrategy = require('passport-local').Strategy
-var JwtStrategy = require('passport-jwt').Strategy,
-  ExtractJwt = require('passport-jwt').ExtractJwt;
-var opts = {}
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme("jwt")
-opts.secretOrKey = 'sonSALAisuus';
+const BCRYPT_SALT_ROUNDS = 12;
 
 
-
-// use passport session
-// var session = require("express-session"),
-//     bodyParser = require("body-parser");
 
 
 
@@ -68,27 +54,19 @@ httpServer.listen(5556)
 
 app.use('/socket.io', express.static(__dirname + '/node_modules/soclet.io'))
 
-//Esim 1
+
 
 var pg = require('pg');
-
 var con_string = 'tcp://postgres:MnoP1994@localhost:5433/Tenttikanta';
 
 var pg_client = new pg.Client(con_string);
 pg_client.connect();
-//var query = pg_client.query('LISTEN aikapaivittyi');
-//var query2 = pg_client.query('LISTEN uusikayttaja');
+
 var query = pg_client.query('LISTEN tenttilisatty');
 
 var query2 = pg_client.query('LISTEN uusikayttaja');
 
 var query3 = pg_client.query('LISTEN aikamuuttui');
-
-// pg_client.on('notification', async (data) => {
-//   console.log(data.payload)
-//   //const payload = JSON.parse(data);
-//   console.log('tentti lisätty', data.payload)
-// })
 
 
 io.on('connection', function (socket) {
@@ -107,62 +85,10 @@ io.on('connection', function (socket) {
 
 
 
-// //-----------------------------ESIM 2
-// const socketIo = require("socket.io");
-
-// const port2 = process.env.PORT || 5556;
-// //const index = require("./routes/index");
-
-// const server = http.createServer(app);
-
-// const io = socketIo(server); // < Interesting!
-
-// const getApiAndEmit = "TODO";
-
-// server.listen(port2, () => console.log(`Listening on port ${port}`));
-
-
-// io.on("connection", (socket) => {
-//   console.log("New client connected");
-//   if (interval) {
-//     clearInterval(interval);
-//   }
-//   interval = setInterval(() => getApiAndEmit(socket), 1000);
-//   socket.on("disconnect", () => {
-//     console.log("Client disconnected");
-//     clearInterval(interval);
-//   });
-// });
-
-
-//-----------------------ESIM 3 -----------------
-
-
-// const webSocketsServerPort = 5556;
-// const webSocketServer = require('websocket').server;
-// const http = require('http');
-// // Spinning the http server and the websocket server.
-// const server = http.createServer();
-// server.listen(webSocketsServerPort);
-// const wsServer = new webSocketServer({
-//   httpServer: server
-// });
 
 
 
-
-
-//{tentti:id: NEW.kurssi_tentti_id}
-
-const BCRYPT_SALT_ROUNDS = 12;
-//app.use(passport.initialize());
-//app.use(passport.session());
-//app.use(flash());
-// routes should be at the last
-
-
-
-//routertestailua
+//----------------------------Router---------------------------------------
 var lisays = require('./router/lisays.js');
 app.use('/lisays', lisays);
 
@@ -171,11 +97,6 @@ app.use('/paivitys', paivitys);
 
 var poista = require('./router/poista.js');
 app.use('/poista', poista);
-
-
-// var kirjautuminen = require('./router/kirjautuminen.js');
-// app.use('/kirjautuminen', kirjautuminen);
-
 
 
 

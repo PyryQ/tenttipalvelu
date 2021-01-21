@@ -4,11 +4,14 @@ import './index.css';
 import App from './App';
 //import reportWebVitals from './reportWebVitals';
 import strings from './Localization.js'
+import { SnackbarProvider } from 'notistack';
 strings.setLanguage('fi');
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <SnackbarProvider maxSnack={3}>
+      <App />
+    </SnackbarProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

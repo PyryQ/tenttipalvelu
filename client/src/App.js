@@ -19,18 +19,21 @@ import Login from './Login';
 import { tarkistaKäyttäjänRooli } from './HttpKutsut';
 import Dropzone from './Dropzone';
 
+import { SnackbarProvider, useSnackbar } from 'notistack';
 
 
-import {useDropzone} from 'react-dropzone';
+import socketIOClient from 'socket.io-client';
+
+
+//notistac
 
 //Kuvat
 import finland from './finland.png';
 import unitedkingdom from './unitedkingdom.png';
 
-//localization
-import {setLanguage} from 'react-localization';
 //const strings = require('./Localization.js');
 import strings from './Localization.js'
+
 //strings.setLanguage('fi');
 
 //import parsiToken from'/server/index.js'
@@ -58,7 +61,6 @@ import strings from './Localization.js'
 //Ohjelman päivitys? /token
 
 
-
 function App() {
 
   const [data, setData] = useState(null)
@@ -77,6 +79,11 @@ function App() {
   const [state, dispatch] = useReducer(reducer, kyselyt);
 
   const [kieli, setKieli] = useState('fi')
+
+  const sIOEndpoint = 'ws://localhost:5556';
+  const { enqueueSnackbar } = useSnackbar();
+
+
 
   //const lang ) navigator.language
 
@@ -148,6 +155,22 @@ function App() {
     }
   }, [state])
 
+
+
+  //Tietokantaa kuunteleva websocket
+  useEffect(() => {
+    const socket = socketIOClient(sIOEndpoint)
+    socket.on('connected', function (data) {
+      console.log("Socket.io: Connected")
+      socket.emit('ready for data', {});
+    });
+
+    socket.on('update', function (data) {
+      console.log(data.message.payload);
+      enqueueSnackbar(data.message.payload)
+      
+    });
+  }, [])
 
   //--------------------------------------REDUCER
   

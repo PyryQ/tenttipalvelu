@@ -45,31 +45,7 @@
     -->
 </body>
 
-<!-- <script src="inc/socket.io.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="../node_modules/socket.io-client/dist/socket.io.js"></script>
-  <script>
-    WEB_SOCKET_SWF_LOCATION = 'inc/WebSocketMain.swf';
-    const io = require('socket.io')(5556);
-    console.log(io)
-    var socket = io.connect('http://localhost:5556');
-
-  //const socket = new WebSocket('http://localhost:3000');
-
-  socket.on('connected', function (data) {
-    socket.emit('ready for data', {});
-    console.log("socket päällä?")
-  });
-
-  socket.onerror(function (data) {
-    console.log("socket päällä?")
-  });
-
-  socket.on('update', function (data) {
-    console.log(data.message.payload);
-  });
-</script> -->
-<script type="text/JavaScript" src="http://localhost:4000/socket.io/client-dist/socket.io.js"></script>
+<!-- <script type="text/JavaScript" src="http://localhost:4000/socket.io/client-dist/socket.io.js"></script>
   <script>
     var socket = io.connect('http://localhost:5556');
     socket.on('connected', function (data) {
@@ -78,8 +54,8 @@
     });
     socket.on('update', function (data) {
       console.log(data.message.payload);
-      window.alert(data.message.payload)
+      
     });
-  </script>
+  </script> -->
 
 </html>

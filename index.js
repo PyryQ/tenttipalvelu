@@ -5,7 +5,7 @@ var app = express()
 var router = express.Router();
 
 app.use(cors({
-  origin: 'http://localhost:4000',
+  origin: 'https://tenttipalvelu.herokuapp.com',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }))
 
@@ -46,7 +46,7 @@ app.use('/socket.io', express.static(__dirname + '/node_modules/socket.io')) //s
 const httpServer = require('http').createServer()
 const io = require('socket.io')(httpServer, {
   cors: {
-    origin: "http://localhost:4000",
+    origin: "https://tenttipalvelu.herokuapp.com",
     methods: ["GET", "POST"]
   }
 })

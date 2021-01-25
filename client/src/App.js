@@ -149,13 +149,14 @@ function App() {
   //Tietokantaa kuunteleva websocket
   useEffect(() => {
     const socket = socketIOClient(sIOEndpoint)
+
     socket.on('connected', function (data) {
       console.log("Socket.io: Connected")
       socket.emit('ready for data', {});
     });
 
     socket.on('update', function (data) {
-
+      //if (käyttäjänrooli == admin)
       enqueueSnackbar(data.message, 'success');        
       
     });

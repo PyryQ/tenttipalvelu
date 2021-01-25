@@ -29,6 +29,10 @@ app.use(fileUpload({
 }));
 
 
+//--------------
+app.use(express.static('.client/build'))
+
+
 
 
 
@@ -46,11 +50,10 @@ const io = require('socket.io')(httpServer, {
   }
 })
 
+
 httpServer.listen(5556)
 
 app.use('/socket.io', express.static(__dirname + '/node_modules/soclet.io'))
-
-
 
 var pg = require('pg');
 var con_string = 'tcp://postgres:MnoP1994@localhost:5433/Tenttikanta';
@@ -74,16 +77,15 @@ io.on('connection', function (socket) {
 
     pg_client.on('notification', function (title) {
 
-      console.log(title)
-      if (title.channel == 'aikamuuttui'){
+      if (title.channel == 'aikamuuttui') {
         var viesti = JSON.parse(title.payload);
-        socket.emit('update', { message: viesti.row.nimi + ", Aloitusaika: " + viesti.row.tentin_aloitusaika + ", Lopetusaika: " + viesti.row.tentin_aloitusaika});
-        //socket.send(viesti.row.nimi)
+        socket.emit('update', { message: viesti.row.nimi + ", Aloitusaika: " + viesti.row.tentin_aloitusaika + ", Lopetusaika: " + viesti.row.tentin_aloitusaika });
+        socket.send(viesti.row.nimi)
       }
       else {
         var viesti = JSON.parse(title.payload);
         socket.emit('update', { message: viesti.viesti });
-        //socket.send(title)
+        socket.send(title)
       }
     });
   });
@@ -525,6 +527,11 @@ app.delete('/poistakayttajanvastaus/:kayttaja_id/:vastaus_id', (req, res, next) 
     })
 })
 
+
+//---------------
+app.get('*', (req, res) => {
+res.sendFile(path.join(__dirname+'client/build/index.html'))
+})
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)

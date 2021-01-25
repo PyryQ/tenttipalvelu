@@ -1,12 +1,26 @@
 const { Pool } = require('pg')
 
-const pool = new Pool({
+var connectInfo = {};
+
+if(process.env.HEROKU){
+  connectInfo = {
     user: 'postgres',
     host: 'localhost',
     database: 'Tenttikanta',
     password: 'MnoP1994',
-    port: 5433,
-})
+    port: 5433
+  }
+}
+else {
+  connectInfo = {
+    user: 'postgres',
+    host: 'localhost',
+    database: 'Tenttikanta',
+    password: 'MnoP1994',
+    port: 5433
+  }
+}
+const pool = new Pool(connectInfo)
 
 
 

@@ -5,7 +5,7 @@ var app = express()
 var router = express.Router();
 
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'http://localhost:4000',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }))
 
@@ -13,7 +13,7 @@ app.use(cors({
 var bodyParser = require("body-parser")
 app.use(bodyParser.json())
 module.exports = app
-const db = require('./db')
+const db = require('./server/db')
 const port = 4000
 
 // Salaus
@@ -30,7 +30,8 @@ app.use(fileUpload({
 
 
 //--------------
-app.use(express.static('.client/build'))
+const path = require('path')
+app.use(express.static('./client/build'))
 
 
 
@@ -45,7 +46,7 @@ app.use('/socket.io', express.static(__dirname + '/node_modules/socket.io')) //s
 const httpServer = require('http').createServer()
 const io = require('socket.io')(httpServer, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "http://localhost:4000",
     methods: ["GET", "POST"]
   }
 })
@@ -97,13 +98,13 @@ io.on('connection', function (socket) {
 
 
 //----------------------------Router---------------------------------------
-var lisays = require('./router/lisays.js');
+var lisays = require('./server/router/lisays.js');
 app.use('/lisays', lisays);
 
-var paivitys = require('./router/paivitys.js');
+var paivitys = require('./server/router/paivitys.js');
 app.use('/paivitys', paivitys);
 
-var poista = require('./router/poista.js');
+var poista = require('./server/router/poista.js');
 app.use('/poista', poista);
 
 
@@ -530,7 +531,7 @@ app.delete('/poistakayttajanvastaus/:kayttaja_id/:vastaus_id', (req, res, next) 
 
 //---------------
 app.get('*', (req, res) => {
-res.sendFile(path.join(__dirname+'client/build/index.html'))
+res.sendFile(path.join(__dirname +'/client/build/index.html'))
 })
 
 app.listen(port, () => {

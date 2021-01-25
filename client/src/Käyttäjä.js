@@ -13,9 +13,24 @@ export default function Käyttäjä(props) {
   let k_token = props.käyttäjänToken
   const [käyttäjänTiedot, setKäyttäjänTiedot]=useState()
 
+  var path = "";
+switch (process.env.NODE_ENV) {
+  case 'production' : 
+    path = 'https://herokuapp.com/'
+    break;
+  case 'development' : 
+    path = 'http://localhost:4000/'
+    break;
+  case 'test' : 
+    path = 'http://localhost:4000/'
+    break;
+  default :
+    throw "Ympäristöä ei ole alustettu"
+}
+
   useEffect(()=>{
     const haeKäyttäjänData = async (token) => {
-      let käyttäjä = await axios.get("http://localhost:4000/kayttajantiedottokenista/" + token)
+      let käyttäjä = await axios.get(path + "kayttajantiedottokenista/" + token)
       setKäyttäjänTiedot(käyttäjä.data[0])
       setKäyttäjänEtunimi(käyttäjä.data[0].etunimi)
       setKäyttäjänSukunimi(käyttäjä.data[0].sukunimi)
@@ -29,12 +44,12 @@ export default function Käyttäjä(props) {
   const päivitäEtunimi = async (k_etunimi) => {
     console.log("k_etunimi, " + k_etunimi)
     console.log(käyttäjänTiedot)
-    let etunimi = await axios.put("http://localhost:4000/paivitaetunimi", {etunimi: k_etunimi, sähköposti: käyttäjänTiedot.sähköposti})
+    let etunimi = await axios.put(path + "paivitaetunimi", {etunimi: k_etunimi, sähköposti: käyttäjänTiedot.sähköposti})
     setKäyttäjänEtunimi(etunimi)
   }
 
   const päivitäSukunimi = async (k_sukunimi) => {
-    let sukunimi = await axios.put("http://localhost:4000/paivitasukunimi", {sukunimi: k_sukunimi, sähköposti: käyttäjänTiedot.sähköposti})
+    let sukunimi = await axios.put(path + "paivitasukunimi", {sukunimi: k_sukunimi, sähköposti: käyttäjänTiedot.sähköposti})
     setKäyttäjänSukunimi(sukunimi)
   }
 

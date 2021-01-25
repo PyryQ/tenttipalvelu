@@ -22,7 +22,7 @@ export default function Käyttäjä(props) {
 
   useEffect(()=>{
     // const haeKäyttäjänData = async () => {
-    //   let käyttäjätHaku = await axios.get("http://localhost:4000/kayttajat")
+    //   let käyttäjätHaku = await axios.get(path + "kayttajat")
     //   console.log(käyttäjätHaku.data)
     //   setKäyttäjät(käyttäjätHaku.data)
     //   console.log(käyttäjät)
@@ -44,7 +44,7 @@ export default function Käyttäjä(props) {
 
 
   //console.log(käyttäjänTiedot)
-  //let käyttäjä = await axios.get("http://localhost:4000/kayttajantiedot/" + k_sähköposti)
+  //let käyttäjä = await axios.get(path + "kayttajantiedot/" + k_sähköposti)
   if (käyttäjät !== null && käyttäjät !== undefined){
     return <div style={{ height: 800, width: '100%' }}>
         <DataGrid rows={käyttäjät} columns={sarakkeet} pageSize={15}/>

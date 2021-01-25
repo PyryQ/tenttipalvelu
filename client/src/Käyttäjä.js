@@ -16,7 +16,7 @@ export default function Käyttäjä(props) {
   var path = "";
 switch (process.env.NODE_ENV) {
   case 'production' : 
-    path = 'https://herokuapp.com/'
+    path = 'https://tenttipalvelu.herokuapp.com/'
     break;
   case 'development' : 
     path = 'http://localhost:4000/'

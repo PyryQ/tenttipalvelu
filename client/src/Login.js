@@ -23,16 +23,17 @@ export default function Login(props) {
     if(käyttäjänSalasana !== "" && käyttäjänSähköposti !== ""){
       try {
         //Verrataan sähköpostia ja salasanaa tietokantaa vasten
-        tarkistaKäyttäjänSalasana(käyttäjänSähköposti, käyttäjänSalasana)
+        tarkistaKäyttäjänSalasana(käyttäjänSähköposti, käyttäjänSalasana).then((result) => {
+          if (result.data !== "" && result.data !== undefined && result.data !== null){
+            alert(strings.LoginSuccessful)
+            props.asetaToken(result.data)
+            props.kirjautuminen(true)
+          }
+          else alert(strings.LoginFailed)
+        })
         //let tietokantaToken = await axios.post("http://localhost:4000/tarkistasalasana", {sahkoposti: käyttäjänSähköposti, salasana: käyttäjänSalasana})
 
         //Mikäli token on validi, tallennetaan token ja merkitään kirjautuminen onnistuneeksi
-        if (tietokantaToken.data !== "" && tietokantaToken.data !== undefined && tietokantaToken.data !== null){
-          alert(strings.LoginSuccessful)
-          props.asetaToken(tietokantaToken.data)
-          props.kirjautuminen(true)
-        }
-        else alert(strings.LoginFailed)
       
       }catch {
         alert(strings.LoginFailed)

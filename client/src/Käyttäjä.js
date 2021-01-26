@@ -13,20 +13,20 @@ export default function Käyttäjä(props) {
   let k_token = props.käyttäjänToken
   const [käyttäjänTiedot, setKäyttäjänTiedot]=useState()
 
-
-switch (process.env.NODE_ENV) {
-  case 'production' : 
-    path = 'https://tenttipalvelu.herokuapp.com/'
-    break;
-  case 'development' : 
-    path = 'http://localhost:4000/'
-    break;
-  case 'test' : 
-    path = 'http://localhost:4000/'
-    break;
-  default :
-    throw "Ympäristöä ei ole alustettu"
-}
+  let path = 'http://localhost:4000/'
+  switch (process.env.NODE_ENV) {
+    case 'production' : 
+      path = 'https://tenttipalvelu.herokuapp.com/'
+      break;
+    case 'development' : 
+      path = 'http://localhost:4000/'
+      break;
+    case 'test' : 
+      path = 'http://localhost:4000/'
+      break;
+    default :
+      throw "Ympäristöä ei ole alustettu"
+  }
 
   useEffect(()=>{
     const haeKäyttäjänData = async (token) => {

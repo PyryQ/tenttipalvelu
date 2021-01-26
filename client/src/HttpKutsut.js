@@ -165,7 +165,7 @@ export async function lisääKäyttäjänKysymyksenTulos(kysymys_id, tulos, toke
 
 export async function tarkistaKäyttäjänSalasana(käyttäjänSähköposti, käyttäjänSalasana) {
   try{
-    let tietokantaToken = await axios.post("http://localhost:4000/tarkistasalasana", {sahkoposti: käyttäjänSähköposti, salasana: käyttäjänSalasana})
+    let result = await axios.post("http://localhost:4000/tarkistasalasana", {sahkoposti: käyttäjänSähköposti, salasana: käyttäjänSalasana})
     return(result.data)
   }
   catch(exception){
@@ -173,6 +173,15 @@ export async function tarkistaKäyttäjänSalasana(käyttäjänSähköposti, kä
   }
 }
 
+export async function lisääKäyttäjä(käyttäjänTiedot) {
+  try{
+    let result = await axios.post("http://localhost:4000/lisaakayttaja", käyttäjänTiedot)
+    return(result.data)
+  }
+  catch(exception){
+    console.log("Vastausta ei onnistuttu lisäämään.")
+  }
+}
 
 
 

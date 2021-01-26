@@ -10,11 +10,15 @@ app.use(cors({
 }))
 
 
+
+
+
 var bodyParser = require("body-parser")
 app.use(bodyParser.json())
 module.exports = app
 const db = require('./server/db')
-const port = 4000
+const port =  process.env.PORT || 4000
+
 
 // Salaus
 const bcrypt = require('bcrypt')
@@ -52,7 +56,7 @@ const io = require('socket.io')(httpServer, {
 })
 
 
-httpServer.listen(5556)
+httpServer.listen(4000)
 
 app.use('/socket.io', express.static(__dirname + '/node_modules/soclet.io'))
 
@@ -531,13 +535,18 @@ app.delete('/poistakayttajanvastaus/:kayttaja_id/:vastaus_id', (req, res, next) 
 
 
 //---------------
+
+
 app.get('*', (req, res) => {
-res.sendFile(path.join(__dirname +'/client/build/index.html'))
+  res.sendFile(path.join(__dirname +'/client/build/index.html'))
 })
 
-app.listen(process.env.PORT || port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+console.log("Port: " + port);
+
+app.listen(port, () => {
+  console.log("Palvelin käynnistyi portissa: " + port)
 })
+
 
 
 

@@ -75,7 +75,8 @@ function App() {
   const [state, dispatch] = useReducer(reducer, kyselyt);
 
   //Socket ja ilmoitusbaari
-  const sIOEndpoint = 'ws://localhost:5556';
+  //const sIOEndpoint = 'ws://localhost:5556';
+  //const sIOEndpoint = 'https://tenttipalvelu.herokuapp.com';
   const { enqueueSnackbar } = useSnackbar();
 
   var path = "";
@@ -162,20 +163,20 @@ function App() {
 
 
   //Tietokantaa kuunteleva websocket
-  useEffect(() => {
-    const socket = socketIOClient(sIOEndpoint)
+  // useEffect(() => {
+  //   const socket = socketIOClient(sIOEndpoint)
 
-    socket.on('connected', function (data) {
-      console.log("Socket.io: Connected")
-      socket.emit('ready for data', {});
-    });
+  //   socket.on('connected', function (data) {
+  //     console.log("Socket.io: Connected")
+  //     socket.emit('ready for data', {});
+  //   });
 
-    socket.on('update', function (data) {
-      //if (käyttäjänrooli == admin)
-      enqueueSnackbar(data.message, 'success');        
+  //   socket.on('update', function (data) {
+  //     //if (käyttäjänrooli == admin)
+  //     enqueueSnackbar(data.message, 'success');        
       
-    });
-  }, [])
+  //   });
+  // }, [])
 
   //--------------------------------------REDUCER
   

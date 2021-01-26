@@ -4,14 +4,22 @@ var cors = require("cors")
 var app = express()
 var router = express.Router();
 
-app.use(cors({
-  origin: 'https://tenttipalvelu.herokuapp.com',
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-}))
 
+if (process.env.NODE_ENV == undefined) {
+  app.use(cors({
+    origin: 'https://localhost:4000/',
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  }))
 
+}
+else {
+  app.use(cors({
+    origin: 'https://tenttipalvelu.herokuapp.com',
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  }))
+}
 
-
+console.log(process.env.NODE_ENV)
 
 var bodyParser = require("body-parser")
 app.use(bodyParser.json())
@@ -56,7 +64,7 @@ const io = require('socket.io')(httpServer, {
 })
 
 
-httpServer.listen(4000)
+httpServer.listen(5556)
 
 app.use('/socket.io', express.static(__dirname + '/node_modules/soclet.io'))
 

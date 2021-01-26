@@ -5,6 +5,7 @@ import "./App.css";
 
 import TextField from '@material-ui/core/TextField';
 import strings from './Localization';
+import { tarkistaKäyttäjänSalasana } from './HttpKutsut';
 
 
 //Käyttäjältä pyydetään sähköposti ja salasana
@@ -22,7 +23,8 @@ export default function Login(props) {
     if(käyttäjänSalasana !== "" && käyttäjänSähköposti !== ""){
       try {
         //Verrataan sähköpostia ja salasanaa tietokantaa vasten
-        let tietokantaToken = await axios.post("http://localhost:4000/tarkistasalasana", {sahkoposti: käyttäjänSähköposti, salasana: käyttäjänSalasana})
+        tarkistaKäyttäjänSalasana(käyttäjänSähköposti, käyttäjänSalasana)
+        //let tietokantaToken = await axios.post("http://localhost:4000/tarkistasalasana", {sahkoposti: käyttäjänSähköposti, salasana: käyttäjänSalasana})
 
         //Mikäli token on validi, tallennetaan token ja merkitään kirjautuminen onnistuneeksi
         if (tietokantaToken.data !== "" && tietokantaToken.data !== undefined && tietokantaToken.data !== null){

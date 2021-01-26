@@ -13,7 +13,7 @@ export default function Käyttäjä(props) {
   let k_token = props.käyttäjänToken
   const [käyttäjänTiedot, setKäyttäjänTiedot]=useState()
 
-  var path = "";
+
 switch (process.env.NODE_ENV) {
   case 'production' : 
     path = 'https://tenttipalvelu.herokuapp.com/'

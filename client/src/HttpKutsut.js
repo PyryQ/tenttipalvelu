@@ -3,7 +3,7 @@ import axios from 'axios';
 var path = "";
 switch (process.env.NODE_ENV) {
   case 'production' : 
-    path = 'https://herokuapp.com/'
+    path = 'https://tenttipalvelu.herokuapp.com/'
     break;
   case 'development' : 
     path = 'http://localhost:4000/'
@@ -155,6 +155,17 @@ export async function lisääVastaus(kysymys_id, token) {
 export async function lisääKäyttäjänKysymyksenTulos(kysymys_id, tulos, token) {
   try{
     let result = await axios.post(path + "lisays/lisaakysymystulos/" + kysymys_id + "/" + tulos + "/" + token)
+    return(result.data)
+  }
+  catch(exception){
+    console.log("Vastausta ei onnistuttu lisäämään.")
+  }
+}
+
+
+export async function tarkistaKäyttäjänSalasana(käyttäjänSähköposti, käyttäjänSalasana) {
+  try{
+    let tietokantaToken = await axios.post("http://localhost:4000/tarkistasalasana", {sahkoposti: käyttäjänSähköposti, salasana: käyttäjänSalasana})
     return(result.data)
   }
   catch(exception){

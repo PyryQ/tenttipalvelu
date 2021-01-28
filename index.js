@@ -19,6 +19,16 @@ else {
   }))
 }
 
+// if (process.env.HEROKU) {
+//   connectInfo = {
+//     connectionString: process.env.DATABASE_URL,
+//     ssl: {
+//       rejectUnauthorized: false
+//     }
+//   }
+// }
+
+
 console.log(process.env.NODE_ENV)
 
 var bodyParser = require("body-parser")
@@ -46,14 +56,10 @@ const path = require('path')
 app.use(express.static('./client/build'))
 
 
-
-
-
 //-----------------WEBSOCKET---------------------------
 
 
 app.use('/socket.io', express.static(__dirname + '/node_modules/socket.io')) //static socket.io
-
 
 const httpServer = require('http').createServer()
 const io = require('socket.io')(httpServer, {
@@ -62,7 +68,6 @@ const io = require('socket.io')(httpServer, {
     methods: ["GET", "POST"]
   }
 })
-
 
 httpServer.listen(5556)
 
@@ -371,7 +376,6 @@ app.get('/tarkistarooli/:token', (req, res, next) => {
         res.send(true)
       }
       else res.send(false)
-
     })
 })
 

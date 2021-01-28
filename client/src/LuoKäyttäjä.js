@@ -3,9 +3,7 @@ import React, { useState } from "react";
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import "./App.css";
-
 import strings from './Localization';
-
 import { lisääKäyttäjä } from './HttpKutsut'
 
 
@@ -18,10 +16,7 @@ export default function Login(props) {
   const [käyttäjänRooli, setKäyttäjänRooli] = useState("");
   const [käyttäjänRooliTarkistus, setKäyttäjänRooliTarkistus] = useState("");
 
-
-
   const luoKäyttäjä = async () => {
-
     if (!tarkistaSalasana(käyttäjänSalasana)) {
       alert(strings.passwordNotice);
     }
@@ -73,7 +68,6 @@ export default function Login(props) {
     var res = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
     return res.test(str);
   }
-
 
   return (
     // Sisäänkirjautumisen form
@@ -132,9 +126,7 @@ export default function Login(props) {
         <Button block size="lg" onClick={() => luoKäyttäjä()}>
           {strings.register}
         </Button>
-
       </div>
-
     </div>
   );
 }

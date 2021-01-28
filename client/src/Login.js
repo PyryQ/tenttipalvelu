@@ -2,7 +2,6 @@ import axios from 'axios';
 import React, { useState } from "react";
 import Button from '@material-ui/core/Button';
 import "./App.css";
-
 import TextField from '@material-ui/core/TextField';
 import strings from './Localization';
 import { tarkistaKäyttäjänSalasana } from './HttpKutsut';
@@ -20,11 +19,12 @@ export default function Login(props) {
 
   //Tarkistetaan onko käyttäjän kirjatumisyritys validi
   const tarkistaKirjautuminen = async () => {
-    if(käyttäjänSalasana !== "" && käyttäjänSähköposti !== ""){
+    if (käyttäjänSalasana !== "" && käyttäjänSähköposti !== "") {
       try {
         //Verrataan sähköpostia ja salasanaa tietokantaa vasten
         tarkistaKäyttäjänSalasana(käyttäjänSähköposti, käyttäjänSalasana).then((result) => {
-          if (result.data !== "" && result.data !== undefined && result.data !== null){
+          //Mikäli token on validi, tallennetaan token ja merkitään kirjautuminen onnistuneeksi
+          if (result.data !== "" && result.data !== undefined && result.data !== null) {
             alert(strings.LoginSuccessful)
             props.asetaToken(result.data)
             props.kirjautuminen(true)
@@ -32,10 +32,7 @@ export default function Login(props) {
           else alert(strings.LoginFailed)
         })
         //let tietokantaToken = await axios.post("http://localhost:4000/tarkistasalasana", {sahkoposti: käyttäjänSähköposti, salasana: käyttäjänSalasana})
-
-        //Mikäli token on validi, tallennetaan token ja merkitään kirjautuminen onnistuneeksi
-      
-      }catch {
+      } catch {
         alert(strings.LoginFailed)
         console.log("Tokenin asettamisessa jotain pielessä.")
       }
@@ -63,7 +60,6 @@ export default function Login(props) {
       <Button block size="lg" onClick={() => tarkistaKirjautuminen()}>
         {strings.login}
       </Button>
-
     </div>
   );
 }

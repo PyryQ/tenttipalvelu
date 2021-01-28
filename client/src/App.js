@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {useEffect, useState, useReducer} from 'react';
 import Fade from 'react-reveal/Fade';
-import axios from 'axios'; //serverin käyttöä varten
+import axios from 'axios'; 
 //Muotoilua
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -19,40 +19,15 @@ import LuoKäyttäjä from './LuoKäyttäjä';
 import Login from './Login';
 import { tarkistaKäyttäjänRooli } from './HttpKutsut';
 import Dropzone from './Dropzone';
+import strings from './Localization.js'
 
 import { useSnackbar } from 'notistack';
 import socketIOClient from 'socket.io-client';
-
 
 //Kuvat
 import finland from './finland.png';
 import unitedkingdom from './unitedkingdom.png';
 
-import strings from './Localization.js'
-
-
-
-
-// Kehitettävää: 
-// aktiivisen tentin buttonille eri väri
-// Kysymyskomponentti?
-// reducer omaan tiedostoon?
-// Muuttujien nimien selkeytys
-// Kommentointia
-// kirjautuminen tarkistus popup
-// käyttäjän sitominen vastauksiin
-// pisteytys
-// style omaan jsään?
-// tokenin säilyminen?
-// Käyttäjän tiedot
-
-//Session
-
-//Käyttäjän  tentti
-//Lista käyttäjistä
-//adminluonti?
-
-//Ohjelman päivitys? /token
 
 
 function App() {
@@ -180,10 +155,8 @@ function App() {
 
   //--------------------------------------REDUCER
   
+  //Reducer tentin syväkopion muokkaamiseksi
   function reducer(state, action) { //data tai state
-    //ReferenceError: Cannot access 'syväKopio' before initialization
-    //^^Mikäli syväkopiota kutsutaan caseissa
-    //Siksi toistaiseksi oma syväkopio kaikille caseille
     let syväKopioR = JSON.parse(JSON.stringify(state)) //data vai state?
     switch (action.type) {
       case 'INIT_DATA':
@@ -264,6 +237,7 @@ function App() {
   const käyttäjäOnAdmin = async () => {
     let onkoAdmin = false;
     if (käyttäjänToken != null && kirjauduttu){
+      //Tarkistetaan rooli tietokannasta: admin = true
       tarkistaKäyttäjänRooli(käyttäjänToken).then((result) =>{
         onkoAdmin = result
         return onkoAdmin;
@@ -274,18 +248,17 @@ function App() {
     return onkoAdmin;
   }
 
-  //Vaihdetaan teksti kielen mukaan
+  //Vaihdetaan teksti kielen mukaan (fi tai en)
   const vaihdaKieli = (kieli) => {
     strings.setLanguage(kieli);
-    console.log(kieli)
-    
+    console.log(kieli) 
   }
 
 
 
 //------------------------------------------MUOTOILUA
 
-  //useStyles yläpalkin muotoilua varten
+  //useStyles navigointipalkin muotoilua varten
   const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
@@ -330,7 +303,7 @@ function App() {
 
   return (
     <div>
-      {/*Yläpalkki navigointipainikkeineen*/}
+      {/*---------------------------Yläpalkki navigointipainikkeineen*/}
       <div className={classes1.root}>
         <AppBar position="static">
           <Toolbar>
@@ -368,6 +341,7 @@ function App() {
 
 
             : <div>
+              {/*------------------Aloitus, login sekä register*/}
               <Button color="inherit" edge="start" 
                 onClick={() => setNäkymä(4)}>{strings.login}</Button>
 
@@ -397,33 +371,30 @@ function App() {
               disableRipple className={classesButton.margin} 
               onClick={() => (setTenttiValinta(index),  setPalautettu(false))}>{arvo.nimi}
             </BootstrapButton>)}
-
-            
-        <br/><br/>
-        
-        {/*Tarkistetaan, ettei state ole undefined*/}
-        {/*{state[tenttiValinta] != undefined ? */}
-        {näkymä === 1 ? <div> {/*Näkymän mukaan tulostetaan*/}
-          <Fade right><TulostaKysymykset
-            dispatch={dispatch}
-            kysymys={state[tenttiValinta]} 
-            palautettu= {palautettu}
-            asetaPalautettu= {setPalautettu}
-            token = {käyttäjänToken}/>
-          </Fade>
+      
           <br/>
-          </div> : null}
+        
+          {näkymä === 1 ? <div> {/*Näkymän mukaan tulostetaan sivu*/}
+            <Fade right><TulostaKysymykset
+              dispatch={dispatch}
+              kysymys={state[tenttiValinta]} 
+              palautettu= {palautettu}
+              asetaPalautettu= {setPalautettu}
+              token = {käyttäjänToken}/>
+            </Fade>
+            <br/>
+            </div> : null}
 
-        {näkymä === 2 && käyttäjäOnAdmin() ?
-          <Fade right><MuokkaaKysymyksiä 
-            dispatch={dispatch}
-            asetaTentti={setTenttiValinta}
-            tentti={state[tenttiValinta]}
-            token = {käyttäjänToken}/>
+          {näkymä === 2 && käyttäjäOnAdmin() ?
+            <Fade right><MuokkaaKysymyksiä 
+              dispatch={dispatch}
+               setaTentti={setTenttiValinta}
+              tentti={state[tenttiValinta]}
+              token = {käyttäjänToken}/>
             </Fade> : null}
             </div> 
             
-            : null}
+        : null}
           
         {näkymä === 3 ?
         <div>
@@ -435,8 +406,7 @@ function App() {
         </div> : null}
 
         {näkymä === 4 ?
-          <Login kirjautuminen = {kirjauduttu} asetaToken = {asetaToken}/> : null
-        }
+          <Login kirjautuminen = {kirjauduttu} asetaToken = {asetaToken}/> : null}
 
         {näkymä === 5 ?
           <Käyttäjä käyttäjänToken = {käyttäjänToken}/> : null}
@@ -453,14 +423,30 @@ function App() {
         <br></br>
         </div>
 
-          
-
-
-
-
-
       </div>
   );
 }
 
 export default App;
+
+// Kehitettävää: 
+// aktiivisen tentin buttonille eri väri
+// Kysymyskomponentti?
+// reducer omaan tiedostoon?
+// Muuttujien nimien selkeytys
+// Kommentointia
+// kirjautuminen tarkistus popup
+// käyttäjän sitominen vastauksiin
+// pisteytys
+// style omaan jsään?
+// tokenin säilyminen?
+// Käyttäjän tiedot
+
+//Session
+
+//Käyttäjän  tentti
+//Lista käyttäjistä
+//adminluonti?
+
+//Ohjelman päivitys? /token
+

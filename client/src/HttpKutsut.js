@@ -84,8 +84,6 @@ export async function päivitäOikeaVastaus(vastaus_id, onkoOikein, token) {
   }
 }
 
-
-
 //-----------------------------------DELETE--------------------------------
 
 export async function poistaTentti(tentti_id, token) {
@@ -120,7 +118,6 @@ export async function poistaVastaus(vastaus_id, token) {
 
 //------------------------------POST-------------------------
 
-
 export async function lisääTentti(token) {
   try{
     let result = await axios.post(path + "lisays/lisaatentti/" + token)
@@ -151,7 +148,6 @@ export async function lisääVastaus(kysymys_id, token) {
   }
 }
 
-
 export async function lisääKäyttäjänKysymyksenTulos(kysymys_id, tulos, token) {
   try{
     let result = await axios.post(path + "lisays/lisaakysymystulos/" + kysymys_id + "/" + tulos + "/" + token)
@@ -161,7 +157,6 @@ export async function lisääKäyttäjänKysymyksenTulos(kysymys_id, tulos, toke
     console.log("Vastausta ei onnistuttu lisäämään.")
   }
 }
-
 
 export async function tarkistaKäyttäjänSalasana(käyttäjänSähköposti, käyttäjänSalasana) {
   try{
@@ -188,18 +183,6 @@ export async function lisääKäyttäjä(käyttäjänTiedot) {
 //------------------------------------GET---------------------------------
 
 
-
-// export async function haeVastausId(kysymys_id) {
-//   try{
-//     let result = await axios.post(path + "lisaavastaus/", {kysymys_id: kysymys_id})
-//     console.log(result.data)
-//     return(result.data)
-//   }
-//   catch(exception){
-//     console.log("Vastausta ei onnistuttu lisäämään.")
-//   }
-// }
-
 export async function haeKäyttäjänTiedot(sähköposti) {
   try{
     let result = await axios.get(path + "kayttajantiedot/" + sähköposti)
@@ -220,7 +203,6 @@ export async function haeKäyttäjät() {
   }
 }
 
-
 export async function tarkistaKäyttäjänRooli(käyttäjänToken) {
   try{
     let result = await axios.get(path + "tarkistarooli/" + käyttäjänToken)
@@ -230,5 +212,15 @@ export async function tarkistaKäyttäjänRooli(käyttäjänToken) {
   catch(exception){
     console.log("Roolia ei saatu tarkistettua.")
   }
-    
 }
+
+// export async function haeVastausId(kysymys_id) {
+//   try{
+//     let result = await axios.post(path + "lisaavastaus/", {kysymys_id: kysymys_id})
+//     console.log(result.data)
+//     return(result.data)
+//   }
+//   catch(exception){
+//     console.log("Vastausta ei onnistuttu lisäämään.")
+//   }
+// }

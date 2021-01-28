@@ -2,16 +2,14 @@ import axios from 'axios';
 import {useEffect, useState } from 'react';
 import { Input } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
-
-
 import strings from './Localization.js'
 
 export default function Käyttäjä(props) {
+  
   const [käyttäjänEtunimi, setKäyttäjänEtunimi]=useState("") //Käytettiin datan käsittelyssä ennen statea
   const [käyttäjänSukunimi, setKäyttäjänSukunimi]=useState("") //Serveriä varten
-
-  let k_token = props.käyttäjänToken
   const [käyttäjänTiedot, setKäyttäjänTiedot]=useState()
+  let k_token = props.käyttäjänToken
 
   let path = 'http://localhost:4000/'
   switch (process.env.NODE_ENV) {
@@ -39,8 +37,6 @@ export default function Käyttäjä(props) {
     haeKäyttäjänData(k_token)
   },[])
 
-
-
   const päivitäEtunimi = async (k_etunimi) => {
     console.log("k_etunimi, " + k_etunimi)
     console.log(käyttäjänTiedot)
@@ -53,8 +49,6 @@ export default function Käyttäjä(props) {
     setKäyttäjänSukunimi(sukunimi)
   }
 
-  //console.log(käyttäjänTiedot)
-  //let käyttäjä = await axios.get("http://localhost:4000/kayttajantiedot/" + k_sähköposti)
   if (käyttäjänTiedot !== null && käyttäjänTiedot !== undefined){
     return <Card>
       {strings.email}: {käyttäjänTiedot.sähköposti}

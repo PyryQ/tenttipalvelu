@@ -1,9 +1,7 @@
 import React from 'react';
 import {Bar} from 'react-chartjs-2';
 
-
 //https://www.chartjs.org/docs/latest/charts/bar.html
-
 
 export default function Kaavio(props){
   let kaikkiPisteet = 90;
@@ -38,7 +36,7 @@ export default function Kaavio(props){
         }
       ]
     };
-  //displayName: 'BarExample',
+
     return (
       <div>
         <h2>Tulokset aiheittain</h2>
@@ -55,7 +53,7 @@ export default function Kaavio(props){
               yAxes: [{
                   stacked: true
               }]
-          }
+            }
           }}
         />
       </div>

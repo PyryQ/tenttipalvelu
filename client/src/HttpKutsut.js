@@ -24,7 +24,7 @@ export async function päivitäTenttiNimi(tentti_id, nimi, token) {
       return result;
     }
     catch(exception){
-      console.log("Kysymystä ei onnistuttu päivittämään.")
+      console.log("Tenttiä ei onnistuttu päivittämään.")
     }
   }
 
@@ -34,7 +34,7 @@ export async function päivitäTentinAloitusaika(päiväjaaika, tentti_id, token
     return result;
   }
   catch(exception){
-    console.log("Kysymystä ei onnistuttu päivittämään.")
+    console.log("Tenttiä ei onnistuttu päivittämään.")
   }
 }
 
@@ -44,7 +44,7 @@ export async function päivitäTentinLopetusaika(päiväjaaika, tentti_id, token
     return result;
   }
   catch(exception){
-    console.log("Kysymystä ei onnistuttu päivittämään.")
+    console.log("Tenttiä ei onnistuttu päivittämään.")
   }
 }
 
@@ -95,7 +95,7 @@ export async function poistaTentti(tentti_id, token) {
       return result
     }
     catch(exception){
-      console.log("Vastausta ei onnistuttu poistamaan.")
+      console.log("Tenttiä ei onnistuttu poistamaan.")
     }
   }
 
@@ -105,7 +105,7 @@ export async function poistaKysymys(kysymys_id, token) {
     return result
   }
   catch(exception){
-    console.log("Vastausta ei onnistuttu poistamaan.")
+    console.log("Kysymystä ei onnistuttu poistamaan.")
   }
 }
 
@@ -167,7 +167,7 @@ export async function tarkistaKäyttäjänSalasana(käyttäjänSähköposti, kä
     return(result.data)
   }
   catch(exception){
-    console.log("Vastausta ei onnistuttu lisäämään.")
+    console.log("Salasanaa ei onnistuttu tarkistamaan.")
   }
 }
 
@@ -177,7 +177,7 @@ export async function lisääKäyttäjä(käyttäjänTiedot) {
     return(result.data)
   }
   catch(exception){
-    console.log("Vastausta ei onnistuttu lisäämään.")
+    console.log("Käyttäjää ei onnistuttu lisäämään.")
   }
 }
 
@@ -221,11 +221,11 @@ export async function tarkistaKäyttäjänRooli(käyttäjänToken) {
 export async function käyttäjänTiedotTokenista(käyttäjänToken) {
   try{
     let result = await axios.get(path + "tarkistarooli/" + käyttäjänToken)
-    let onkoAdmin = result.data
-    return(onkoAdmin)
+    let käyttäjänTiedot = result.data
+    return(käyttäjänTiedot)
   }
   catch(exception){
-    console.log("Roolia ei saatu tarkistettua.")
+    console.log("Käyttäjän tokenin tarkistus ei onnistunut.")
   }
 }
 // export async function haeVastausId(kysymys_id) {

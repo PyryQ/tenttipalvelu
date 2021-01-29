@@ -3,6 +3,7 @@ import {useEffect, useState } from 'react';
 import { Input } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import strings from './Localization.js'
+import { käyttäjänTiedotTokenista } from './HttpKutsut';
 
 export default function Käyttäjä(props) {
   

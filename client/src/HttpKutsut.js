@@ -15,7 +15,6 @@ switch (process.env.NODE_ENV) {
     throw "Ympäristöä ei ole alustettu"
 }
 
-
 //-------------------------------------PUT------------------------
 
 export async function päivitäTenttiNimi(tentti_id, nimi, token) {
@@ -181,10 +180,7 @@ export async function lisääKäyttäjä(käyttäjänTiedot) {
   }
 }
 
-
-
 //------------------------------------GET---------------------------------
-
 
 export async function haeKäyttäjänTiedot(sähköposti) {
   try{
@@ -217,7 +213,6 @@ export async function tarkistaKäyttäjänRooli(käyttäjänToken) {
   }
 }
 
-
 export async function käyttäjänTiedotTokenista(käyttäjänToken) {
   try{
     let result = await axios.get(path + "tarkistarooli/" + käyttäjänToken)
@@ -228,6 +223,7 @@ export async function käyttäjänTiedotTokenista(käyttäjänToken) {
     console.log("Käyttäjän tokenin tarkistus ei onnistunut.")
   }
 }
+
 // export async function haeVastausId(kysymys_id) {
 //   try{
 //     let result = await axios.post(path + "lisaavastaus/", {kysymys_id: kysymys_id})

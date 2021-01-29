@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "AMn8618xKAboVjP1VXh1ms/dKXS3n54g5QccclegyPTEuXAD8gllI6QMA9QAfA+Qota/AVp2AZijlN1evXrg4w==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Pyry\\Projects\\tenttipalvelu\\client\\Test\\Test.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Pyry\\.nuget\\packages\\npgsql\\5.0.3\\npgsql.5.0.3.nupkg.sha512",
+    "C:\\Users\\Pyry\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.6.0\\system.runtime.compilerservices.unsafe.4.6.0.nupkg.sha512"
+  ],
+  "logs": []
+}

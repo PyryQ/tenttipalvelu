@@ -407,7 +407,7 @@ app.post('/tarkistasalasana', (req, res, next) => {
         try {
           bcrypt.compare(annettuSalasana, result.rows[0].salasana, function (err, resultB) {
             if (resultB) {
-              const token = jwt.sign({ sähköposti: annettuSähköposti, rooli: result.rows[0].rooli }, 'sonSALAisuus', { expiresIn: '4h' });
+              let token = jwt.sign({ sähköposti: annettuSähköposti, rooli: result.rows[0].rooli }, 'sonSALAisuus', { expiresIn: '4h' });
               return res.send(token)
             }
             else { "Salasanan tarkistus ei onnistunut." }

@@ -8,6 +8,7 @@ import { lisääKäyttäjä } from './HttpKutsut'
 
 
 export default function Login(props) {
+  //Muuttujat käyttäjän tietojen tallentamiseksi
   const [käyttäjänSähköposti, setKäyttäjänSähköposti] = useState("");
   const [käyttäjänSalasana, setKäyttäjänSalasana] = useState("");
   const [käyttäjänSalasana2, setKäyttäjänSalasana2] = useState("");
@@ -16,45 +17,56 @@ export default function Login(props) {
   const [käyttäjänRooli, setKäyttäjänRooli] = useState("");
   const [käyttäjänRooliTarkistus, setKäyttäjänRooliTarkistus] = useState("");
 
+  //Tarkistetaan syötteet, mikäli ne ovat kunnossa, lisätään käyttäjä tietokantaan
   const luoKäyttäjä = async () => {
-    if (!tarkistaSalasana(käyttäjänSalasana)) {
-      alert(strings.passwordNotice);
-    }
-
-    else if (!tarkistaSähköposti(käyttäjänSähköposti)) {
-      alert(strings.invalidEmail);
-    }
-
-    else if (käyttäjänSalasana !== käyttäjänSalasana2) {
-      alert(strings.unmatchPassword);
-    }
-
-    else if (käyttäjänEtunimi !== "" && käyttäjänSukunimi !== "" && käyttäjänEtunimi.length > 0) {
-
-      if (käyttäjänRooliTarkistus == "admin1234" || käyttäjänRooliTarkistus == "oppilas") {
-        if (käyttäjänRooliTarkistus == "admin1234") {
-          setKäyttäjänRooli("admin")
-          console.log(käyttäjänRooli)
-        }
-        else { setKäyttäjänRooli("oppilas") }
-
-        if (käyttäjänRooli != "") {
-          console.log("oppilas?" + käyttäjänRooli)
-          let käyttäjänTiedot = { etunimi: käyttäjänEtunimi, sukunimi: käyttäjänSukunimi, sahkoposti: käyttäjänSähköposti, rooli: käyttäjänRooli, salasana: käyttäjänSalasana }
-          lisääKäyttäjä(käyttäjänTiedot).then((result) => {
-            if (result.data === null || result.data === "" || result.data === undefined || result.data === false) {
-              alert(strings.somethingWrong)
-            }
-            else alert(strings.userSuccesful)
-          })
-          //let tietokantaKäyttäjä = await axios.post("http://localhost:4000/lisaakayttaja", käyttäjänTiedot)
-
-        }
-        else alert(strings.somethingWrong)
+    try {
+      //Salasanan vaatimukset täyttyvät
+      if (!tarkistaSalasana(käyttäjänSalasana)) {
+        alert(strings.passwordNotice);
       }
-      else alert(strings.incorrectRolePW)
+
+      //Sähköposti annettu oikeassa muodossa
+      else if (!tarkistaSähköposti(käyttäjänSähköposti)) {
+        alert(strings.invalidEmail);
+      }
+
+      //Salasanat täsmäävät
+      else if (käyttäjänSalasana !== käyttäjänSalasana2) {
+        alert(strings.unmatchPassword);
+      }
+
+      //Nimet eivät ole tyhjät
+      else if (käyttäjänEtunimi !== "" && käyttäjänSukunimi !== "" && käyttäjänEtunimi.length > 0) {
+
+        //Roolisalasana oikein
+        if (käyttäjänRooliTarkistus == "admin1234" || käyttäjänRooliTarkistus == "oppilas") {
+          if (käyttäjänRooliTarkistus == "admin1234") {
+            setKäyttäjänRooli("admin")
+            console.log(käyttäjänRooli)
+          }
+          else { setKäyttäjänRooli("oppilas") }
+
+          if (käyttäjänRooli != "") {
+            //Lisätään käyttäjän tiedot yhteen muuttujaan ja lähetetään tietokantaan
+            let käyttäjänTiedot = { etunimi: käyttäjänEtunimi, sukunimi: käyttäjänSukunimi, sahkoposti: käyttäjänSähköposti, rooli: käyttäjänRooli, salasana: käyttäjänSalasana }
+            lisääKäyttäjä(käyttäjänTiedot).then((result) => {
+              //Tarkistetaan serverin palauttama arvo
+              if (result.data === null || result.data === "" || result.data === undefined || result.data === false) {
+                alert(strings.somethingWrong)
+              }
+              else alert(strings.userSuccesful)
+            })
+          }
+          else alert(strings.somethingWrong)
+        }
+        else alert(strings.incorrectRolePW)
+      }
+      else alert(strings.unfilledForm);
     }
-    else alert(strings.unfilledForm);
+    catch (error) {
+      alert(strings.somethingWrong)
+      console.log(error)
+    }
   }
 
   function tarkistaSähköposti(email) {
@@ -63,8 +75,8 @@ export default function Login(props) {
   }
 
   function tarkistaSalasana(str) {
-    // at least one number, one lowercase and one uppercase letter
-    // at least six characters
+    //Vähintään yksi numero, yksi pieni ja yksi iso kirjain
+    //Vähintään kuusi merkkiä
     var res = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
     return res.test(str);
   }

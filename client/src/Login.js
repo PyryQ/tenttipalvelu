@@ -16,7 +16,6 @@ export default function Login(props) {
   const [käyttäjänSähköposti, setKäyttäjänSähköposti] = useState("");
   const [käyttäjänSalasana, setKäyttäjänSalasana] = useState("");
 
-
   //Tarkistetaan onko käyttäjän kirjatumisyritys validi
   const tarkistaKirjautuminen = async () => {
     if (käyttäjänSalasana !== "" && käyttäjänSähköposti !== "") {

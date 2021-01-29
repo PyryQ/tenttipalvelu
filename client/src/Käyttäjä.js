@@ -9,36 +9,29 @@ export default function Käyttäjä(props) {
   const [käyttäjänEtunimi, setKäyttäjänEtunimi]=useState("") //Käytettiin datan käsittelyssä ennen statea
   const [käyttäjänSukunimi, setKäyttäjänSukunimi]=useState("") //Serveriä varten
   const [käyttäjänTiedot, setKäyttäjänTiedot]=useState()
-  let k_token = props.käyttäjänToken
-
   let path = 'http://localhost:4000/'
-  switch (process.env.NODE_ENV) {
-    case 'production' : 
-      path = 'https://tenttipalvelu.herokuapp.com/'
-      break;
-    case 'development' : 
-      path = 'http://localhost:4000/'
-      break;
-    case 'test' : 
-      path = 'http://localhost:4000/'
-      break;
-    default :
-      throw "Ympäristöä ei ole alustettu"
-  }
+  let k_token = props.käyttäjänToken
 
   useEffect(()=>{
     const haeKäyttäjänData = async (token) => {
-      let käyttäjä = await axios.get(path + "kayttajantiedottokenista/" + token)
-      setKäyttäjänTiedot(käyttäjä.data[0])
-      setKäyttäjänEtunimi(käyttäjä.data[0].etunimi)
-      setKäyttäjänSukunimi(käyttäjä.data[0].sukunimi)
-      console.log(käyttäjänEtunimi)
+
+      käyttäjänTiedotTokenista(token).then((result) => {
+        //Tarkistetaan serverin palauttama arvo
+        if (result.data === null || result.data === "" || result.data === undefined || result.data === false) {
+          alert(strings.somethingWrong)
+        }
+        else {
+          setKäyttäjänTiedot(result.data[0])
+          setKäyttäjänEtunimi(result.data[0].etunimi)
+          setKäyttäjänSukunimi(result.data[0].sukunimi)
+          alert(strings.userSuccesful)
+        }
+      })
     }
     haeKäyttäjänData(k_token)
   },[])
 
   const päivitäEtunimi = async (k_etunimi) => {
-    console.log("k_etunimi, " + k_etunimi)
     console.log(käyttäjänTiedot)
     let etunimi = await axios.put(path + "paivitaetunimi", {etunimi: k_etunimi, sähköposti: käyttäjänTiedot.sähköposti})
     setKäyttäjänEtunimi(etunimi)

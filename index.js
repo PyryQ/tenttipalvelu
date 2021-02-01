@@ -28,7 +28,16 @@ app.use(fileUpload({
 
 
 //-----------------WEBSOCKET---------------------------
-
+var appOrigin = null
+var con_string = null
+if (!process.env.HEROKU){
+  con_string = 'tcp://postgres:MnoP1994@localhost:5433/Tenttikanta';
+  appOrigin = 'http://localhost:4000'
+}
+else {
+  con_string = process.env.DATABASE_URL
+  appOrigin = 'https://tenttipalvelu.herokuapp.com/'
+}
 
 // app.use('/socket.io', express.static(__dirname + '/node_modules/socket.io')) //static socket.io
 

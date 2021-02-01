@@ -3,24 +3,10 @@ const express = require('express')
 var cors = require("cors")
 var app = express()
 var router = express.Router();
-
-
-
+const path = require('path')
+app.use(express.static('./client/build'))
 app.use(cors())
 
-
-
-if (process.env.HEROKU) {
-  connectInfo = {
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false
-    }
-  }
-}
-
-
-console.log(process.env.NODE_ENV)
 
 var bodyParser = require("body-parser")
 app.use(bodyParser.json())
@@ -41,64 +27,70 @@ app.use(fileUpload({
   limits: { fileSize: 2 * 1024 * 1024 * 1024 },
 }));
 
+// if (process.env.HEROKU) {
+//   connectInfo = {
+//     connectionString: process.env.DATABASE_URL,
+//     ssl: {
+//       rejectUnauthorized: false
+//     }
+//   }
+// }
 
-//--------------
-const path = require('path')
-app.use(express.static('./client/build'))
+
 
 
 //-----------------WEBSOCKET---------------------------
 
 
-app.use('/socket.io', express.static(__dirname + '/node_modules/socket.io')) //static socket.io
+// app.use('/socket.io', express.static(__dirname + '/node_modules/socket.io')) //static socket.io
 
-const httpServer = require('http').createServer()
-const io = require('socket.io')(httpServer, {
-  cors: {
-    origin: "https://tenttipalvelu.herokuapp.com",
-    methods: ["GET", "POST"]
-  }
-})
+// const httpServer = require('http').createServer()
+// const io = require('socket.io')(httpServer, {
+//   cors: {
+//     origin: "https://tenttipalvelu.herokuapp.com",
+//     methods: ["GET", "POST"]
+//   }
+// })
 
-httpServer.listen(5556)
+// httpServer.listen(5556)
 
-app.use('/socket.io', express.static(__dirname + '/node_modules/soclet.io'))
+// app.use('/socket.io', express.static(__dirname + '/node_modules/soclet.io'))
 
-var pg = require('pg');
-var con_string = 'tcp://postgres:MnoP1994@localhost:5433/Tenttikanta';
+// var pg = require('pg');
+// var con_string = 'tcp://postgres:MnoP1994@localhost:5433/Tenttikanta';
 
-var pg_client = new pg.Client(con_string);
-pg_client.connect();
+// var pg_client = new pg.Client(con_string);
+// pg_client.connect();
 
-var query = pg_client.query('LISTEN tenttilisatty');
+// var query = pg_client.query('LISTEN tenttilisatty');
 
-var query2 = pg_client.query('LISTEN uusikayttaja');
+// var query2 = pg_client.query('LISTEN uusikayttaja');
 
-var query3 = pg_client.query('LISTEN aikamuuttui');
+// var query3 = pg_client.query('LISTEN aikamuuttui');
 
 
-io.on('connection', function (socket) {
-  socket.emit('connected', { connected: true });
-  console.log("socket connected")
-  socket.on('ready for data', function (data) {
+// io.on('connection', function (socket) {
+//   socket.emit('connected', { connected: true });
+//   console.log("socket connected")
+//   socket.on('ready for data', function (data) {
 
-    console.log("socket ready for data")
+//     console.log("socket ready for data")
 
-    pg_client.on('notification', function (title) {
+//     pg_client.on('notification', function (title) {
 
-      if (title.channel == 'aikamuuttui') {
-        var viesti = JSON.parse(title.payload);
-        socket.emit('update', { message: viesti.row.nimi + ", Aloitusaika: " + viesti.row.tentin_aloitusaika + ", Lopetusaika: " + viesti.row.tentin_aloitusaika });
-        socket.send(viesti.row.nimi)
-      }
-      else {
-        var viesti = JSON.parse(title.payload);
-        socket.emit('update', { message: viesti.viesti });
-        socket.send(title)
-      }
-    });
-  });
-}); 
+//       if (title.channel == 'aikamuuttui') {
+//         var viesti = JSON.parse(title.payload);
+//         socket.emit('update', { message: viesti.row.nimi + ", Aloitusaika: " + viesti.row.tentin_aloitusaika + ", Lopetusaika: " + viesti.row.tentin_aloitusaika });
+//         socket.send(viesti.row.nimi)
+//       }
+//       else {
+//         var viesti = JSON.parse(title.payload);
+//         socket.emit('update', { message: viesti.viesti });
+//         socket.send(title)
+//       }
+//     });
+//   });
+// }); 
 
 
 
@@ -375,8 +367,6 @@ app.get('/tarkistarooli/:token', (req, res, next) => {
 
 //-------------------------------------------LOGIN---------------------------------
 
-
-//https://www.digitalocean.com/community/tutorials/api-authentication-with-json-web-tokensjwt-and-passport
 
 //Tarkistetaan salasana
 app.post('/tarkistasalasana', (req, res, next) => {

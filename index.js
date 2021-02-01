@@ -13,7 +13,7 @@ app.use(bodyParser.json())
 
 module.exports = app
 const db = require('./server/db')
-const port =  process.env.PORT || 4000
+const port =  process.env.PORT || 3000
 
 // Salaus
 const bcrypt = require('bcrypt')

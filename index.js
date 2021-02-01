@@ -5,38 +5,26 @@ var app = express()
 var router = express.Router();
 const path = require('path')
 app.use(express.static('./client/build'))
-app.use(cors())
 
 
 var bodyParser = require("body-parser")
 app.use(bodyParser.json())
+
 module.exports = app
 const db = require('./server/db')
 const port =  process.env.PORT || 4000
 
+app.use(cors())
 
 // Salaus
 const bcrypt = require('bcrypt')
-const BCRYPT_SALT_ROUNDS = 12;
 var jwt = require('jsonwebtoken');
 const SALT_ROUNDS = 9
-
 
 const fileUpload = require('express-fileupload');
 app.use(fileUpload({
   limits: { fileSize: 2 * 1024 * 1024 * 1024 },
 }));
-
-// if (process.env.HEROKU) {
-//   connectInfo = {
-//     connectionString: process.env.DATABASE_URL,
-//     ssl: {
-//       rejectUnauthorized: false
-//     }
-//   }
-// }
-
-
 
 
 //-----------------WEBSOCKET---------------------------
@@ -93,11 +81,6 @@ app.use(fileUpload({
 // }); 
 
 
-
-
-
-
-
 //----------------------------Router---------------------------------------
 var lisays = require('./server/router/lisays.js');
 app.use('/lisays', lisays);
@@ -109,13 +92,6 @@ var poista = require('./server/router/poista.js');
 app.use('/poista', poista);
 
 
-
-
-
-
-
-
-
 //---------------------------------------------------POST------------------------------------
 
 //Lisää käyttäjä
@@ -123,7 +99,6 @@ app.post('/lisaakayttaja', (req, res, next) => {
 
   let annettuSähköposti = req.body.sahkoposti
   let annettuSalasana = req.body.salasana
-
   try {
     db.query("INSERT INTO käyttäjä (etunimi, sukunimi, sähköposti, rooli) values ($1, $2, $3, $4) RETURNING sähköposti;",
       [req.body.etunimi, req.body.sukunimi, req.body.sahkoposti, req.body.rooli], (err, result) => {
@@ -182,10 +157,7 @@ app.post('/lisaakayttajantentti/:k_id/:t_id/:pm/:arvos/:t_tehty', (req, res, nex
 })
 
 
-
-
 //-----------------TIEDOSTOT----------------
-
 
 app.post('/upload', function (req, res) {
   console.log("upload")
@@ -215,10 +187,6 @@ app.post('/upload', function (req, res) {
     }
   });
 });
-
-
-
-
 
 
 //------------------------------------------------ GET------------------------------------------
@@ -318,8 +286,6 @@ app.get('/kayttajat', (req, res, next) => {
   })
 })
 
-
-
 app.get('/kayttajantiedottokenista/:token', (req, res, next) => {
   let käyttäjänToken = req.params.token
   let tokenSähköposti
@@ -334,9 +300,6 @@ app.get('/kayttajantiedottokenista/:token', (req, res, next) => {
       res.send(result.rows)
     })
 })
-
-
-
 
 app.get('/tarkistarooli/:token', (req, res, next) => {
 
@@ -363,10 +326,7 @@ app.get('/tarkistarooli/:token', (req, res, next) => {
 })
 
 
-
-
 //-------------------------------------------LOGIN---------------------------------
-
 
 //Tarkistetaan salasana
 app.post('/tarkistasalasana', (req, res, next) => {
@@ -414,7 +374,6 @@ app.get('/kayttajansalasana/:sahkoposti/:salasana', (req, res, next) => {
     })
 })
 
-
 //Käyttäjän salasana
 app.get('/kirjautuminen/:sahkoposti', (req, res, next) => {
   db.query("SELECT salasana FROM käyttäjä WHERE sähköposti = $1",
@@ -439,8 +398,6 @@ app.post('/kirjaudu', (req, res, next) => {
 
 
 //--------------------------------------------PUT----------------------------------------------
-
-
 
 
 //päivitä oikea vastaus
@@ -474,8 +431,6 @@ app.put('/paivitasukunimi', (req, res, next) => {
     })
 })
 
-
-
 //päivitä käyttäjän vastaus
 app.put('/paivitakayttajanvastaus/:k_id/:v_id/:k_valinta/:v_oikein', (req, res, next) => {
   db.query("UPDATE käyttäjänvastaus SET käyttäjän_valinta = $3, vastaus_oikein = $4 WHERE käyttäjä_id_fk = $1 AND vastaus_id_fk = $2;",
@@ -487,12 +442,6 @@ app.put('/paivitakayttajanvastaus/:k_id/:v_id/:k_valinta/:v_oikein', (req, res, 
     })
 })
 
-
-
-
-
-
-
 //------------------------------------- DELETE-----------------------------------------------
 
 app.delete('/poistakayttaja/:sahkoposti', (req, res, next) => {
@@ -503,8 +452,6 @@ app.delete('/poistakayttaja/:sahkoposti', (req, res, next) => {
     res.send(result)
   })
 })
-// http://localhost:4000/poistakayttaja/sahkopostit
-
 
 app.delete('/poistakayttajantentti/:kayttaja_id/:tentti_id', (req, res, next) => {
   db.query("DELETE FROM kayttajantentti WHERE käyttäjä_id_fk = $2 AND tentti_id_fk = $1;",
@@ -529,12 +476,9 @@ app.delete('/poistakayttajanvastaus/:kayttaja_id/:vastaus_id', (req, res, next) 
 
 //---------------
 
-
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname +'/client/build/index.html'))
 })
-
-console.log("Port: " + port);
 
 app.listen(port, () => {
   console.log("Palvelin käynnistyi portissa: " + port)

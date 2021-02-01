@@ -5,19 +5,10 @@ var app = express()
 var router = express.Router();
 
 
-if (process.env.NODE_ENV == undefined) {
-  app.use(cors({
-    origin: 'https://localhost:4000/',
-    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-  }))
 
-}
-else {
-  app.use(cors({
-    origin: 'https://tenttipalvelu.herokuapp.com',
-    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-  }))
-}
+app.use(cors())
+
+
 
 if (process.env.HEROKU) {
   connectInfo = {

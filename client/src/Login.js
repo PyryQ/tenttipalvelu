@@ -23,42 +23,46 @@ export default function Login(props) {
         //Verrataan sähköpostia ja salasanaa tietokantaa vasten
         tarkistaKäyttäjänSalasana(käyttäjänSähköposti, käyttäjänSalasana).then((result) => {
           //Mikäli token on validi, tallennetaan token ja merkitään kirjautuminen onnistuneeksi
-          if (result.data !== "" && result.data !== undefined && result.data !== null) {
-            alert(strings.LoginSuccessful)
-            props.asetaToken(result.data)
-            props.kirjautuminen(true)
+          try {
+            if (result.data !== "" && result.data !== undefined && result.data !== null) {
+              alert(strings.LoginSuccessful)
+              props.asetaToken(result.data)
+              props.kirjautuminen(true)
+            }
+            else alert(strings.LoginFailed)
+          } catch (error) {
+            console.log(error)
           }
-          else alert(strings.LoginFailed)
-        })
-        //let tietokantaToken = await axios.post("http://localhost:4000/tarkistasalasana", {sahkoposti: käyttäjänSähköposti, salasana: käyttäjänSalasana})
-      } catch {
-        alert(strings.LoginFailed)
-        console.log("Tokenin asettamisessa jotain pielessä.")
-      }
+  })
+  //let tietokantaToken = await axios.post("http://localhost:4000/tarkistasalasana", {sahkoposti: käyttäjänSähköposti, salasana: käyttäjänSalasana})
+} catch {
+  alert(strings.LoginFailed)
+  console.log("Tokenin asettamisessa jotain pielessä.")
+}
     }
     else alert(strings.LoginFailed)
   }
 
-  return (
-    // Sisäänkirjautumisen kohdat
-    <div className="kirjaudu">
-      <p><TextField
-        id="login-sähköposti"
-        label={strings.email}
-        variant="outlined"
-        onChange={(e) => setKäyttäjänSähköposti(e.target.value)}
-      /></p>
-      <TextField
-        id="login-salasana"
-        label={strings.password}
-        type="password"
-        variant="outlined"
-        onChange={(e) => setKäyttäjänSalasana(e.target.value)}
-      />
-      <br></br>
-      <Button block size="lg" onClick={() => tarkistaKirjautuminen()}>
-        {strings.login}
-      </Button>
-    </div>
-  );
+return (
+  // Sisäänkirjautumisen kohdat
+  <div className="kirjaudu">
+    <p><TextField
+      id="login-sähköposti"
+      label={strings.email}
+      variant="outlined"
+      onChange={(e) => setKäyttäjänSähköposti(e.target.value)}
+    /></p>
+    <TextField
+      id="login-salasana"
+      label={strings.password}
+      type="password"
+      variant="outlined"
+      onChange={(e) => setKäyttäjänSalasana(e.target.value)}
+    />
+    <br></br>
+    <Button block size="lg" onClick={() => tarkistaKirjautuminen()}>
+      {strings.login}
+    </Button>
+  </div>
+);
 }

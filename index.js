@@ -15,7 +15,7 @@ module.exports = app
 const db = require('./server/db')
 const port =  process.env.PORT || 4000
 
-app.use(cors())
+
 
 // Salaus
 const bcrypt = require('bcrypt')
@@ -29,67 +29,75 @@ app.use(fileUpload({
 }));
 
 
+
 //-----------------WEBSOCKET---------------------------
-// var appOrigin = null
-// var con_string = null
-// if (!process.env.HEROKU){
-//   con_string = 'tcp://postgres:MnoP1994@localhost:5433/Tenttikanta';
-//   appOrigin = 'http://localhost:4000'
-// }
-// else {
-//   con_string = process.env.DATABASE_URL
-//   appOrigin = 'https://tenttipalvelu.herokuapp.com/'
-// }
+var appOrigin = null
+var con_string = null
+if (!process.env.HEROKU){
+  con_string = 'tcp://postgres:MnoP1994@localhost:5433/Tenttikanta';
+  appOrigin = 'http://localhost:4000'
+}
+else {
+  con_string = process.env.DATABASE_URL
+  appOrigin = 'https://tenttipalvelu.herokuapp.com/'
+}
+
+var corsOptions = {
+  origin: appOrigin,
+  optionsSuccessStatus: 200,
+  methods: "GET, PUT, POST, DELETE"
+}
+
+app.use(cors(corsOptions))
 
 // app.use('/socket.io', express.static(__dirname + '/node_modules/socket.io')) //static socket.io
 
-// const httpServer = require('http').createServer()
-// const io = require('socket.io')(httpServer, {
-//   cors: {
-//     origin: "https://tenttipalvelu.herokuapp.com",
-//     methods: ["GET", "POST"]
-//   }
-// })
+const io = require('socket.io')(httpServer, {
+  cors: {
+    origin: appOrigin,
+    methods: ["GET", "POST"]
+  }
+})
 
-// httpServer.listen(5556)
+httpServer.listen(5556)
 
-// app.use('/socket.io', express.static(__dirname + '/node_modules/soclet.io'))
+app.use('/socket.io', express.static(__dirname + '/node_modules/soclet.io'))
 
-// var pg = require('pg');
-// var con_string = 'tcp://postgres:MnoP1994@localhost:5433/Tenttikanta';
+var pg = require('pg');
+var con_string = 'tcp://postgres:MnoP1994@localhost:5433/Tenttikanta';
 
-// var pg_client = new pg.Client(con_string);
-// pg_client.connect();
+var pg_client = new pg.Client(con_string);
+pg_client.connect();
 
-// var query = pg_client.query('LISTEN tenttilisatty');
+var query = pg_client.query('LISTEN tenttilisatty');
 
-// var query2 = pg_client.query('LISTEN uusikayttaja');
+var query2 = pg_client.query('LISTEN uusikayttaja');
 
-// var query3 = pg_client.query('LISTEN aikamuuttui');
+var query3 = pg_client.query('LISTEN aikamuuttui');
 
 
-// io.on('connection', function (socket) {
-//   socket.emit('connected', { connected: true });
-//   console.log("socket connected")
-//   socket.on('ready for data', function (data) {
+io.on('connection', function (socket) {
+  socket.emit('connected', { connected: true });
+  console.log("socket connected")
+  socket.on('ready for data', function (data) {
 
-//     console.log("socket ready for data")
+    console.log("socket ready for data")
 
-//     pg_client.on('notification', function (title) {
+    pg_client.on('notification', function (title) {
 
-//       if (title.channel == 'aikamuuttui') {
-//         var viesti = JSON.parse(title.payload);
-//         socket.emit('update', { message: viesti.row.nimi + ", Aloitusaika: " + viesti.row.tentin_aloitusaika + ", Lopetusaika: " + viesti.row.tentin_aloitusaika });
-//         socket.send(viesti.row.nimi)
-//       }
-//       else {
-//         var viesti = JSON.parse(title.payload);
-//         socket.emit('update', { message: viesti.viesti });
-//         socket.send(title)
-//       }
-//     });
-//   });
-// }); 
+      if (title.channel == 'aikamuuttui') {
+        var viesti = JSON.parse(title.payload);
+        socket.emit('update', { message: viesti.row.nimi + ", Aloitusaika: " + viesti.row.tentin_aloitusaika + ", Lopetusaika: " + viesti.row.tentin_aloitusaika });
+        socket.send(viesti.row.nimi)
+      }
+      else {
+        var viesti = JSON.parse(title.payload);
+        socket.emit('update', { message: viesti.viesti });
+        socket.send(title)
+      }
+    });
+  });
+}); 
 
 
 //----------------------------Router---------------------------------------

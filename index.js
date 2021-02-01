@@ -6,6 +6,7 @@ var router = express.Router();
 const path = require('path')
 app.use(express.static('./client/build'))
 
+const httpServer = reguire('http').createServer(app)
 
 var bodyParser = require("body-parser")
 app.use(bodyParser.json())
@@ -21,6 +22,7 @@ const bcrypt = require('bcrypt')
 var jwt = require('jsonwebtoken');
 const SALT_ROUNDS = 9
 
+
 const fileUpload = require('express-fileupload');
 app.use(fileUpload({
   limits: { fileSize: 2 * 1024 * 1024 * 1024 },
@@ -28,16 +30,16 @@ app.use(fileUpload({
 
 
 //-----------------WEBSOCKET---------------------------
-var appOrigin = null
-var con_string = null
-if (!process.env.HEROKU){
-  con_string = 'tcp://postgres:MnoP1994@localhost:5433/Tenttikanta';
-  appOrigin = 'http://localhost:4000'
-}
-else {
-  con_string = process.env.DATABASE_URL
-  appOrigin = 'https://tenttipalvelu.herokuapp.com/'
-}
+// var appOrigin = null
+// var con_string = null
+// if (!process.env.HEROKU){
+//   con_string = 'tcp://postgres:MnoP1994@localhost:5433/Tenttikanta';
+//   appOrigin = 'http://localhost:4000'
+// }
+// else {
+//   con_string = process.env.DATABASE_URL
+//   appOrigin = 'https://tenttipalvelu.herokuapp.com/'
+// }
 
 // app.use('/socket.io', express.static(__dirname + '/node_modules/socket.io')) //static socket.io
 
@@ -489,7 +491,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname +'/client/build/index.html'))
 })
 
-app.listen(port, () => {
+httpServer.listen(port, () => {
   console.log("Palvelin käynnistyi portissa: " + port)
 })
 

@@ -14,6 +14,7 @@ switch (process.env.NODE_ENV) {
   default :
     throw "Ympäristöä ei ole alustettu"
 }
+console.log(path)
 
 //-------------------------------------PUT------------------------
 

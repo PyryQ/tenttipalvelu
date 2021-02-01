@@ -6,7 +6,7 @@ var router = express.Router();
 const path = require('path')
 app.use(express.static('./client/build'))
 
-const httpServer = reguire('http').createServer(app)
+const httpServer = require('http').createServer(app)
 
 var bodyParser = require("body-parser")
 app.use(bodyParser.json())
@@ -57,7 +57,7 @@ const io = require('socket.io')(httpServer, {
 
 //httpServer.listen(5556)
 
-app.use('/socket.io', express.static(__dirname + '/node_modules/soclet.io'))
+app.use('/socket.io', express.static(__dirname + '/node_modules/socket.io'))
 
 var pg = require('pg');
 

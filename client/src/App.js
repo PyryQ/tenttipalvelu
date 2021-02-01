@@ -251,7 +251,6 @@ function App() {
   //Vaihdetaan teksti kielen mukaan (fi tai en)
   const vaihdaKieli = (kieli) => {
     strings.setLanguage(kieli);
-    console.log(kieli) 
   }
 
 

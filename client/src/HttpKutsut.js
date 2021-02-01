@@ -1,19 +1,19 @@
 import axios from 'axios';
 
-var path = "";
-switch (process.env.NODE_ENV) {
-  case 'production' : 
-    path = 'https://tenttipalvelu.herokuapp.com/'
-    break;
-  case 'development' : 
-    path = 'http://localhost:4000/'
-    break;
-  case 'test' : 
-    path = 'http://localhost:4000/'
-    break;
-  default :
-    throw "Ympäristöä ei ole alustettu"
-}
+var path = "https://tenttipalvelu.herokuapp.com/";
+// switch (process.env.NODE_ENV) {
+//   case 'production' : 
+//     path = 'https://tenttipalvelu.herokuapp.com/'
+//     break;
+//   case 'development' : 
+//     path = 'http://localhost:4000/'
+//     break;
+//   case 'test' : 
+//     path = 'http://localhost:4000/'
+//     break;
+//   default :
+//     throw 'http://localhost:4000/'
+// }
 console.log(path)
 
 //-------------------------------------PUT------------------------

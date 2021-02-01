@@ -8,7 +8,7 @@ if(process.env.HEROKU){
     host: 'localhost',
     database: 'Tenttikanta',
     password: 'MnoP1994',
-    port: 5433
+    port: 5432
   }
 }
 else {
@@ -17,7 +17,7 @@ else {
     host: 'localhost',
     database: 'Tenttikanta',
     password: 'MnoP1994',
-    port: 5433
+    port: 5432
   }
 }
 const pool = new Pool(connectInfo)

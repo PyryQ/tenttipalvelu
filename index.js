@@ -19,14 +19,14 @@ else {
   }))
 }
 
-// if (process.env.HEROKU) {
-//   connectInfo = {
-//     connectionString: process.env.DATABASE_URL,
-//     ssl: {
-//       rejectUnauthorized: false
-//     }
-//   }
-// }
+if (process.env.HEROKU) {
+  connectInfo = {
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false
+    }
+  }
+}
 
 
 console.log(process.env.NODE_ENV)

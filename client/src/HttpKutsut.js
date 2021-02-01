@@ -6,7 +6,7 @@ switch (process.env.NODE_ENV) {
     path = 'https://tenttipalvelu.herokuapp.com/'
     break;
   case 'development' : 
-    path = 'http://localhost:4000/'
+    path = 'https://tenttipalvelu.herokuapp.com/'
     break;
   case 'test' : 
     path = 'http://localhost:4000/'

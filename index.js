@@ -15,13 +15,10 @@ module.exports = app
 const db = require('./server/db')
 const port =  process.env.PORT || 4000
 
-
-
 // Salaus
 const bcrypt = require('bcrypt')
 var jwt = require('jsonwebtoken');
 const SALT_ROUNDS = 9
-
 
 const fileUpload = require('express-fileupload');
 app.use(fileUpload({
@@ -29,13 +26,12 @@ app.use(fileUpload({
 }));
 
 
-
 //-----------------WEBSOCKET---------------------------
 var appOrigin = null
 var con_string = null
 if (!process.env.HEROKU){
-  con_string = 'tcp://postgres:MnoP1994@localhost:5433/Tenttikanta';
-  appOrigin = 'http://localhost:4000'
+  con_string = 'tcp://postgres:MnoP1994@localhost:5432/Tenttikanta';
+  appOrigin = 'http://localhost:3000'
 }
 else {
   con_string = process.env.DATABASE_URL
@@ -59,12 +55,11 @@ const io = require('socket.io')(httpServer, {
   }
 })
 
-httpServer.listen(5556)
+//httpServer.listen(5556)
 
 app.use('/socket.io', express.static(__dirname + '/node_modules/soclet.io'))
 
 var pg = require('pg');
-var con_string = 'tcp://postgres:MnoP1994@localhost:5433/Tenttikanta';
 
 var pg_client = new pg.Client(con_string);
 pg_client.connect();

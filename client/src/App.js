@@ -58,15 +58,15 @@ function App() {
   var endpoint = null;
   switch (process.env.NODE_ENV) {
     case 'production' : 
-      path = 'https://tenttipalvelu.herokuapp.com/'
+      path = 'https://tenttipalvelu.herokuapp.com'
       endpoint = 'https://tenttipalvelu.herokuapp.com'
       break;
     case 'development' : 
-      path = 'http://localhost:4000/'
+      path = 'http://localhost:4000'
       endpoint = 'http://localhost:4000'
       break;
     case 'test' : 
-      path = 'http://localhost:4000/'
+      path = 'http://localhost:4000'
       endpoint = 'http://localhost:4000'
       break;
     default :
@@ -79,20 +79,22 @@ function App() {
   useEffect(()=>{
     
     const fetchData = async () => {
+      let testi = await axios.get(path + "/kayttajat")
+      console.log(testi)
       try{
-        let result = await axios.get(path + "tentit")
-
+        let result = await axios.get(path + "/tentit")
+        
         //state pohjustetaan
         if (result.data.length > 0){
           for (var i = 0; i < result.data.length; i++){ //käydään läpi tentit
             result.data[i].kysely = []
-            let kysymykset = await axios.get(path + "kysymykset/" + result.data[i].tentti_id)
+            let kysymykset = await axios.get(path + "/kysymykset/" + result.data[i].tentti_id)
             result.data[i].kysely = kysymykset.data
 
             if (result.data[i].kysely.length > 0){
               for (var j = 0; j < result.data[i].kysely.length; j++){ // käydään kysymykset
                 result.data[i].kysely[j].vastaukset = []
-                let vastaukset = await axios.get(path + "vastaukset/" + result.data[i].kysely[j].kysymys_id)
+                let vastaukset = await axios.get(path + "/vastaukset/" + result.data[i].kysely[j].kysymys_id)
                 result.data[i].kysely[j].vastaukset = vastaukset.data
               }
             }

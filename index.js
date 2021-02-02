@@ -96,13 +96,13 @@ io.on('connection', function (socket) {
 
 
 //----------------------------Router---------------------------------------
-var lisays = require('./server/router/lisays.js');
+var lisays = require('./router/lisays.js');
 app.use('/lisays', lisays);
 
-var paivitys = require('./server/router/paivitys.js');
+var paivitys = require('./router/paivitys.js');
 app.use('/paivitys', paivitys);
 
-var poista = require('./server/router/poista.js');
+var poista = require('./router/poista.js');
 app.use('/poista', poista);
 
 

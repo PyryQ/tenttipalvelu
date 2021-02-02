@@ -32,10 +32,12 @@ var con_string = null
 if (!process.env.HEROKU){
   con_string = 'tcp://postgres:MnoP1994@localhost/Tenttikanta';
   appOrigin = 'http://localhost:3000'
+  console.log("front: " + appOrigin)
 }
 else {
   con_string = process.env.DATABASE_URL
   appOrigin = 'https://tenttipalvelu.herokuapp.com/'
+  console.log("front: " + appOrigin)
 }
 
 var corsOptions = {
@@ -224,16 +226,6 @@ app.get('/kysymykset/:tentti_id', (req, res, next) => {
     })
 })
 
-//Kaikki kysymykset
-app.get('/kysymykset', (req, res, next) => {
-  db.query('SELECT * FROM kysymys', (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(result.rows)
-  })
-})
-
 //Kaikki kysymyksen vastaukset
 app.get('/vastaukset/:kysymys_id', (req, res, next) => {
   db.query('SELECT * FROM vastaus WHERE kysymys_id_fk = $1',
@@ -378,31 +370,8 @@ app.get('/kayttajansalasana/:sahkoposti/:salasana', (req, res, next) => {
     })
 })
 
-//Käyttäjän salasana
-app.get('/kirjautuminen/:sahkoposti', (req, res, next) => {
-  db.query("SELECT salasana FROM käyttäjä WHERE sähköposti = $1",
-    [req.params.sahkoposti], (err, result) => {
-      if (err) {
-        return next(err)
-      }
-      res.send(result.rows)
-    })
-})
-
-app.post('/kirjaudu', (req, res, next) => {
-  db.query("SELECT salasana FROM käyttäjä WHERE sähköposti = $1",
-    [req.body.sähköposti, req.body.salasana], (err, result) => {
-      if (err) {
-        return next(err)
-      }
-      console.log(result.rows)
-      res.send(result.rows)
-    })
-});
-
 
 //--------------------------------------------PUT----------------------------------------------
-
 
 //päivitä oikea vastaus
 app.put('/paivitaoikeavastaus', (req, res, next) => {
@@ -446,36 +415,6 @@ app.put('/paivitakayttajanvastaus/:k_id/:v_id/:k_valinta/:v_oikein', (req, res, 
     })
 })
 
-//------------------------------------- DELETE-----------------------------------------------
-
-app.delete('/poistakayttaja/:sahkoposti', (req, res, next) => {
-  db.query("DELETE FROM käyttäjä WHERE sähköposti=$1;", [req.params.sahkoposti], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(result)
-  })
-})
-
-app.delete('/poistakayttajantentti/:kayttaja_id/:tentti_id', (req, res, next) => {
-  db.query("DELETE FROM kayttajantentti WHERE käyttäjä_id_fk = $2 AND tentti_id_fk = $1;",
-    [req.params.kayttaja_id, req.params.tentti_id], (err, result) => {
-      if (err) {
-        return next(err)
-      }
-      res.send(result)
-    })
-})
-
-app.delete('/poistakayttajanvastaus/:kayttaja_id/:vastaus_id', (req, res, next) => {
-  db.query("DELETE FROM vastaus WHERE käyttäjä_id_fk = $2 AND vastaus_id_fk = $1;",
-    [req.params.kayttaja_id, req.params.vastaus_id], (err, result) => {
-      if (err) {
-        return next(err)
-      }
-      res.send(result)
-    })
-})
 
 
 //---------------

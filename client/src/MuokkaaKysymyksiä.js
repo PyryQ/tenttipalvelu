@@ -132,8 +132,8 @@ export default function MuokkaaKysymyksiä(props) {
   async function poistaTämäTentti() {
     poistaTentti(dataM.tentti_id, token).then((result) => {
       if (result !== false) {
-        props.asetaTentti(0)
         props.dispatch({ type: 'POISTA_TENTTI', data: {} });
+        props.asetaTentti(0)
       }
     }).catch((error) => {
       console.log(error)

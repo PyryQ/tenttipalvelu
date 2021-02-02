@@ -50,6 +50,7 @@ function App() {
 
   // Alustetaan state ja reducer kyselyn avulla
   const [state, dispatch] = useReducer(reducer, kyselyt);
+  const [stateDemo, dispatchDemo] = useReducer(reducer, kyselyt);
 
 
   var path = "";
@@ -251,7 +252,7 @@ function App() {
     let onkoAdmin = false;
     if (käyttäjänToken != null && kirjauduttu){
       //Tarkistetaan rooli tietokannasta: admin = true
-      tarkistaKäyttäjänRooli(käyttäjänToken).then((result) =>{
+      await tarkistaKäyttäjänRooli(käyttäjänToken).then((result) =>{
         onkoAdmin = result
         return onkoAdmin;
       }).catch((error) => {

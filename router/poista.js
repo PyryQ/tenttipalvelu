@@ -59,7 +59,7 @@ router.delete('/poistavastaus', vainAdmin, (req, res, next) => {
     })
 })
 
-router.delete('/poistakayttaja/:sahkoposti', (req, res, next) => {
+router.delete('/poistakayttaja/:sahkoposti', vainAdmin, (req, res, next) => {
   db.query("DELETE FROM käyttäjä WHERE sähköposti=$1;", [req.params.sahkoposti], (err, result) => {
     if (err) {
       return next(err)
@@ -68,7 +68,7 @@ router.delete('/poistakayttaja/:sahkoposti', (req, res, next) => {
   })
 })
 
-router.delete('/poistakayttajantentti/:kayttaja_id/:tentti_id', (req, res, next) => {
+router.delete('/poistakayttajantentti/:kayttaja_id/:tentti_id', vainAdmin, (req, res, next) => {
   db.query("DELETE FROM kayttajantentti WHERE käyttäjä_id_fk = $2 AND tentti_id_fk = $1;",
     [req.params.kayttaja_id, req.params.tentti_id], (err, result) => {
       if (err) {
@@ -78,7 +78,7 @@ router.delete('/poistakayttajantentti/:kayttaja_id/:tentti_id', (req, res, next)
     })
 })
 
-router.delete('/poistakayttajanvastaus/:kayttaja_id/:vastaus_id', (req, res, next) => {
+router.delete('/poistakayttajanvastaus/:kayttaja_id/:vastaus_id', vainAdmin, (req, res, next) => {
   db.query("DELETE FROM vastaus WHERE käyttäjä_id_fk = $2 AND vastaus_id_fk = $1;",
     [req.params.kayttaja_id, req.params.vastaus_id], (err, result) => {
       if (err) {

@@ -95,6 +95,10 @@ app.use(cors(corsOptions))
 //   });
 // }); 
 
+process.on('uncaughtException', function (err) {
+  console.log(err);
+}); 
+
 
 //----------------------------Router---------------------------------------
 var lisays = require('./router/lisays.js');

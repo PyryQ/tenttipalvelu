@@ -36,14 +36,14 @@ if (!process.env.HEROKU){
 }
 else {
   con_string = process.env.DATABASE_URL
-  appOrigin = 'https://tenttipalvelu.herokuapp.com/'
+  appOrigin = 'https://tenttipalvelu.herokuapp.com'
   console.log("front: " + appOrigin)
 }
 
 var corsOptions = {
   origin: appOrigin,
   optionsSuccessStatus: 200,
-  methods: "GET, PUT, POST, DELETE"
+  methods: "GET,PUT,POST,DELETE"
 }
 
 app.use(cors(corsOptions))

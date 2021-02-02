@@ -325,8 +325,8 @@ function App() {
               edge="start" className={classes1.menuButton} 
               onClick={() => setNäkymä(1)}>{strings.exams}</Button>
 
-            <Button color="inherit" 
-              onClick={() => setNäkymä(5)}>{strings.user}</Button>
+            {/* <Button color="inherit" 
+              onClick={() => setNäkymä(5)}>{strings.user}</Button> */}
 
 
             {käyttäjäOnAdmin() ?
@@ -339,8 +339,8 @@ function App() {
               onClick={() => setNäkymä(8)}> {strings.users} </Button>
              : null }
 
-            <Button 
-              onClick={() => setNäkymä(7)}>{strings.dropdemo}</Button>
+            {/* <Button 
+              onClick={() => setNäkymä(7)}>{strings.dropdemo}</Button> */}
             
             {käyttäjäOnAdmin() ?
               <Button 
@@ -400,7 +400,7 @@ function App() {
           {näkymä === 2 && käyttäjäOnAdmin() ?
             <Fade right><MuokkaaKysymyksiä 
               dispatch={dispatch}
-               setaTentti={setTenttiValinta}
+              asetaTentti={setTenttiValinta}
               tentti={state[tenttiValinta]}
               token = {käyttäjänToken}/>
             </Fade> : null}

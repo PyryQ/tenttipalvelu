@@ -137,17 +137,6 @@ app.post('/lisaakayttaja', (req, res, next) => {
 
 })
 
-app.post('/lisaakayttaja2', (req, res, next) => {
-  db.query("INSERT INTO käyttäjä (etunimi, sukunimi, sähköposti, rooli, salasana) values ($1, $2, $3, $4, $5);",
-    [req.body.etunimi, req.body.sukunimi, req.body.sahkoposti, req.body.rooli, req.body.salasana], (err, result) => {
-      if (err) {
-        return next(err)
-      }
-      res.send(result)
-    })
-})
-//http://localhost:4000/lisaakayttaja/testi/testinen/testaus/kayttaja/salasana12345
-
 //Lisää käyttäjän vastaus
 app.post('/lisaakayttajanvastaus/:k_id/:v_id/:k_valinta/:v_oikein', (req, res, next) => {
   db.query("INSERT INTO käyttäjänvastaus (käyttäjä_id_fk, vastaus_id_fk, käyttäjän_valinta, vastaus_oikein) VALUES ($1, $2, $3, $4);",

@@ -79,7 +79,7 @@ function App() {
   useEffect(()=>{
     
     const fetchData = async () => {
-      let testi = await axios.get(path + "/kayttajat")
+      let testi = await axios.get(path + "/kysymykset")
       console.log(testi)
       try{
         let result = await axios.get(path + "/tentit")

@@ -427,7 +427,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname +'/client/build/index.html'))
 })
 
-app.listen(port, () => {
+httpServer.listen(port, () => {
   console.log("Palvelin käynnistyi portissa: " + port)
 })
 

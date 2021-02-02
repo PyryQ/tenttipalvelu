@@ -38,6 +38,7 @@ else {
   con_string = process.env.DATABASE_URL
   appOrigin = 'https://tenttipalvelu.herokuapp.com/'
   console.log("front: " + appOrigin)
+  console.log(process.env.DATABASE_URL)
 }
 
 var corsOptions = {

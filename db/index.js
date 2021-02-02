@@ -3,8 +3,8 @@ const { Pool } = require('pg')
 var connectInfo = {};
 
 var pool = null;
-if(process.env.HEROKU){
-  pool = new Pool({connectionString:process.env.DATABASE_URL})
+if (process.env.HEROKU) {
+  pool = new Pool({ connectionString: process.env.DATABASE_URL })
 }
 else {
   connectInfo = {

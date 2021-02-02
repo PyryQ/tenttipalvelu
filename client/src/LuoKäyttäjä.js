@@ -42,16 +42,16 @@ export default function Login(props) {
         if (käyttäjänRooliTarkistus == "admin1234" || käyttäjänRooliTarkistus == "oppilas") {
           if (käyttäjänRooliTarkistus == "admin1234") {
             setKäyttäjänRooli("admin")
-            console.log(käyttäjänRooli)
           }
           else { setKäyttäjänRooli("oppilas") }
+          console.log(käyttäjänRooli)
 
           if (käyttäjänRooli != "") {
             //Lisätään käyttäjän tiedot yhteen muuttujaan ja lähetetään tietokantaan
             let käyttäjänTiedot = { etunimi: käyttäjänEtunimi, sukunimi: käyttäjänSukunimi, sahkoposti: käyttäjänSähköposti, rooli: käyttäjänRooli, salasana: käyttäjänSalasana }
             lisääKäyttäjä(käyttäjänTiedot).then((result) => {
               //Tarkistetaan serverin palauttama arvo
-              if (result.data === null || result.data === "" || result.data === undefined || result.data === false) {
+              if (result === null || result === "" || result === undefined || result === false) {
                 alert(strings.somethingWrong)
               }
               else alert(strings.userSuccesful)

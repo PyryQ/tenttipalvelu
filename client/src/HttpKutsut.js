@@ -165,7 +165,7 @@ export async function tarkistaKäyttäjänSalasana(käyttäjänSähköposti, kä
   console.log("salasanan tarkistus" + käyttäjänSalasana + " " + käyttäjänSähköposti + " " + path)
   try{
     let result = await axios.post(path + "/tarkistasalasana", {sahkoposti: käyttäjänSähköposti, salasana: käyttäjänSalasana})
-    console.log("tarkistafunktion result, "+ result)
+    console.log("tarkistafunktion result, "+ result.data)
     return(result.data)
   }
   catch(exception){
@@ -177,6 +177,7 @@ export async function tarkistaKäyttäjänSalasana(käyttäjänSähköposti, kä
 export async function lisääKäyttäjä(käyttäjänTiedot) {
   try{
     let result = await axios.post(path + "/lisaakayttaja", käyttäjänTiedot)
+    console.log("result.data " + result.data)
     return(result.data)
   }
   catch(exception){

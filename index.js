@@ -42,8 +42,8 @@ else {
 
 var corsOptions = {
   origin: appOrigin,
-  optionsSuccessStatus: 200,
-  methods: "GET,PUT,POST,DELETE"
+  optionsSuccessStatus: 200
+  //methods: "GET,PUT,POST,DELETE"
 }
 
 app.use(cors(corsOptions))
@@ -427,9 +427,14 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname +'/client/build/index.html'))
 })
 
-app.listen(port, () => {
-  console.log("Palvelin käynnistyi portissa: " + port)
-})
+// app.listen(port, () => {
+//   console.log("Palvelin käynnistyi portissa: " + port)
+// })
+
+var serverTest = app.listen(process.env.PORT || 4000, function () {
+  var portTest = serverTest.address().port;
+  console.log("Express is working on port " + portTest);
+});
 
 
 

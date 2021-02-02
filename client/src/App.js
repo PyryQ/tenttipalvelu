@@ -28,6 +28,8 @@ import socketIOClient from 'socket.io-client';
 import finland from './finland.png';
 import unitedkingdom from './unitedkingdom.png';
 
+import {haeTentit, haeKysymykset} from './HttpKutsut'
+
 
 
 function App() {
@@ -77,37 +79,45 @@ function App() {
         
   //Post, get ja put serverin datan testaamista varten. Ei käytössä ohjelmassa.
   useEffect(()=>{
-    
     const fetchData = async () => {
-      let testi = await axios.get(path + "/kysymykset")
-      console.log(testi)
+
       try{
-        let result = await axios.get(path + "/tentit")
+        let tentit = null
+        await haeTentit().then((tentitResult) => {
+          tentit = tentitResult;
+        })
         
         //state pohjustetaan
-        if (result.data.length > 0){
-          for (var i = 0; i < result.data.length; i++){ //käydään läpi tentit
-            result.data[i].kysely = []
-            let kysymykset = await axios.get(path + "/kysymykset/" + result.data[i].tentti_id)
-            result.data[i].kysely = kysymykset.data
+        if (tentit.length > 0){
+          for (var i = 0; i < tentit.length; i++){ //käydään läpi tentit
 
-            if (result.data[i].kysely.length > 0){
-              for (var j = 0; j < result.data[i].kysely.length; j++){ // käydään kysymykset
-                result.data[i].kysely[j].vastaukset = []
-                let vastaukset = await axios.get(path + "/vastaukset/" + result.data[i].kysely[j].kysymys_id)
-                result.data[i].kysely[j].vastaukset = vastaukset.data
+            tentit[i].kysely = []
+            let kysymykset = null
+            await haeKysymykset(tentit[i].tentti_id).then((kysymyksetResult) => {
+              kysymykset = kysymyksetResult;
+            })
+            tentit[i].kysely = kysymykset
+
+            if (tentit[i].kysely.length > 0){
+
+              for (var j = 0; j < tentit[i].kysely.length; j++){ // käydään kysymykset
+                tentit[i].kysely[j].vastaukset = []
+                let vastaukset = null
+                await haeKysymykset(tentit[i].kysely[j].kysymys_id).then((vastauksetResult) => {
+                  vastaukset = vastauksetResult;
+                })
+                tentit[i].kysely[j].vastaukset = vastaukset
               }
             }
-            setData2(result.data);
+            setData2(tentit);
             setDataAlustettu2(true)
           }
-          dispatch({type: "INIT_DATA", data: result.data})
+          dispatch({type: "INIT_DATA", data: tentit})
         }else{
           throw("Tietokannan alustaminen epäonnistui (Get)") 
         }
       }
       catch(exception){
-        //createData();
         console.log(exception)
       }
     }

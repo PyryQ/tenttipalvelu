@@ -209,7 +209,6 @@ export async function haeKäyttäjät() {
 
 export async function tarkistaKäyttäjänRooli(käyttäjänToken) {
   try{
-    console.log(käyttäjänToken)
     let result = await axios.get(path + "/tarkistarooli/" + käyttäjänToken)
     let onkoAdmin = result.data
     return(onkoAdmin)
@@ -227,6 +226,36 @@ export async function käyttäjänTiedotTokenista(käyttäjänToken) {
   }
   catch(exception){
     console.log("Käyttäjän tokenin tarkistus ei onnistunut.")
+  }
+}
+
+export async function haeTentit() {
+  try{
+    let result = await axios.get(path + "/tentit");
+    return(result.data)
+  }
+  catch(exception){
+    console.log("Tenttejä ei onnistuttu hakemaan.")
+  }
+}
+
+export async function haeKysymykset(tentti_id) {
+  try{
+    let result = await axios.get(path + "/kysymykset/" + tentti_id);
+    return(result.data)
+  }
+  catch(exception){
+    console.log("Kysymyksiä ei onnistuttu hakemaan.")
+  }
+}
+
+export async function haeVastaukset(kysymys_id) {
+  try{
+    let result = await axios.get(path + "/vastaukset/" + kysymys_id);
+    return(result.data)
+  }
+  catch(exception){
+    console.log("Kysymyksiä ei onnistuttu hakemaan.")
   }
 }
 

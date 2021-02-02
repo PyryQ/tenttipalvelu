@@ -49,7 +49,7 @@ export default function Login(props) {
           if (käyttäjänRooli != "") {
             //Lisätään käyttäjän tiedot yhteen muuttujaan ja lähetetään tietokantaan
             let käyttäjänTiedot = { etunimi: käyttäjänEtunimi, sukunimi: käyttäjänSukunimi, sahkoposti: käyttäjänSähköposti, rooli: käyttäjänRooli, salasana: käyttäjänSalasana }
-            lisääKäyttäjä(käyttäjänTiedot).then((result) => {
+            await lisääKäyttäjä(käyttäjänTiedot).then((result) => {
               //Tarkistetaan serverin palauttama arvo
               if (result === null || result === "" || result === undefined || result === false) {
                 alert(strings.somethingWrong)

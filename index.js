@@ -38,7 +38,6 @@ else {
   con_string = process.env.DATABASE_URL
   appOrigin = 'https://tenttipalvelu.herokuapp.com/'
   console.log("front: " + appOrigin)
-  console.log(process.env.DATABASE_URL)
 }
 
 var corsOptions = {
@@ -424,9 +423,9 @@ app.put('/paivitakayttajanvastaus/:k_id/:v_id/:k_valinta/:v_oikein', (req, res, 
 
 //---------------
 
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname +'/client/build/index.html'))
-// })
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname +'/client/build/index.html'))
+})
 
 app.listen(port, () => {
   console.log("Palvelin käynnistyi portissa: " + port)

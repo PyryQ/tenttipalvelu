@@ -51,10 +51,6 @@ function App() {
   // Alustetaan state ja reducer kyselyn avulla
   const [state, dispatch] = useReducer(reducer, kyselyt);
 
-  //Socket ja ilmoitusbaari
-  //const sIOEndpoint = 'ws://localhost:5556';
-  //const sIOEndpoint = 'https://tenttipalvelu.herokuapp.com';
-  const { enqueueSnackbar } = useSnackbar();
 
   var path = "";
   var endpoint = null;

@@ -30,7 +30,7 @@ app.use(fileUpload({
 var appOrigin = null
 var con_string = null
 if (!process.env.HEROKU){
-  con_string = 'tcp://postgres:MnoP1994@localhost:5432/Tenttikanta';
+  con_string = 'tcp://postgres:MnoP1994@localhost/Tenttikanta';
   appOrigin = 'http://localhost:3000'
 }
 else {

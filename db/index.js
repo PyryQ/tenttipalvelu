@@ -16,7 +16,7 @@ else {
   }
   pool = new Pool(connectInfo)
 }
-console.log("db pool " + pool)
+
 
 module.exports = {
   query: (text, params, callback) => {

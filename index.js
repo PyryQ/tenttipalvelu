@@ -12,7 +12,7 @@ var bodyParser = require("body-parser")
 app.use(bodyParser.json())
 
 module.exports = app
-const db = require('./server/db')
+const db = require('./db')
 const port =  process.env.PORT || 4000
 
 // Salaus

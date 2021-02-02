@@ -1,13 +1,21 @@
 const { Pool } = require('pg')
 
-const pool = new Pool({
+var connectInfo = {};
+
+var pool = null;
+if (process.env.HEROKU) {
+  pool = new Pool({ connectionString: process.env.DATABASE_URL })
+}
+else {
+  connectInfo = {
     user: 'postgres',
     host: 'localhost',
     database: 'Tenttikanta',
     password: 'MnoP1994',
-    port: 5432,
-})
-
+    port: 5432
+  }
+  pool = new Pool(connectInfo)
+}
 
 
 module.exports = {

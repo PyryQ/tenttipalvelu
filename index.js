@@ -95,9 +95,9 @@ app.use(cors(corsOptions))
 //   });
 // }); 
 
-process.on('uncaughtException', function (err) {
-  console.log(err);
-}); 
+// process.on('uncaughtException', function (err) {
+//   console.log(err);
+// }); 
 
 
 //----------------------------Router---------------------------------------

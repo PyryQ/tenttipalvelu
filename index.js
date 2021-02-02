@@ -344,6 +344,7 @@ app.get('/tarkistarooli/:token', (req, res, next) => {
 
 //Tarkistetaan salasana
 app.post('/tarkistasalasana', (req, res, next) => {
+  console.log("index, tarkista salasana")
   let annettuSalasana = req.body.salasana
   let annettuSähköposti = req.body.sahkoposti
   try {
@@ -363,12 +364,13 @@ app.post('/tarkistasalasana', (req, res, next) => {
           bcrypt.compare(annettuSalasana, result.rows[0].salasana, function (err, resultB) {
             if (resultB) {
               let token = jwt.sign({ sähköposti: annettuSähköposti, rooli: result.rows[0].rooli }, 'sonSALAisuus', { expiresIn: '4h' });
+              console.log("tokenin asetus onnistui")
               return res.send(token)
             }
             else { "Salasanan tarkistus ei onnistunut." }
           });
         }
-        catch { "Salasanan tarkistus ei onnistunut." }
+        catch (error) { console.log(error)}
 
       })
   } catch { "Salasanan tarkistus ei onnistunut." }

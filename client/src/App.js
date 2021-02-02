@@ -59,15 +59,15 @@ function App() {
   switch (process.env.NODE_ENV) {
     case 'production' : 
       path = 'https://tenttipalvelu.herokuapp.com/'
-      endpoint = 'https://tenttipalvelu.herokuapp.com/'
+      endpoint = 'https://tenttipalvelu.herokuapp.com'
       break;
     case 'development' : 
       path = 'http://localhost:4000/'
-      endpoint = 'http://localhost:4000/'
+      endpoint = 'http://localhost:4000'
       break;
     case 'test' : 
       path = 'http://localhost:4000/'
-      endpoint = 'http://localhost:4000/'
+      endpoint = 'http://localhost:4000'
       break;
     default :
       throw "Ympäristöä ei ole alustettu"

@@ -434,8 +434,8 @@ function App() {
           <LuoKäyttäjä/> : null}
 
 
-        {näkymä === 7 ?
-          <div>Demo  <Dropzone/></div> : null}
+        {/* {näkymä === 7 ?
+          <div>Demo  <Dropzone/></div> : null} */}
         <br></br>
         </div>
 

@@ -12,7 +12,7 @@ else {
     host: 'localhost',
     database: 'Tenttikanta',
     password: 'MnoP1994',
-    port: 5432
+    port: 5432,
   }
   pool = new Pool(connectInfo)
 }

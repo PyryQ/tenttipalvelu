@@ -335,11 +335,8 @@ function App() {
             {/* <Button color="inherit" 
               onClick={() => setNäkymä(5)}>{strings.user}</Button> */}
 
-
-            {käyttäjäOnAdmin() ?
             <Button color="inherit" 
               onClick={() => setNäkymä(2)}> {strings.editExams} </Button>
-             : null }
 
             {käyttäjäOnAdmin() && onkoAdmin ?
             <Button color="inherit" 
@@ -349,10 +346,8 @@ function App() {
             {/* <Button 
               onClick={() => setNäkymä(7)}>{strings.dropdemo}</Button> */}
             
-            {käyttäjäOnAdmin() && onkoAdmin ?
               <Button 
                 onClick={() => setNäkymä(3)}> {strings.chartdemo}</Button>
-            : null }
 
             <Button color="inherit" 
               onClick={() => poistu()}>{strings.signof}</Button>

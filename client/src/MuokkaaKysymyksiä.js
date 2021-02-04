@@ -229,12 +229,11 @@ export default function MuokkaaKysymyksiä(props) {
 
   return (
     <div>
-      {props.onAdmin ? <div>
+      {!props.onAdmin ? <div>
         Oppilaat eivät voi muokata tenttejä.
-        <br></br>
-        </div>
+      </div>
         : null}
-        
+
       {/*Input tentin nimen muokkaamiseksi*/}
       <Input key={"tentti_input" + dataM.tentti_id} className="tenttiM" defaultValue={dataM.nimi}
         onChange={(e) => päivitäTämäTenttiNimi(dataM.tentti_id, e.target.value)}>
@@ -245,8 +244,10 @@ export default function MuokkaaKysymyksiä(props) {
       {/*Button tentin poistamiseksi*/}
       <Button className="poistaTT"
         onClick={() => {
-          if (window.confirm(strings.delete + " " + dataM.nimi + "?")) {
-            poistaTämäTentti();
+          if (props.onAdmin) {
+            if (window.confirm(strings.delete + " " + dataM.nimi + "?")) {
+              poistaTämäTentti();
+            }
           }
         }}>
         <DeleteIcon />{strings.deleteE}</Button>

@@ -39,6 +39,7 @@ export default function Login(props) {
       else if (käyttäjänEtunimi !== "" && käyttäjänSukunimi !== "" && käyttäjänEtunimi.length > 0) {
 
         //Roolisalasana oikein
+        console.log("käyttäjänroolitarkistus" + käyttäjänRooliTarkistus)
         if (käyttäjänRooliTarkistus == "admin1234" || käyttäjänRooliTarkistus == "oppilas") {
           let rooliTesti = "";
           if (käyttäjänRooliTarkistus == "admin1234") {
@@ -54,7 +55,7 @@ export default function Login(props) {
           console.log(käyttäjänRooli)
           console.log("roolitesti " + rooliTesti)
 
-          if (käyttäjänRooli != "") {
+          if (rooliTesti != "") {
             //Lisätään käyttäjän tiedot yhteen muuttujaan ja lähetetään tietokantaan
             let käyttäjänTiedot = { etunimi: käyttäjänEtunimi, sukunimi: käyttäjänSukunimi, sahkoposti: käyttäjänSähköposti, rooli: rooliTesti, salasana: käyttäjänSalasana }
             lisääKäyttäjä(käyttäjänTiedot).then((result) => {

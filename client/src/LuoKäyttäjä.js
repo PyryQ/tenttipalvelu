@@ -45,28 +45,29 @@ export default function Login(props) {
           if (käyttäjänRooliTarkistus == "admin1234") {
             setKäyttäjänRooli("admin")
             rooliTesti = "admin"
-            console.log(käyttäjänRooli)
           }
-          else { 
-            setKäyttäjänRooli("oppilas") 
+          else {
+            setKäyttäjänRooli("oppilas")
             rooliTesti = "oppilas"
-            console.log(käyttäjänRooli)
           }
-          console.log(käyttäjänRooli)
-          console.log("roolitesti " + rooliTesti)
 
-          if (rooliTesti != "") {
-            //Lisätään käyttäjän tiedot yhteen muuttujaan ja lähetetään tietokantaan
-            let käyttäjänTiedot = { etunimi: käyttäjänEtunimi, sukunimi: käyttäjänSukunimi, sahkoposti: käyttäjänSähköposti, rooli: rooliTesti, salasana: käyttäjänSalasana }
-            lisääKäyttäjä(käyttäjänTiedot).then((result) => {
-              //Tarkistetaan serverin palauttama arvo
-              if (result === null || result === "" || result === undefined || result === false) {
-                alert(strings.somethingWrong)
-              }
-              else alert(strings.userSuccesful)
-            })
+          try {
+            if (rooliTesti != "") {
+              //Lisätään käyttäjän tiedot yhteen muuttujaan ja lähetetään tietokantaan
+              let käyttäjänTiedot = { etunimi: käyttäjänEtunimi, sukunimi: käyttäjänSukunimi, sahkoposti: käyttäjänSähköposti, rooli: rooliTesti, salasana: käyttäjänSalasana }
+              lisääKäyttäjä(käyttäjänTiedot).then((result) => {
+                //Tarkistetaan serverin palauttama arvo
+                if (result === null || result === "" || result === undefined || result === false) {
+                  alert(strings.somethingWrong)
+                }
+                else alert(strings.userSuccesful)
+              })
+            }
+            else alert(strings.somethingWrong)
           }
-          else alert(strings.somethingWrong)
+          catch (error) {
+            console.log(error)
+          }
         }
         else alert(strings.incorrectRolePW)
       }

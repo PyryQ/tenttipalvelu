@@ -1,5 +1,6 @@
 import {useEffect, useState } from 'react';
 import { DataGrid, RowsProp, ColDef } from '@material-ui/data-grid';
+import Button from '@material-ui/core/Button';
 import {haeKäyttäjät} from './HttpKutsut';
 import strings from './Localization.js'
 
@@ -13,6 +14,8 @@ export default function Käyttäjä(props) {
       { field: 'rooli', headerName: strings.role, width: 150 }
   ];
   const rivit = käyttäjät
+
+  const [poistettavaKäyttäjä, setPoistettavaKäyttäjä] = useState(null)
 
   //Haetaan kaikkien käyttäjien data, kun välilehti avataan
   useEffect(()=>{
@@ -28,11 +31,23 @@ export default function Käyttäjä(props) {
     haeKaikkiKäyttäjät()
   },[])
 
+  function tallennaValinta(selections) {
+    console.log(selections)
+  }
+
   //Jos käyttäjien data saatu, muodostetaan datagrid
   if (käyttäjät !== null && käyttäjät !== undefined){
     return <div style={{ height: 800, width: '100%' }}>
-        <DataGrid rows={käyttäjät} columns={sarakkeet} pageSize={15}/>
+        <DataGrid 
+          rows={käyttäjät} 
+          columns={sarakkeet} 
+          pageSize={15}
+          onSelectionChange={tallennaValinta}/>
+        <Button className="poistakayttaja" key={"poistakayttaja"}>
+          Poista valittu käyttäjä
+        </Button>
     </div>
+
           
   } else return null
 }

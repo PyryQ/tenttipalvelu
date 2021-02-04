@@ -23,17 +23,13 @@ export default function Login(props) {
         //Verrataan sähköpostia ja salasanaa tietokantaa vasten
         tarkistaKäyttäjänSalasana(käyttäjänSähköposti, käyttäjänSalasana).then((result) => {
           //Mikäli token on validi, tallennetaan token ja merkitään kirjautuminen onnistuneeksi
-          console.log("tarkista salasana")
-          console.log("result, " + result)
             if (result != "" && result != undefined && result != null) {
-              console.log("result oikein")
               alert(strings.LoginSuccessful)
               props.asetaToken(result)
               props.kirjautuminen(true)
             }
             else {
               alert(strings.LoginFailed)
-              console.log("pieleen meni " + result)
             }
         })
         //let tietokantaToken = await axios.post("http://localhost:4000/tarkistasalasana", {sahkoposti: käyttäjänSähköposti, salasana: käyttäjänSalasana})

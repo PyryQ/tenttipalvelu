@@ -189,6 +189,7 @@ export default function MuokkaaKysymyksiä(props) {
 
           {/*Input vastauksen asettamiselle*/}
           <Input className="vastausM"
+            disabled={!props.onAdmin}
             defaultValue={itemV.vastaus}
             key={"muuta_v" + itemV.vastaus_id}
             onBlur={(e) => päivitäTämäVastausNimi(itemV.vastaus_id, e.target.value, indexK, indexV)}>
@@ -235,7 +236,10 @@ export default function MuokkaaKysymyksiä(props) {
         : null}
 
       {/*Input tentin nimen muokkaamiseksi*/}
-      <Input key={"tentti_input" + dataM.tentti_id} className="tenttiM" defaultValue={dataM.nimi}
+      <Input key={"tentti_input" + dataM.tentti_id} 
+        disabled={!props.onAdmin}
+        className="tenttiM" 
+        defaultValue={dataM.nimi}
         onChange={(e) => päivitäTämäTenttiNimi(dataM.tentti_id, e.target.value)}>
       </Input>
       <br></br>
@@ -289,6 +293,7 @@ export default function MuokkaaKysymyksiä(props) {
         <Card className="korttiM" l={2} elevation={3} key={"kortti" + itemK.kysymys_id}>
           <div>
             <Input className="kysymysM"
+              disabled={!props.onAdmin}
               defaultValue={itemK.kysymys}
               onBlur={(e) => päivitäTämäKysymysNimi(itemK.kysymys_id, e.target.value, indexK)}>
             </Input>

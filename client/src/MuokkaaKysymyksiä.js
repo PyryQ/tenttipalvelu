@@ -132,7 +132,7 @@ export default function MuokkaaKysymyksiä(props) {
   async function poistaTämäTentti() {
     poistaTentti(dataM.tentti_id, token).then((result) => {
       console.log("tenttipoisto" + result)
-      if (result !== false) {
+      if (result === true) {
         props.dispatch({ type: 'POISTA_TENTTI', data: {} });
         props.asetaTentti(0)
       }
@@ -144,7 +144,7 @@ export default function MuokkaaKysymyksiä(props) {
   async function poistaTämäKysymys(kysymys_id, indexK) {
 
     poistaKysymys(kysymys_id, token).then((result) => {
-      if (result !== false) {
+      if (result === true) {
         props.dispatch({ type: 'POISTA_KYSYMYS', data: { indexKy: indexK } });
       }
     }).catch((error) => {
@@ -155,7 +155,7 @@ export default function MuokkaaKysymyksiä(props) {
   async function poistaTämäVastaus(vastaus_id, indexK, indexV) {
 
     poistaVastaus(vastaus_id, token).then((result) => {
-      if (result !== false) {
+      if (result === true) {
         props.dispatch({ type: 'POISTA_VASTAUS', data: { indexKy: indexK, indexVa: indexV } });
       }
     }).catch((error) => {

@@ -36,7 +36,7 @@ router.delete('/poistatentti', vainAdmin, (req, res, next) => {
       if (err) {
         return next(err)
       }
-      res.send(result)
+      res.send(true)
     })
 })
 
@@ -46,7 +46,7 @@ router.delete('/poistakysymys', vainAdmin, (req, res, next) => {
       if (err) {
         return next(err)
       }
-      res.send(result)
+      res.send(true)
     })
 })
 
@@ -56,7 +56,7 @@ router.delete('/poistavastaus', vainAdmin, (req, res, next) => {
       if (err) {
         return next(err)
       }
-      res.send(result)
+      res.send(true)
     })
 })
 
@@ -65,7 +65,7 @@ router.delete('/poistakayttaja/:sahkoposti', vainAdmin, (req, res, next) => {
     if (err) {
       return next(err)
     }
-    res.send(result)
+    res.send(true)
   })
 })
 

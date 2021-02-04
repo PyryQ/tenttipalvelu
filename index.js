@@ -48,56 +48,56 @@ var corsOptions = {
 
 app.use(cors(corsOptions))
 
-// app.use('/socket.io', express.static(__dirname + '/node_modules/socket.io')) //static socket.io
+app.use('/socket.io', express.static(__dirname + '/node_modules/socket.io')) //static socket.io
 
-// const io = require('socket.io')(httpServer, {
-//   cors: {
-//     origin: appOrigin,
-//     methods: ["GET", "POST"]
-//   }
-// })
-
-
-// app.use('/socket.io', express.static(__dirname + '/node_modules/socket.io'))
-
-// var pg = require('pg');
-
-// var pg_client = new pg.Client(con_string);
-// pg_client.connect();
-
-// var query = pg_client.query('LISTEN tenttilisatty');
-
-// var query2 = pg_client.query('LISTEN uusikayttaja');
-
-// var query3 = pg_client.query('LISTEN aikamuuttui');
+const io = require('socket.io')(httpServer, {
+  cors: {
+    origin: appOrigin,
+    methods: ["GET", "POST"]
+  }
+})
 
 
-// io.on('connection', function (socket) {
-//   socket.emit('connected', { connected: true });
-//   console.log("socket connected")
-//   socket.on('ready for data', function (data) {
+app.use('/socket.io', express.static(__dirname + '/node_modules/socket.io'))
 
-//     console.log("socket ready for data")
+var pg = require('pg');
 
-//     pg_client.on('notification', function (title) {
+var pg_client = new pg.Client(con_string);
+pg_client.connect();
 
-//       if (title.channel == 'aikamuuttui') {
-//         var viesti = JSON.parse(title.payload);
-//         socket.emit('update', { message: viesti.row.nimi + ", Aloitusaika: " + viesti.row.tentin_aloitusaika + ", Lopetusaika: " + viesti.row.tentin_aloitusaika });
-//         socket.send(viesti.row.nimi)
-//       }
-//       else {
-//         var viesti = JSON.parse(title.payload);
-//         socket.emit('update', { message: viesti.viesti });
-//         socket.send(title)
-//       }
-//     });
-//   });
-// }); 
+var query = pg_client.query('LISTEN tenttilisatty');
 
-// process.on('uncaughtException', function (err) {
-//   console.log(err);
-// }); 
+var query2 = pg_client.query('LISTEN uusikayttaja');
+
+var query3 = pg_client.query('LISTEN aikamuuttui');
+
+
+io.on('connection', function (socket) {
+  socket.emit('connected', { connected: true });
+  console.log("socket connected")
+  socket.on('ready for data', function (data) {
+
+    console.log("socket ready for data")
+
+    pg_client.on('notification', function (title) {
+
+      if (title.channel == 'aikamuuttui') {
+        var viesti = JSON.parse(title.payload);
+        socket.emit('update', { message: viesti.row.nimi + ", Aloitusaika: " + viesti.row.tentin_aloitusaika + ", Lopetusaika: " + viesti.row.tentin_aloitusaika });
+        socket.send(viesti.row.nimi)
+      }
+      else {
+        var viesti = JSON.parse(title.payload);
+        socket.emit('update', { message: viesti.viesti });
+        socket.send(title)
+      }
+    });
+  });
+}); 
+
+process.on('uncaughtException', function (err) {
+  console.log(err);
+}); 
 
 
 //----------------------------Router---------------------------------------

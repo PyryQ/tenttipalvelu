@@ -252,7 +252,7 @@ function App() {
     let onkoAdmin = false;
     if (käyttäjänToken != null && kirjauduttu){
       //Tarkistetaan rooli tietokannasta: admin = true
-      await tarkistaKäyttäjänRooli(käyttäjänToken).then((result) =>{
+      tarkistaKäyttäjänRooli(käyttäjänToken).then((result) =>{
         onkoAdmin = result
         return onkoAdmin;
       }).catch((error) => {
@@ -421,8 +421,8 @@ function App() {
         {näkymä === 4 ?
           <Login kirjautuminen = {kirjauduttu} asetaToken = {asetaToken}/> : null}
 
-        {näkymä === 5 ?
-          <Käyttäjä käyttäjänToken = {käyttäjänToken}/> : null}
+        {/* {näkymä === 5 ?
+          <Käyttäjä käyttäjänToken = {käyttäjänToken}/> : null} */}
 
         {näkymä === 8 ?
           <Käyttäjät käyttäjänToken = {käyttäjänToken}/> : null}

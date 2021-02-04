@@ -179,11 +179,13 @@ export default function MuokkaaKysymyksiä(props) {
       return <div> {itemK.vastaukset.map((itemV, indexV) =>
         <div key={"vastaukset" + itemV.vastaus_id}>
           {/*Checkbox oikean vastauksen asettamiselle*/}
-          <label><Checkbox className="vastausCheckM"
-            key={"muuta_ov" + itemV.vastaus_id}
-            checked={itemV.oikea_vastaus}
-            onChange={(e) => päivitäTämäOikeaVastaus(itemV.vastaus_id, e.target.checked, indexK, indexV)} />
-          </label>
+          {props.onAdmin ?
+            <label><Checkbox className="vastausCheckM"
+              key={"muuta_ov" + itemV.vastaus_id}
+              checked={itemV.oikea_vastaus}
+              onChange={(e) => päivitäTämäOikeaVastaus(itemV.vastaus_id, e.target.checked, indexK, indexV)} />
+            </label>
+            : null}
 
           {/*Input vastauksen asettamiselle*/}
           <Input className="vastausM"
@@ -227,6 +229,12 @@ export default function MuokkaaKysymyksiä(props) {
 
   return (
     <div>
+      {props.onAdmin ? <div>
+        Oppilaat eivät voi muokata tenttejä.
+        <br></br>
+        </div>
+        : null}
+        
       {/*Input tentin nimen muokkaamiseksi*/}
       <Input key={"tentti_input" + dataM.tentti_id} className="tenttiM" defaultValue={dataM.nimi}
         onChange={(e) => päivitäTämäTenttiNimi(dataM.tentti_id, e.target.value)}>
@@ -273,7 +281,7 @@ export default function MuokkaaKysymyksiä(props) {
           }} />
       </form>
 
-      <br/>
+      <br />
 
       {/*Tulostetaan kysymys, sen poistobutton ja vastausvaihtoehdot*/}
       {dataM.kysely.map((itemK, indexK) =>

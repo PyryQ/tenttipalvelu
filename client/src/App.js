@@ -28,7 +28,7 @@ import socketIOClient from 'socket.io-client';
 import finland from './finland.png';
 import unitedkingdom from './unitedkingdom.png';
 
-import {haeTentit, haeKysymykset} from './HttpKutsut'
+import {haeTentit, haeKysymykset, haeVastaukset} from './HttpKutsut'
 
 
 
@@ -104,7 +104,7 @@ function App() {
               for (var j = 0; j < tentit[i].kysely.length; j++){ // käydään kysymykset
                 tentit[i].kysely[j].vastaukset = []
                 let vastaukset = null
-                await haeKysymykset(tentit[i].kysely[j].kysymys_id).then((vastauksetResult) => {
+                await haeVastaukset(tentit[i].kysely[j].kysymys_id).then((vastauksetResult) => {
                   vastaukset = vastauksetResult;
                 })
                 tentit[i].kysely[j].vastaukset = vastaukset
@@ -404,12 +404,13 @@ function App() {
             <br/>
             </div> : null}
 
-          {näkymä === 2 && käyttäjäOnAdmin() ?
+          {näkymä === 2 ?
             <Fade right><MuokkaaKysymyksiä 
               dispatch={dispatch}
               asetaTentti={setTenttiValinta}
               tentti={state[tenttiValinta]}
-              token = {käyttäjänToken}/>
+              token = {käyttäjänToken}
+              onAdmin = {onkoAdmin}/>
             </Fade> : null}
             </div> 
             

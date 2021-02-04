@@ -134,7 +134,6 @@ export default function Login(props) {
           variant="outlined"
           onChange={(e) => (setKäyttäjänRooliTarkistus(e.target.value))}
         /></p>
-        <br className="lomake-br" />
         <Button block size="lg" onClick={() => luoKäyttäjä()}>
           {strings.register}
         </Button>

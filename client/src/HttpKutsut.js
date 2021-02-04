@@ -14,7 +14,6 @@ switch (process.env.NODE_ENV) {
   default :
     throw 'http://localhost:4000'
 }
-console.log(path)
 
 //-------------------------------------PUT------------------------
 
@@ -24,6 +23,7 @@ export async function päivitäTenttiNimi(tentti_id, nimi, token) {
       return result;
     }
     catch(exception){
+      console.log(exception)
       console.log("Tenttiä ei onnistuttu päivittämään.")
     }
   }
@@ -34,6 +34,7 @@ export async function päivitäTentinAloitusaika(päiväjaaika, tentti_id, token
     return result;
   }
   catch(exception){
+    console.log(exception)
     console.log("Tenttiä ei onnistuttu päivittämään.")
   }
 }
@@ -44,6 +45,7 @@ export async function päivitäTentinLopetusaika(päiväjaaika, tentti_id, token
     return result;
   }
   catch(exception){
+    console.log(exception)
     console.log("Tenttiä ei onnistuttu päivittämään.")
   }
 }
@@ -54,6 +56,7 @@ export async function päivitäKysymysNimi(kysymys_id, kysymys, token) {
       return result;
     }
     catch(exception){
+      console.log(exception)
       console.log("Kysymystä ei onnistuttu päivittämään.")
     }
   }
@@ -64,6 +67,7 @@ export async function päivitäVastausNimi(vastaus_id, vastaus, token) {
     return result;
   }
   catch(exception){
+    console.log(exception)
     console.log("Vastausta ei onnistuttu päivittämään.")
   }
 }
@@ -74,6 +78,7 @@ export async function lisääKäyttäjänVastaus(vastaus_id, vastaus, oikea_vast
     return result;
   }
   catch(exception){
+    console.log(exception)
     console.log("Vastausta ei onnistuttu päivittämään.")
   }
 }
@@ -81,8 +86,10 @@ export async function lisääKäyttäjänVastaus(vastaus_id, vastaus, oikea_vast
 export async function päivitäOikeaVastaus(vastaus_id, onkoOikein, token) {
   try{
     let result = await axios.put(path + "/paivitaoikeavastaus", {vastaus_id: vastaus_id, oikein: onkoOikein, token: token})
+    return result;
   }
   catch(exception){
+    console.log(exception)
     console.log("Vastausta ei onnistuttu päivittämään.")
   }
 }
@@ -95,6 +102,7 @@ export async function poistaTentti(tentti_id, token) {
       return result
     }
     catch(exception){
+      console.log(exception)
       console.log("Tenttiä ei onnistuttu poistamaan.")
     }
   }
@@ -105,6 +113,7 @@ export async function poistaKysymys(kysymys_id, token) {
     return result
   }
   catch(exception){
+    console.log(exception)
     console.log("Kysymystä ei onnistuttu poistamaan.")
   }
 }
@@ -115,6 +124,7 @@ export async function poistaVastaus(vastaus_id, token) {
     return result
   }
   catch(exception){
+    console.log(exception)
     console.log("Vastausta ei onnistuttu poistamaan.")
   }
 }
@@ -127,6 +137,7 @@ export async function lisääTentti(token) {
     return(result.data)
   }
   catch(exception){
+    console.log(exception)
     console.log("Vastausta ei onnistuttu lisäämään.")
   }
 }
@@ -137,6 +148,7 @@ export async function lisääKysymys(tentti_id, token) {
     return(result.data)
   }
   catch(exception){
+    console.log(exception)
     console.log("Kysymystä ei onnistuttu lisäämään.")
   }
 }
@@ -147,6 +159,7 @@ export async function lisääVastaus(kysymys_id, token) {
     return(result.data)
   }
   catch(exception){
+    console.log(exception)
     console.log("Vastausta ei onnistuttu lisäämään.")
   }
 }
@@ -157,15 +170,15 @@ export async function lisääKäyttäjänKysymyksenTulos(kysymys_id, tulos, toke
     return(result.data)
   }
   catch(exception){
+    console.log(exception)
     console.log("Vastausta ei onnistuttu lisäämään.")
   }
 }
 
 export async function tarkistaKäyttäjänSalasana(käyttäjänSähköposti, käyttäjänSalasana) {
-  console.log("salasanan tarkistus" + käyttäjänSalasana + " " + käyttäjänSähköposti + " " + path)
+
   try{
     let result = await axios.post(path + "/tarkistasalasana", {sahkoposti: käyttäjänSähköposti, salasana: käyttäjänSalasana})
-    console.log("tarkistafunktion result, "+ result.data)
     return(result.data)
   }
   catch(exception){
@@ -177,7 +190,6 @@ export async function tarkistaKäyttäjänSalasana(käyttäjänSähköposti, kä
 export async function lisääKäyttäjä(käyttäjänTiedot) {
   try{
     let result = await axios.post(path + "/lisaakayttaja", käyttäjänTiedot)
-    console.log("result.data " + result.data)
     return(result.data)
   }
   catch(exception){

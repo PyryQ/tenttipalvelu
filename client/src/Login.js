@@ -21,7 +21,7 @@ export default function Login(props) {
     if (käyttäjänSalasana !== "" && käyttäjänSähköposti !== "") {
       try {
         //Verrataan sähköpostia ja salasanaa tietokantaa vasten
-        await tarkistaKäyttäjänSalasana(käyttäjänSähköposti, käyttäjänSalasana).then((result) => {
+        tarkistaKäyttäjänSalasana(käyttäjänSähköposti, käyttäjänSalasana).then((result) => {
           //Mikäli token on validi, tallennetaan token ja merkitään kirjautuminen onnistuneeksi
           console.log("tarkista salasana")
           console.log("result, " + result)

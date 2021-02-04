@@ -5,7 +5,7 @@ var router = express.Router();
 var jwt = require('jsonwebtoken');
 
 const db = require('../db')
-// console.log(token)
+const salaisuus = process.env.SECRET || 'sonSALAisuus'
 const SALT_ROUNDS = 9
 
 
@@ -18,7 +18,7 @@ var middleware = {
   
     let onkoOikeidet = false;
 
-    jwt.verify(req.params.token, 'sonSALAisuus', function(err, decoded) {
+    jwt.verify(req.params.token, salaisuus, function(err, decoded) {
       //voimassaoloaika
       if (decoded.rooli === "admin"){
         onkoOikeidet = true;
@@ -83,7 +83,7 @@ router.post('/lisaakayttajanvastaus/:vastaus_id/:vastaus/:oikea_vastaus/:token',
     console.log(onkoVastausOikein)
   
     //Käyttäjän sähköposti tokenista
-    jwt.verify(req.params.token, 'sonSALAisuus', function(err, decoded) {
+    jwt.verify(req.params.token, salaisuus, function(err, decoded) {
       //voimassaoloaika
       if (err){
         return res.send(null)
@@ -156,7 +156,7 @@ router.post('/lisaakysymystulos/:kysymys_id/:tulos/:token', middleware.vainAdmin
   var käyttäjänId
     
   //Käyttäjän sähköposti tokenista
-  jwt.verify(req.params.token, 'sonSALAisuus', function(err, decoded) {
+  jwt.verify(req.params.token, salaisuus, function(err, decoded) {
     //voimassaoloaika
     if (err){
       return res.send(false)

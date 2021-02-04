@@ -25,6 +25,8 @@ app.use(fileUpload({
   limits: { fileSize: 2 * 1024 * 1024 * 1024 },
 }));
 
+const salaisuus = process.env.SECRET || 'sonSALAisuus'
+
 
 //-----------------WEBSOCKET---------------------------
 var appOrigin = null
@@ -287,7 +289,7 @@ app.get('/kayttajat', (req, res, next) => {
 app.get('/kayttajantiedottokenista/:token', (req, res, next) => {
   let käyttäjänToken = req.params.token
   let tokenSähköposti
-  jwt.verify(käyttäjänToken, 'sonSALAisuus', function (err, decoded) {
+  jwt.verify(käyttäjänToken, salaisuus, function (err, decoded) {
     tokenSähköposti = decoded.sähköposti
   })
   db.query("SELECT etunimi, sukunimi, sähköposti, rooli FROM käyttäjä WHERE sähköposti = $1",
@@ -305,7 +307,7 @@ app.get('/tarkistarooli/:token', (req, res, next) => {
   let tokenRooli;
   let tokenSähköposti;
 
-  jwt.verify(käyttäjänToken, 'sonSALAisuus', function (err, decoded) {
+  jwt.verify(käyttäjänToken, salaisuus, function (err, decoded) {
     tokenRooli = decoded.rooli
     tokenSähköposti = decoded.sähköposti
   })
@@ -347,7 +349,7 @@ app.post('/tarkistasalasana', (req, res, next) => {
         try {
           bcrypt.compare(annettuSalasana, result.rows[0].salasana, function (err, resultB) {
             if (resultB) {
-              let token = jwt.sign({ sähköposti: annettuSähköposti, rooli: result.rows[0].rooli }, 'sonSALAisuus', { expiresIn: '4h' });
+              let token = jwt.sign({ sähköposti: annettuSähköposti, rooli: result.rows[0].rooli }, salaisuus, { expiresIn: '4h' });
               console.log("tokenin asetus onnistui")
               return res.send(token)
             }

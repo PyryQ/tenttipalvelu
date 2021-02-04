@@ -5,6 +5,7 @@ var router = express.Router();
 
 router.use(bodyParser.json())
 var jwt = require('jsonwebtoken');
+const salaisuus = process.env.SECRET || 'sonSALAisuus'
 
 const db = require('../db')
 // console.log(token)
@@ -17,7 +18,7 @@ var middleware = {
     
       let onkoOikeidet = false;
   
-      jwt.verify(req.body.token, 'sonSALAisuus', function(err, decoded) {
+      jwt.verify(req.body.token, salaisuus, function(err, decoded) {
         //voimassaoloaika
         if (decoded.rooli === "admin"){
           onkoOikeidet = true;
@@ -74,7 +75,7 @@ router.put('/paivitakayttajanvastaus', middleware.vainAdmin, (req, res, next) =>
   let käyttäjänSähköposti
   let käyttäjän_id
 
-  jwt.verify(req.body.token, 'sonSALAisuus', function(err, decoded) {
+  jwt.verify(req.body.token, salaisuus, function(err, decoded) {
     //voimassaoloaika
     if (err){
       return res.send(false)

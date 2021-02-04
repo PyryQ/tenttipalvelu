@@ -46,27 +46,31 @@ function App() {
   const [kirjauduttuSisään, setKirjauduttuSisään] = useState(false) //Onko kirjauduttu
   const [kieli, setKieli] = useState('fi')
 
+  const [onkoAdmin, setOnkoAdmin] = useState(false)
+
   const kyselyt = []  //Pohja kyselyn muodostamiseksi
 
   // Alustetaan state ja reducer kyselyn avulla
   const [state, dispatch] = useReducer(reducer, kyselyt);
   const [stateDemo, dispatchDemo] = useReducer(reducer, kyselyt);
 
+  const { enqueueSnackbar } = useSnackbar();
+
 
   var path = "";
-  var endpoint = null;
+  var sIOEndpoint = null;
   switch (process.env.NODE_ENV) {
     case 'production' : 
       path = 'https://tenttipalvelu.herokuapp.com'
-      endpoint = 'https://tenttipalvelu.herokuapp.com'
+      sIOEndpoint = 'https://tenttipalvelu.herokuapp.com'
       break;
     case 'development' : 
       path = 'http://localhost:4000'
-      endpoint = 'http://localhost:4000'
+      sIOEndpoint = 'http://localhost:4000'
       break;
     case 'test' : 
       path = 'http://localhost:4000'
-      endpoint = 'http://localhost:4000'
+      sIOEndpoint = 'http://localhost:4000'
       break;
     default :
       throw "Ympäristöä ei ole alustettu"
@@ -152,20 +156,19 @@ function App() {
 
 
   //Tietokantaa kuunteleva websocket
-  // useEffect(() => {
-  //   const socket = socketIOClient(sIOEndpoint)
+  useEffect(() => {
+    const socket = socketIOClient(sIOEndpoint)
 
-  //   socket.on('connected', function (data) {
-  //     console.log("Socket.io: Connected")
-  //     socket.emit('ready for data', {});
-  //   });
+    socket.on('connected', function (data) {
+      console.log("Socket.io: Connected")
+      socket.emit('ready for data', {});
+    });
 
-  //   socket.on('update', function (data) {
-  //     //if (käyttäjänrooli == admin)
-  //     enqueueSnackbar(data.message, 'success');        
-      
-  //   });
-  // }, [])
+    socket.on('update', function (data) {
+      //if (käyttäjänrooli == admin)
+      enqueueSnackbar(data.message, 'success');        
+    });
+  }, [])
 
   //--------------------------------------REDUCER
   
@@ -249,18 +252,20 @@ function App() {
 
   //Tarkistetaan, onko käyttäjä admin
   const käyttäjäOnAdmin = async () => {
-    let onkoAdmin = false;
+    let onkoAdminTupla = false;
     if (käyttäjänToken != null && kirjauduttu){
       //Tarkistetaan rooli tietokannasta: admin = true
       tarkistaKäyttäjänRooli(käyttäjänToken).then((result) =>{
-        console.log("ROOLI: " + result)
-        onkoAdmin = result
-        return onkoAdmin;
+        if (result !== false){
+          setOnkoAdmin(true)
+        }
+        onkoAdminTupla = result
+        return onkoAdminTupla;
       }).catch((error) => {
         console.log(error)
       })
     }
-    return onkoAdmin;
+    return onkoAdminTupla;
   }
 
   //Vaihdetaan teksti kielen mukaan (fi tai en)
@@ -336,7 +341,7 @@ function App() {
               onClick={() => setNäkymä(2)}> {strings.editExams} </Button>
              : null }
 
-            {käyttäjäOnAdmin() ?
+            {käyttäjäOnAdmin() && onkoAdmin ?
             <Button color="inherit" 
               onClick={() => setNäkymä(8)}> {strings.users} </Button>
              : null }
@@ -344,7 +349,7 @@ function App() {
             {/* <Button 
               onClick={() => setNäkymä(7)}>{strings.dropdemo}</Button> */}
             
-            {käyttäjäOnAdmin() ?
+            {käyttäjäOnAdmin() && onkoAdmin ?
               <Button 
                 onClick={() => setNäkymä(3)}> {strings.chartdemo}</Button>
             : null }

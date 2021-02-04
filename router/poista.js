@@ -5,6 +5,7 @@ var router = express.Router();
 
 router.use(bodyParser.json())
 var jwt = require('jsonwebtoken');
+const salaisuus = process.env.SECRET || 'sonSALAisuus'
 
 const db = require('../db')
 // console.log(token)
@@ -16,7 +17,7 @@ function vainAdmin(req, res, next) {
 
   let onkoOikeidet = false
 
-  jwt.verify(req.body.token, 'sonSALAisuus', function (err, decoded) {
+  jwt.verify(req.body.token, salaisuus, function (err, decoded) {
     //voimassaoloaika
     if (decoded.rooli === "admin") {
       onkoOikeidet = true;

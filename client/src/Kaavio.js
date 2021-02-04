@@ -40,7 +40,7 @@ export default function Kaavio(props){
     return (
       <div>
         <h2>Tulokset aiheittain</h2>
-        <Bar
+        <Bar className="kaavioDemo"
           data={data}
           width={100}
           height={60}

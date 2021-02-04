@@ -111,7 +111,8 @@
 
 
 .kaavio{
-  width: 50%;
+  width: 75%;
+  min-width: 300px;
 }
 
 

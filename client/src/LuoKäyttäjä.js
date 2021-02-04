@@ -42,8 +42,12 @@ export default function Login(props) {
         if (käyttäjänRooliTarkistus == "admin1234" || käyttäjänRooliTarkistus == "oppilas") {
           if (käyttäjänRooliTarkistus == "admin1234") {
             setKäyttäjänRooli("admin")
+            console.log(käyttäjänRooli)
           }
-          else { setKäyttäjänRooli("oppilas") }
+          else { 
+            setKäyttäjänRooli("oppilas") 
+            console.log(käyttäjänRooli)
+          }
           console.log(käyttäjänRooli)
 
           if (käyttäjänRooli != "") {

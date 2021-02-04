@@ -69,13 +69,14 @@ router.delete('/poistakayttaja/:sahkoposti', vainAdmin, (req, res, next) => {
   })
 })
 
-router.delete('/poistakayttajaid/:id', vainAdmin, (req, res, next) => {
-  db.query("DELETE FROM käyttäjä WHERE sähköposti=$1;", [req.params.id], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(true)
-  })
+router.delete('/poistakayttajaid', vainAdmin, (req, res, next) => {
+  db.query("DELETE FROM käyttäjä WHERE sähköposti=$1;",
+    [req.body.käyttäjä_id], (err, result) => {
+      if (err) {
+        return next(err)
+      }
+      res.send(true)
+    })
 })
 
 router.delete('/poistakayttajantentti/:kayttaja_id/:tentti_id', vainAdmin, (req, res, next) => {

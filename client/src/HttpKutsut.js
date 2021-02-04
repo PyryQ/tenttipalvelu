@@ -99,7 +99,7 @@ export async function päivitäOikeaVastaus(vastaus_id, onkoOikein, token) {
 export async function poistaTentti(tentti_id, token) {
     try{
       let result = await axios.delete(path + "/poista/poistatentti", {data: {tentti_id: tentti_id, token: token}})
-      return result
+      return(result.data)
     }
     catch(exception){
       console.log(exception)
@@ -110,7 +110,7 @@ export async function poistaTentti(tentti_id, token) {
 export async function poistaKysymys(kysymys_id, token) {
   try{
     let result = await axios.delete(path + "/poista/poistakysymys", {data: {kysymys_id: kysymys_id, token: token}})
-    return result
+    return(result.data)
   }
   catch(exception){
     console.log(exception)
@@ -121,7 +121,7 @@ export async function poistaKysymys(kysymys_id, token) {
 export async function poistaVastaus(vastaus_id, token) {
   try{
     let result = await axios.delete(path + "/poista/poistavastaus", {data: {vastaus_id: vastaus_id, token: token}})
-    return result
+    return(result.data)
   }
   catch(exception){
     console.log(exception)

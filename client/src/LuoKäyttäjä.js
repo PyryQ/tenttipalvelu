@@ -40,19 +40,23 @@ export default function Login(props) {
 
         //Roolisalasana oikein
         if (käyttäjänRooliTarkistus == "admin1234" || käyttäjänRooliTarkistus == "oppilas") {
+          let rooliTesti = "";
           if (käyttäjänRooliTarkistus == "admin1234") {
             setKäyttäjänRooli("admin")
+            rooliTesti = "admin"
             console.log(käyttäjänRooli)
           }
           else { 
             setKäyttäjänRooli("oppilas") 
+            rooliTesti = "oppilas"
             console.log(käyttäjänRooli)
           }
           console.log(käyttäjänRooli)
+          console.log("roolitesti " + rooliTesti)
 
           if (käyttäjänRooli != "") {
             //Lisätään käyttäjän tiedot yhteen muuttujaan ja lähetetään tietokantaan
-            let käyttäjänTiedot = { etunimi: käyttäjänEtunimi, sukunimi: käyttäjänSukunimi, sahkoposti: käyttäjänSähköposti, rooli: käyttäjänRooli, salasana: käyttäjänSalasana }
+            let käyttäjänTiedot = { etunimi: käyttäjänEtunimi, sukunimi: käyttäjänSukunimi, sahkoposti: käyttäjänSähköposti, rooli: rooliTesti, salasana: käyttäjänSalasana }
             lisääKäyttäjä(käyttäjänTiedot).then((result) => {
               //Tarkistetaan serverin palauttama arvo
               if (result === null || result === "" || result === undefined || result === false) {

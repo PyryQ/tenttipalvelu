@@ -253,6 +253,7 @@ function App() {
     if (käyttäjänToken != null && kirjauduttu){
       //Tarkistetaan rooli tietokannasta: admin = true
       tarkistaKäyttäjänRooli(käyttäjänToken).then((result) =>{
+        console.log("ROOLI: " + result)
         onkoAdmin = result
         return onkoAdmin;
       }).catch((error) => {

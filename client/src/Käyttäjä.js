@@ -34,7 +34,6 @@ export default function Käyttäjä(props) {
   }, [])
 
   const päivitäEtunimi = async (k_etunimi) => {
-    console.log(käyttäjänTiedot)
     let etunimi = await axios.put(path + "paivitaetunimi", { etunimi: k_etunimi, sähköposti: käyttäjänTiedot.sähköposti })
     setKäyttäjänEtunimi(etunimi)
   }

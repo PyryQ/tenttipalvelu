@@ -54,7 +54,7 @@ let strings = new LocalizedStrings({
     incorrectRolePW: "Incorrect password for the role.",
     userSuccesful: "User created succesfully.",
     unfilledForm: "Some section is missing.",
-    exit: "Do you want to exit the program?",
+    exit: "Do you want to sign out?",
     passwordNotice: "The password must have at least: \n - six characters \n - one number \n - one lowercase letter \n - one uppercase letter.",
 
     //Admin password guide

@@ -48,6 +48,8 @@ function App() {
 
   const [onkoAdmin, setOnkoAdmin] = useState(false)
 
+  let onkoAdminTupla = false; //jotta tiedetään mitä admineille renderöidään
+
   const kyselyt = []  //Pohja kyselyn muodostamiseksi
 
   // Alustetaan state ja reducer kyselyn avulla
@@ -247,12 +249,21 @@ function App() {
       setKirjauduttuSisään(false)
       setKäyttäjänToken(null)
       setNäkymä(4)
+      onkoAdminTupla = false
     }
+  }
+
+  //Kun käyttäjä poistetaan, ei kysytä varmistusta, vaan kirjaudutaan suoraan ulos
+  const käyttäjäpoistettu = () => {
+      setKirjauduttuSisään(false)
+      setKäyttäjänToken(null)
+      setNäkymä(4)
+      onkoAdminTupla = false
   }
 
   //Tarkistetaan, onko käyttäjä admin
   const käyttäjäOnAdmin = async () => {
-    let onkoAdminTupla = false;
+    onkoAdminTupla = false
     if (käyttäjänToken != null && kirjauduttu) {
       //Tarkistetaan rooli tietokannasta: admin = true
       tarkistaKäyttäjänRooli(käyttäjänToken).then((result) => {
@@ -332,8 +343,8 @@ function App() {
                   edge="start" className={classes1.menuButton}
                   onClick={() => setNäkymä(1)}>{strings.exams}</Button>
 
-                <Button color="inherit" 
-              onClick={() => setNäkymä(5)}>{strings.user}</Button>
+                <Button color="inherit"
+                  onClick={() => setNäkymä(5)}>{strings.user}</Button>
 
                 <Button color="inherit"
                   onClick={() => setNäkymä(2)}> {strings.editExams} </Button>
@@ -426,9 +437,9 @@ function App() {
             asetaToken={asetaToken} /> : null}
 
         {näkymä === 5 ?
-          <Käyttäjä 
-          käyttäjänToken={käyttäjänToken} 
-          poistuminen = {poistu}/> : null}
+          <Käyttäjä
+            käyttäjänToken={käyttäjänToken}
+            poistuminen={käyttäjäpoistettu} /> : null}
 
         {näkymä === 8 ?
           <Käyttäjät käyttäjänToken={käyttäjänToken} /> : null}

@@ -7,6 +7,7 @@ import strings from './Localization';
 import { lisääKäyttäjä } from './HttpKutsut'
 
 
+
 export default function Login(props) {
   //Muuttujat käyttäjän tietojen tallentamiseksi
   const [käyttäjänSähköposti, setKäyttäjänSähköposti] = useState("");
@@ -16,6 +17,7 @@ export default function Login(props) {
   const [käyttäjänSukunimi, setKäyttäjänSukunimi] = useState("");
   const [käyttäjänRooli, setKäyttäjänRooli] = useState("");
   const [käyttäjänRooliTarkistus, setKäyttäjänRooliTarkistus] = useState("");
+  const salaisuus = process.env.SECRET3 || "tämännäkeeitse"
 
   //Tarkistetaan syötteet, mikäli ne ovat kunnossa, lisätään käyttäjä tietokantaan
   const luoKäyttäjä = async () => {
@@ -39,8 +41,7 @@ export default function Login(props) {
       else if (käyttäjänEtunimi !== "" && käyttäjänSukunimi !== "" && käyttäjänEtunimi.length > 0) {
 
         //Roolisalasana oikein
-        console.log("käyttäjänroolitarkistus" + käyttäjänRooliTarkistus)
-        if (käyttäjänRooliTarkistus == "admin1234" || käyttäjänRooliTarkistus == "oppilas") {
+        if (käyttäjänRooliTarkistus == salaisuus || käyttäjänRooliTarkistus == "oppilas") {
           let rooliTesti = "";
           if (käyttäjänRooliTarkistus == "admin1234") {
             setKäyttäjänRooli("admin")

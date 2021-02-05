@@ -54,24 +54,20 @@ function App() {
 
   // Alustetaan state ja reducer kyselyn avulla
   const [state, dispatch] = useReducer(reducer, kyselyt);
-  const [stateDemo, dispatchDemo] = useReducer(reducer, kyselyt);
 
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar(); //socketilmoituksille
 
 
-  var path = "";
+  //Endpoint websocketille
   var sIOEndpoint = null;
   switch (process.env.NODE_ENV) {
     case 'production':
-      path = 'https://tenttipalvelu.herokuapp.com'
       sIOEndpoint = 'https://tenttipalvelu.herokuapp.com'
       break;
     case 'development':
-      path = 'http://localhost:4000'
       sIOEndpoint = 'http://localhost:4000'
       break;
     case 'test':
-      path = 'http://localhost:4000'
       sIOEndpoint = 'http://localhost:4000'
       break;
     default:
@@ -83,7 +79,6 @@ function App() {
   //Post, get ja put serverin datan testaamista varten. Ei käytössä ohjelmassa.
   useEffect(() => {
     const fetchData = async () => {
-
       try {
         let tentit = null
         await haeTentit().then((tentitResult) => {
@@ -133,8 +128,6 @@ function App() {
     strings.setLanguage(kieli);
   }, [kieli])
 
-
-
   // localStoragen data-avaimena on "data", joka alustetaan tässä
   useEffect(() => {
     let jemma = window.localStorage;
@@ -147,15 +140,12 @@ function App() {
     setDataAlustettu(true)
   }, [])
 
-
   // Päivitetään localStorage staten mukaan
   useEffect(() => {
     if (dataAlustettu) {
       window.localStorage.setItem("data", JSON.stringify(state))
     }
   }, [state])
-
-
 
   //Tietokantaa kuunteleva websocket
   useEffect(() => {
@@ -283,7 +273,6 @@ function App() {
   const vaihdaKieli = (kieli) => {
     strings.setLanguage(kieli);
   }
-
 
 
   //------------------------------------------MUOTOILUA

@@ -108,7 +108,10 @@
   margin-left: 10px;
 }
 
-
+.käyttäjäkortti{
+  width: 75%;
+  min-width: 300px;
+}
 
 .kaavio{
   width: 75%;

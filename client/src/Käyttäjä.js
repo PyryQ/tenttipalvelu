@@ -60,7 +60,7 @@ export default function Käyttäjä(props) {
   }
 
   if (käyttäjänTiedot !== null && käyttäjänTiedot !== undefined) {
-    return <div><Card>
+    return <div><Card className="käyttäjäkortti">
       {strings.email}: {käyttäjänTiedot.sähköposti}
       <br></br>
       {strings.firstname}: <Input defaultValue={käyttäjänTiedot.etunimi} onChange={(e) => päivitäEtunimi(e.target.value)}></Input>
@@ -72,7 +72,7 @@ export default function Käyttäjä(props) {
       <Button className="poistaTT"
         onClick={() => {
           if (window.confirm("Poista käyttäjätietosi?")) {
-            poistaTämäKäyttäjä();
+            poistaTämäKäyttäjä(k_token);
           }
         }}>{strings.deleteMyUser}</Button>
     </div>

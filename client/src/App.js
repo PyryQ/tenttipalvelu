@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import {useEffect, useState, useReducer} from 'react';
+import React, { Component } from 'react';
+import { useEffect, useState, useReducer } from 'react';
 import Fade from 'react-reveal/Fade';
-import axios from 'axios'; 
+import axios from 'axios';
 //Muotoilua
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -28,7 +28,7 @@ import socketIOClient from 'socket.io-client';
 import finland from './finland.png';
 import unitedkingdom from './unitedkingdom.png';
 
-import {haeTentit, haeKysymykset, haeVastaukset} from './HttpKutsut'
+import { haeTentit, haeKysymykset, haeVastaukset } from './HttpKutsut'
 
 
 
@@ -60,37 +60,37 @@ function App() {
   var path = "";
   var sIOEndpoint = null;
   switch (process.env.NODE_ENV) {
-    case 'production' : 
+    case 'production':
       path = 'https://tenttipalvelu.herokuapp.com'
       sIOEndpoint = 'https://tenttipalvelu.herokuapp.com'
       break;
-    case 'development' : 
+    case 'development':
       path = 'http://localhost:4000'
       sIOEndpoint = 'http://localhost:4000'
       break;
-    case 'test' : 
+    case 'test':
       path = 'http://localhost:4000'
       sIOEndpoint = 'http://localhost:4000'
       break;
-    default :
+    default:
       throw "Ympäristöä ei ole alustettu"
   }
 
 
-        
+
   //Post, get ja put serverin datan testaamista varten. Ei käytössä ohjelmassa.
-  useEffect(()=>{
+  useEffect(() => {
     const fetchData = async () => {
 
-      try{
+      try {
         let tentit = null
         await haeTentit().then((tentitResult) => {
           tentit = tentitResult;
         })
-        
+
         //state pohjustetaan
-        if (tentit.length > 0){
-          for (var i = 0; i < tentit.length; i++){ //käydään läpi tentit
+        if (tentit.length > 0) {
+          for (var i = 0; i < tentit.length; i++) { //käydään läpi tentit
 
             tentit[i].kysely = []
             let kysymykset = null
@@ -99,9 +99,9 @@ function App() {
             })
             tentit[i].kysely = kysymykset
 
-            if (tentit[i].kysely.length > 0){
+            if (tentit[i].kysely.length > 0) {
 
-              for (var j = 0; j < tentit[i].kysely.length; j++){ // käydään kysymykset
+              for (var j = 0; j < tentit[i].kysely.length; j++) { // käydään kysymykset
                 tentit[i].kysely[j].vastaukset = []
                 let vastaukset = null
                 await haeVastaukset(tentit[i].kysely[j].kysymys_id).then((vastauksetResult) => {
@@ -113,25 +113,25 @@ function App() {
             setData2(tentit);
             setDataAlustettu2(true)
           }
-          dispatch({type: "INIT_DATA", data: tentit})
-        }else{
-          throw("Tietokannan alustaminen epäonnistui (Get)") 
+          dispatch({ type: "INIT_DATA", data: tentit })
+        } else {
+          throw ("Tietokannan alustaminen epäonnistui (Get)")
         }
       }
-      catch(exception){
+      catch (exception) {
         console.log(exception)
       }
     }
     fetchData();
-  },[])
+  }, [])
 
 
   //Kielen asettaminen
-  useEffect(()=>{
+  useEffect(() => {
     strings.setLanguage(kieli);
-  },[kieli])
+  }, [kieli])
 
-    
+
 
   // localStoragen data-avaimena on "data", joka alustetaan tässä
   useEffect(() => {
@@ -140,10 +140,10 @@ function App() {
     if (tempData == null) {
       jemma.setItem("data", JSON.stringify(kyselyt))
       tempData = kyselyt
-    } 
+    }
     setData(tempData);
     setDataAlustettu(true)
-  },[])
+  }, [])
 
 
   // Päivitetään localStorage staten mukaan
@@ -166,12 +166,12 @@ function App() {
 
     socket.on('update', function (data) {
       //if (käyttäjänrooli == admin)
-      enqueueSnackbar(data.message, 'success');        
+      enqueueSnackbar(data.message, 'success');
     });
   }, [])
 
   //--------------------------------------REDUCER
-  
+
   //Reducer tentin syväkopion muokkaamiseksi
   function reducer(state, action) { //data tai state
     let syväKopioR = JSON.parse(JSON.stringify(state)) //data vai state?
@@ -188,7 +188,7 @@ function App() {
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset[action.data.indexVa].oikea_vastaus = action.data.valittuV
         return syväKopioR
       case 'LISÄÄ_VASTAUS':
-        let uusiVastaus = {vastaus: strings.newA, valittu: false, oikea_vastaus: false, vastaus_id: action.data.vastaus_id}
+        let uusiVastaus = { vastaus: strings.newA, valittu: false, oikea_vastaus: false, vastaus_id: action.data.vastaus_id }
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].vastaukset.push(uusiVastaus)
         return syväKopioR
       case 'POISTA_VASTAUS':
@@ -198,7 +198,7 @@ function App() {
         syväKopioR[tenttiValinta].kysely[action.data.indexKy].kysymys = action.data.kysymys
         return syväKopioR
       case 'LISÄÄ_KYSYMYS':
-        let uusiKysymys =  {kysymys: strings.newQ, vastaukset: [], kysymys_id: action.data.kysymys_id}
+        let uusiKysymys = { kysymys: strings.newQ, vastaukset: [], kysymys_id: action.data.kysymys_id }
         syväKopioR[tenttiValinta].kysely.push(uusiKysymys)
         return syväKopioR
       case 'POISTA_KYSYMYS':
@@ -208,11 +208,11 @@ function App() {
         syväKopioR[tenttiValinta].nimi = action.data.nimi
         return syväKopioR
       case 'LISÄÄ_TENTTI':
-        let uusiTentti = {tentti_id: action.data.tentti_id, nimi: strings.newE, kysely: []}
+        let uusiTentti = { tentti_id: action.data.tentti_id, nimi: strings.newE, kysely: [] }
         syväKopioR.push(uusiTentti)
         return syväKopioR
       case 'POISTA_TENTTI':
-        if(state.length > 1){
+        if (state.length > 1) {
           syväKopioR.splice(tenttiValinta, 1)
         }
         return syväKopioR
@@ -227,8 +227,8 @@ function App() {
     }
   }
 
-  
-//--------Kirjautumisen, roolin ja käyttäjän tietojen hallinnointia
+
+  //--------Kirjautumisen, roolin ja käyttäjän tietojen hallinnointia
 
   // Tarkistaa onko kirjauduttu
   const kirjauduttu = (onkoKirjauduttu) => {
@@ -243,7 +243,7 @@ function App() {
 
   //Poistutaan kirjautumisnäkymään, tyhjätään token
   const poistu = () => {
-    if (window.confirm(strings.exit)){
+    if (window.confirm(strings.exit)) {
       setKirjauduttuSisään(false)
       setKäyttäjänToken(null)
       setNäkymä(4)
@@ -253,10 +253,10 @@ function App() {
   //Tarkistetaan, onko käyttäjä admin
   const käyttäjäOnAdmin = async () => {
     let onkoAdminTupla = false;
-    if (käyttäjänToken != null && kirjauduttu){
+    if (käyttäjänToken != null && kirjauduttu) {
       //Tarkistetaan rooli tietokannasta: admin = true
-      tarkistaKäyttäjänRooli(käyttäjänToken).then((result) =>{
-        if (result !== false){
+      tarkistaKäyttäjänRooli(käyttäjänToken).then((result) => {
+        if (result !== false) {
           setOnkoAdmin(true)
         }
         onkoAdminTupla = result
@@ -275,7 +275,7 @@ function App() {
 
 
 
-//------------------------------------------MUOTOILUA
+  //------------------------------------------MUOTOILUA
 
   //useStyles navigointipalkin muotoilua varten
   const useStyles = makeStyles((theme) => ({
@@ -314,7 +314,7 @@ function App() {
       },
       '&:focus': {
         boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
-      } 
+      }
     },
   })(Button);
   const classesButton = useStyles();
@@ -327,118 +327,121 @@ function App() {
         <AppBar position="static">
           <Toolbar>
             {kirjauduttuSisään ?
-            <div>
-            <Button color="inherit" 
-              edge="start" className={classes1.menuButton} 
-              onClick={() => setNäkymä(1)}>{strings.exams}</Button>
+              <div>
+                <Button color="inherit"
+                  edge="start" className={classes1.menuButton}
+                  onClick={() => setNäkymä(1)}>{strings.exams}</Button>
 
-            {/* <Button color="inherit" 
+                {/* <Button color="inherit" 
               onClick={() => setNäkymä(5)}>{strings.user}</Button> */}
 
-            <Button color="inherit" 
-              onClick={() => setNäkymä(2)}> {strings.editExams} </Button>
+                <Button color="inherit"
+                  onClick={() => setNäkymä(2)}> {strings.editExams} </Button>
 
-            {käyttäjäOnAdmin() && onkoAdmin ?
-            <Button color="inherit" 
-              onClick={() => setNäkymä(8)}> {strings.users} </Button>
-             : null }
+                {käyttäjäOnAdmin() && onkoAdmin ?
+                  <Button color="inherit"
+                    onClick={() => setNäkymä(8)}> {strings.users} </Button>
+                  : null}
 
-            {/* <Button 
+                {/* <Button 
               onClick={() => setNäkymä(7)}>{strings.dropdemo}</Button> */}
-            
-              <Button 
-                onClick={() => setNäkymä(3)}> {strings.chartdemo}</Button>
 
-            <Button color="inherit" 
-              onClick={() => poistu()}>{strings.signof}</Button>
-            </div>
+                <Button
+                  onClick={() => setNäkymä(3)}> {strings.chartdemo}</Button>
 
+                <Button color="inherit"
+                  onClick={() => poistu()}>{strings.signof}</Button>
+              </div>
 
-            : <div>
-              {/*------------------Aloitus, login sekä register*/}
-              <Button color="inherit" edge="start" 
-                onClick={() => setNäkymä(4)}>{strings.login}</Button>
+              : <div>
+                {/*------------------Aloitus, login sekä register*/}
+                <Button color="inherit" edge="start"
+                  onClick={() => setNäkymä(4)}>{strings.login}</Button>
 
-              <Button color="inherit" edge="start" 
-              onClick={() => setNäkymä(6)}>{strings.register}</Button>
+                <Button color="inherit" edge="start"
+                  onClick={() => setNäkymä(6)}>{strings.register}</Button>
 
-            <Button color="inherit" 
-              onClick={() => (vaihdaKieli('fi'), setKieli('fi'))}><img className="kieliPainike" src={finland} alt="Finland" /></Button>
+                <Button color="inherit"
+                  onClick={() => (vaihdaKieli('fi'), setKieli('fi'))}><img className="kieliPainike" src={finland} alt="Finland" /></Button>
 
-            <Button color="inherit" 
-              onClick={() => (vaihdaKieli('en'), setKieli('en'))}><img className="kieliPainike" src={unitedkingdom} alt="Finland" /></Button>
-            </div>}
+                <Button color="inherit"
+                  onClick={() => (vaihdaKieli('en'), setKieli('en'))}><img className="kieliPainike" src={unitedkingdom} alt="Finland" /></Button>
+              </div>}
           </Toolbar>
-      </AppBar>
+        </AppBar>
       </div>
       <br></br>
 
       <div>
         {/*Painikkeet kyselyn valintaa varten*/}
-        {näkymä === 1 || näkymä === 2 ? 
-          <div>{state.map((arvo, index) => 
-            <BootstrapButton 
-              key={"kyselypainike" + index} 
-              variant="contained" 
-              color="primary" 
+        {näkymä === 1 || näkymä === 2 ?
+          <div>{state.map((arvo, index) =>
+            <BootstrapButton
+              key={"kyselypainike" + index}
+              variant="contained"
+              color="primary"
               role="button"
-              disableRipple className={classesButton.margin} 
-              onClick={() => (setTenttiValinta(index),  setPalautettu(false))}>{arvo.nimi}
+              disableRipple className={classesButton.margin}
+              onClick={() => (setTenttiValinta(index), setPalautettu(false))}>{arvo.nimi}
             </BootstrapButton>)}
-      
-          <br/>
-        
-          {näkymä === 1 ? <div> {/*Näkymän mukaan tulostetaan sivu*/}
-            <Fade right><TulostaKysymykset
-              dispatch={dispatch}
-              kysymys={state[tenttiValinta]} 
-              palautettu= {palautettu}
-              asetaPalautettu= {setPalautettu}
-              token = {käyttäjänToken}/>
-            </Fade>
-            <br/>
+
+            <br></br>
+
+            {näkymä === 1 ? <div> {/*Näkymän mukaan tulostetaan sivu*/}
+              <Fade right><TulostaKysymykset
+                dispatch={dispatch}
+                kysymys={state[tenttiValinta]}
+                palautettu={palautettu}
+                asetaPalautettu={setPalautettu}
+                token={käyttäjänToken} />
+              </Fade>
+              <br />
             </div> : null}
 
-          {näkymä === 2 ?
-            <Fade right><MuokkaaKysymyksiä 
-              dispatch={dispatch}
-              asetaTentti={setTenttiValinta}
-              tentti={state[tenttiValinta]}
-              token = {käyttäjänToken}
-              onAdmin = {onkoAdmin}/>
-            </Fade> : null}
-            </div> 
-            
-        : null}
-          
+            {näkymä === 2 ?
+              <Fade right><MuokkaaKysymyksiä
+                dispatch={dispatch}
+                asetaTentti={setTenttiValinta}
+                tentti={state[tenttiValinta]}
+                token={käyttäjänToken}
+                onAdmin={onkoAdmin} />
+              </Fade> : null}
+          </div>
+
+          : null}
+
         {näkymä === 3 ?
-        <div>
-          <Fade right>
-            {/*<Kaavio/>*/}
-            <KaavioVaaka/>
-            <br></br>
-          </Fade>
-        </div> : null}
+          <div>
+            <Fade right>
+              {/*<Kaavio/>*/}
+              <KaavioVaaka />
+              <br></br>
+            </Fade>
+          </div> : null}
 
         {näkymä === 4 ?
-          <Login kirjautuminen = {kirjauduttu} asetaToken = {asetaToken}/> : null}
+          <Login
+            kirjautuminen={kirjauduttu}
+            asetaToken={asetaToken} /> : null}
 
-        {/* {näkymä === 5 ?
-          <Käyttäjä käyttäjänToken = {käyttäjänToken}/> : null} */}
+        {näkymä === 5 ?
+          <Käyttäjä 
+          käyttäjänToken={käyttäjänToken} 
+          poistuminen = {poistu}/> : null}
 
         {näkymä === 8 ?
-          <Käyttäjät käyttäjänToken = {käyttäjänToken}/> : null}
+          <Käyttäjät käyttäjänToken={käyttäjänToken} /> : null}
 
         {näkymä === 6 ?
-          <LuoKäyttäjä/> : null}
+          <LuoKäyttäjä /> : null}
 
 
         {/* {näkymä === 7 ?
           <div>Demo  <Dropzone/></div> : null} */}
         <br></br>
-        </div>
-
       </div>
+
+    </div>
   );
 }
 

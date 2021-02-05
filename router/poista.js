@@ -60,8 +60,16 @@ router.delete('/poistavastaus', vainAdmin, (req, res, next) => {
     })
 })
 
-router.delete('/poistakayttaja/:sahkoposti', vainAdmin, (req, res, next) => {
-  db.query("DELETE FROM käyttäjä WHERE sähköposti=$1;", [req.params.sahkoposti], (err, result) => {
+router.delete('/poistaomakayttaja', (req, res, next) => {
+
+  let käyttäjänSähköposti = "";
+
+  jwt.verify(req.body.token, salaisuus, function (err, decoded) {
+    //voimassaoloaika
+    käyttäjänSähköposti = decoded.sähköposti
+  });
+
+  db.query("DELETE FROM käyttäjä WHERE sähköposti=$1;", [käyttäjänSähköposti], (err, result) => {
     if (err) {
       return next(err)
     }
@@ -70,7 +78,7 @@ router.delete('/poistakayttaja/:sahkoposti', vainAdmin, (req, res, next) => {
 })
 
 router.delete('/poistakayttajaid', vainAdmin, (req, res, next) => {
-  db.query("DELETE FROM käyttäjä WHERE sähköposti=$1;",
+  db.query("DELETE FROM käyttäjä WHERE käyttäjä_id=$1;",
     [req.body.käyttäjä_id], (err, result) => {
       if (err) {
         return next(err)

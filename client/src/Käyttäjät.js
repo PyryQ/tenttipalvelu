@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { DataGrid, RowsProp, ColDef } from '@material-ui/data-grid';
 import Button from '@material-ui/core/Button';
-import { haeKäyttäjät, poistaKäyttäjä } from './HttpKutsut';
+import { haeKäyttäjät, poistaKäyttäjäId } from './HttpKutsut';
 import strings from './Localization.js'
 
 export default function Käyttäjä(props) {
@@ -38,7 +38,7 @@ export default function Käyttäjä(props) {
 
   async function poistaTämäKäyttäjä(käyttäjänID, käyttäjänToken) {
 
-    poistaKäyttäjä(käyttäjänID, käyttäjänToken).then((result) => {
+    poistaKäyttäjäId(käyttäjänID, käyttäjänToken).then((result) => {
 
       if (result === true) {
         alert("Käyttäjän poisto onnistui")

@@ -129,9 +129,20 @@ export async function poistaVastaus(vastaus_id, token) {
   }
 }
 
-export async function poistaKäyttäjä(käyttäjä_id, token) {
+export async function poistaKäyttäjäId(käyttäjä_id, token) {
   try{
     let result = await axios.delete(path + "/poista/poistakayttajaid", {data: {käyttäjä_id: käyttäjä_id, token: token}})
+    return(result.data)
+  }
+  catch(exception){
+    console.log(exception)
+    console.log("Vastausta ei onnistuttu poistamaan.")
+  }
+}
+
+export async function poistaKäyttäjä(token) {
+  try{
+    let result = await axios.delete(path + "/poista/poistaomakayttaja", {data: {token: token}})
     return(result.data)
   }
   catch(exception){

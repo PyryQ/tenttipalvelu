@@ -27,7 +27,6 @@ export default function Käyttäjä(props) {
           setKäyttäjänTiedot(result[0])
           setKäyttäjänEtunimi(result[0].etunimi)
           setKäyttäjänSukunimi(result[0].sukunimi)
-          alert(strings.userSuccesful)
         }
       })
     }

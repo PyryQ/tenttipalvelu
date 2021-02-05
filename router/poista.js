@@ -61,20 +61,21 @@ router.delete('/poistavastaus', vainAdmin, (req, res, next) => {
 })
 
 router.delete('/poistaomakayttaja', (req, res, next) => {
+  let käyttäjänToken = req.body.token
+  let käyttäjänSähköposti
 
-  let käyttäjänSähköposti = "";
-
-  jwt.verify(req.body.token, salaisuus, function (err, decoded) {
+  jwt.verify(käyttäjänToken, salaisuus, function (err, decoded) {
     //voimassaoloaika
     käyttäjänSähköposti = decoded.sähköposti
   });
-
-  db.query("DELETE FROM käyttäjä WHERE sähköposti=$1;", [käyttäjänSähköposti], (err, result) => {
-    if (err) {
-      return next(err)
-    }
-    res.send(true)
-  })
+  console.log(käyttäjänSähköposti)
+  db.query("DELETE FROM käyttäjä WHERE sähköposti=$1;",
+    [käyttäjänSähköposti], (err, result) => {
+      if (err) {
+        return next(err)
+      }
+      res.send(true)
+    })
 })
 
 router.delete('/poistakayttajaid', vainAdmin, (req, res, next) => {

@@ -19,13 +19,14 @@ export default function Käyttäjä(props) {
 
       käyttäjänTiedotTokenista(token).then((result) => {
         //Tarkistetaan serverin palauttama arvo
-        if (result.data === null || result.data === "" || result.data === undefined || result.data === false) {
+        console.log(result)
+        if (result === null || result === "" || result === undefined || result === false) {
           alert(strings.somethingWrong)
         }
         else {
-          setKäyttäjänTiedot(result.data[0])
-          setKäyttäjänEtunimi(result.data[0].etunimi)
-          setKäyttäjänSukunimi(result.data[0].sukunimi)
+          setKäyttäjänTiedot(result[0])
+          setKäyttäjänEtunimi(result[0].etunimi)
+          setKäyttäjänSukunimi(result[0].sukunimi)
           alert(strings.userSuccesful)
         }
       })
@@ -74,7 +75,7 @@ export default function Käyttäjä(props) {
           if (window.confirm("Poista käyttäjätietosi?")) {
             poistaTämäKäyttäjä();
           }
-        }}>Poista käyttäjä</Button>
+        }}>{strings.deleteMyUser}</Button>
     </div>
 
 

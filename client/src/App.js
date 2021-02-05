@@ -386,6 +386,7 @@ function App() {
             </BootstrapButton>)}
 
             <br></br>
+            <br></br>
 
             {näkymä === 1 ? <div> {/*Näkymän mukaan tulostetaan sivu*/}
               <Fade right><TulostaKysymykset

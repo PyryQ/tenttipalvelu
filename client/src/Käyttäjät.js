@@ -37,17 +37,17 @@ export default function Käyttäjä(props) {
   }
 
   async function poistaTämäKäyttäjä(käyttäjänID, käyttäjänToken) {
+    if (window.confirm(strings.deleteQue)){
+      poistaKäyttäjäId(käyttäjänID, käyttäjänToken).then((result) => {
 
-    poistaKäyttäjäId(käyttäjänID, käyttäjänToken).then((result) => {
-
-      if (result === true) {
-        alert("Käyttäjän poisto onnistui")
-      }
-      else {
-        console.log("käyttäjän poisto epäonnistui")
-      }
-
-    })
+        if (result === true) {
+          alert("Käyttäjän poisto onnistui")
+        }
+        else {
+          console.log("käyttäjän poisto epäonnistui")
+        }
+      })
+    }
   }
 
   //Jos käyttäjien data saatu, muodostetaan datagrid
@@ -63,8 +63,8 @@ export default function Käyttäjä(props) {
       <Button className="poistakayttaja"
         key={"poistakayttaja"}
         onClick={() => poistaTämäKäyttäjä(poistettavaKäyttäjä, props.käyttäjänToken)}>
-        Poista valittu käyttäjä
-        </Button>
+        {strings.deleteSelectedUser}
+      </Button>
     </div>
   } else return null
 }

@@ -39,9 +39,14 @@ let strings = new LocalizedStrings({
     startingTime: "Starting time",
     endingTime: "Ending time",
 
+    //Delete user
+    deleteSelectedUser: "Delete delected user",
+    deleteMyUser: "Delete my user",
+    deleteQue: "Delete the selected user?",
+
 
     //Alerts
-    LoginSuccessful: "Login succeeded.",
+    LoginSuccessful: "Login successful.",
     LoginFailed: "Login failed.",
     unmatchPassword: "Passwords don't match.",
     invalidEmail: "Invalid email.",
@@ -94,6 +99,11 @@ let strings = new LocalizedStrings({
     //Aika
     startingTime: "Aloitusaika",
     endingTime: "Lopetusaika",
+
+    //Poista käyttäjä
+    deleteSelectedUser: "Poista valittu käyttäjä",
+    deleteMyUser: "Poista käyttäjä",
+    deleteQue: "Poistetaanko valittu käyttäjä?",
 
 
     //Ilmoitukset ja varoitukset

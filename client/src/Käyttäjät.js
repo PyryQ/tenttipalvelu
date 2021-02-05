@@ -33,7 +33,7 @@ export default function Käyttäjä(props) {
 
   function tallennaValinta(selections) {
     console.log(selections.rowIds[0])
-    setPoistettavaKäyttäjä(selections.rowIds)
+    setPoistettavaKäyttäjä(selections.rowIds[0])
   }
 
   async function poistaTämäKäyttäjä(käyttäjänID, käyttäjänToken) {

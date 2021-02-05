@@ -332,8 +332,8 @@ function App() {
                   edge="start" className={classes1.menuButton}
                   onClick={() => setNäkymä(1)}>{strings.exams}</Button>
 
-                {/* <Button color="inherit" 
-              onClick={() => setNäkymä(5)}>{strings.user}</Button> */}
+                <Button color="inherit" 
+              onClick={() => setNäkymä(5)}>{strings.user}</Button>
 
                 <Button color="inherit"
                   onClick={() => setNäkymä(2)}> {strings.editExams} </Button>

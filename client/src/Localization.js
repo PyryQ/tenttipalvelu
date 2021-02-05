@@ -71,8 +71,8 @@ let strings = new LocalizedStrings({
     firstname: "Etunimi",
     lastname: "Sukunimi",
     password: "Salasana",
-    passwordAgain: "Password again",
-    rolePassword: "Rolepassword",
+    passwordAgain: "Salasana uudelleen",
+    rolePassword: "Roolisalasana",
     admin: "Admin",
     role: "Rooli",
 

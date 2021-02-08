@@ -1,8 +1,8 @@
 {
   "runtimeOptions": {
     "additionalProbingPaths": [
-      "C:\\Users\\Pyry\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\Pyry\\.nuget\\packages"
+      "C:\\Users\\pyryq\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\pyryq\\.nuget\\packages"
     ]
   }
 }

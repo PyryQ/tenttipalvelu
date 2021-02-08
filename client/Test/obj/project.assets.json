@@ -78,19 +78,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Pyry\\.nuget\\packages\\": {}
+    "C:\\Users\\pyryq\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Pyry\\Projects\\tenttipalvelu\\client\\Test\\Test.csproj",
+      "projectUniqueName": "C:\\Users\\pyryq\\harjoitus\\tenttipalvelu\\client\\test\\Test.csproj",
       "projectName": "Test",
-      "projectPath": "C:\\Users\\Pyry\\Projects\\tenttipalvelu\\client\\Test\\Test.csproj",
-      "packagesPath": "C:\\Users\\Pyry\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Pyry\\Projects\\tenttipalvelu\\client\\Test\\obj\\",
+      "projectPath": "C:\\Users\\pyryq\\harjoitus\\tenttipalvelu\\client\\test\\Test.csproj",
+      "packagesPath": "C:\\Users\\pyryq\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\pyryq\\harjoitus\\tenttipalvelu\\client\\test\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Pyry\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\pyryq\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"

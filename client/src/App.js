@@ -215,7 +215,7 @@ function App() {
         syväKopioR[tenttiValinta].tentin_lopetusaika = action.data.päiväjaaika
         return syväKopioR;
       default:
-        throw new Error();
+        throw new Error("Reducer failed to find relevant case.");
     }
   }
 

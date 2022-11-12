@@ -11,7 +11,6 @@ function accept(req, res) {
         return;
     }
 
-
     // Yhteys voi olla keep-alike
     if (!req.headers.upgrade.connection.match(/\bupgrade\b/i)){
         res.end();
@@ -19,10 +18,6 @@ function accept(req, res) {
     }
 
     wss.handleUpgrade(req, req.socket, Buffer.alloc(0), onConnect);
-
-
-
-
 }
 
 function onConnect(ws) {

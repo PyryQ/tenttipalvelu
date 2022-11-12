@@ -8,11 +8,6 @@ const db = require('../db')
 // console.log(token)
 const SALT_ROUNDS = 9
 
-
-
-
-
-
 var middleware = {
   vainAdmin: function (req, res, next){
   
@@ -32,14 +27,11 @@ var middleware = {
   }
 }
 
-//router.use(middleware.vainAdmin)
-
-
 
 
 //----------------------------POST------------------------
 
-//Lisää tentti (lisää defaultarvot tietokantaan?)
+//Lisää tentti
 router.post('/lisaatentti/:token', middleware.vainAdmin, (req, res, next) => {
     db.query("INSERT INTO tentti (nimi) values ('Uusi tentti') RETURNING tentti_id;", (err, result) => {
       if (err) {
@@ -48,8 +40,6 @@ router.post('/lisaatentti/:token', middleware.vainAdmin, (req, res, next) => {
       return res.send(result.rows[0].tentti_id)
     })
   })
-  //http://localhost:4000/lisaatentti/TenttiNimi/30/10/2021-01-01 12:00:00/2021-01-01 14:00:00/pisterajat
-  //( to_timestamp )
   
   //Lisää kysymys
   router.post('/lisaakysymys/:tentti_id/:token', middleware.vainAdmin, (req, res, next) => {
@@ -100,10 +90,6 @@ router.post('/lisaakayttajanvastaus/:vastaus_id/:vastaus/:oikea_vastaus/:token',
 
       käyttäjänId = result.rows[0].käyttäjä_id
 
-      //SELECT CASE WHEN EXISTS (SELECT 1 FROM käyttäjänvastaus WHERE käyttäjä_id_fk = $1 AND vastaus_id_fk = $2) THEN 0 ELSE 1 END
-
-
-      //"SELECT COUNT(DISTINCT vastaus_id) FROM käyttäjänvastaus WHERE käyttäjä_id_fk = $1 AND vastaus_id_fk = $2)"
       //Tutkitaan, onko vastaukseen jo vastattu
       db.query("SELECT CASE WHEN EXISTS (SELECT 1 FROM käyttäjänvastaus WHERE käyttäjä_id_fk = $1 AND vastaus_id_fk = $2) THEN 1 ELSE 0 END", 
       [käyttäjänId, req.params.vastaus_id], (err, result2) => { 
@@ -113,8 +99,7 @@ router.post('/lisaakayttajanvastaus/:vastaus_id/:vastaus/:oikea_vastaus/:token',
           return res.send(null)
         }
 
-        else if (result2.rows[0].case === 1){ // Jos vastaava vastaus löytyy, päivitetään se
-          
+        else if (result2.rows[0].case === 1){ // Jos vastaava vastaus löytyy, päivitetään se         
           
           db.query("UPDATE käyttäjänvastaus SET käyttäjän_valinta = $3, vastaus_oikein = $4 WHERE käyttäjä_id_fk = $1 AND vastaus_id_fk = $2", 
           [käyttäjänId, req.params.vastaus_id, req.params.vastaus, onkoVastausOikein], (err, result) => { 
@@ -144,12 +129,7 @@ router.post('/lisaakayttajanvastaus/:vastaus_id/:vastaus/:oikea_vastaus/:token',
     })
   })
 
-  //Vastauksen tarkistus
-
-  
-  
-
-    //Lisää kysymyksen tulos
+//Lisää kysymyksen tulos
 router.post('/lisaakysymystulos/:kysymys_id/:tulos/:token', middleware.vainAdmin, (req, res, next) => {
 
   let käyttäjänSähköposti

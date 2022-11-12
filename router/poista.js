@@ -8,9 +8,6 @@ var jwt = require('jsonwebtoken');
 const salaisuus = process.env.SECRET || 'sonSALAisuus'
 
 const db = require('../db')
-// console.log(token)
-const SALT_ROUNDS = 9
-
 
 
 function vainAdmin(req, res, next) {
@@ -30,6 +27,7 @@ function vainAdmin(req, res, next) {
   else return res.send(false)
 }
 
+//Poista tentti
 router.delete('/poistatentti', vainAdmin, (req, res, next) => {
   db.query("DELETE FROM tentti WHERE tentti_id = $1;",
     [req.body.tentti_id], (err, result) => {
@@ -40,6 +38,7 @@ router.delete('/poistatentti', vainAdmin, (req, res, next) => {
     })
 })
 
+//Poista kysymys
 router.delete('/poistakysymys', vainAdmin, (req, res, next) => {
   db.query("DELETE FROM kysymys WHERE kysymys_id=$1;",
     [req.body.kysymys_id], (err, result) => {
@@ -50,6 +49,7 @@ router.delete('/poistakysymys', vainAdmin, (req, res, next) => {
     })
 })
 
+//Poista vastaus
 router.delete('/poistavastaus', vainAdmin, (req, res, next) => {
   db.query("DELETE FROM vastaus WHERE vastaus_id =$1;",
     [req.body.vastaus_id], (err, result) => {
@@ -60,6 +60,7 @@ router.delete('/poistavastaus', vainAdmin, (req, res, next) => {
     })
 })
 
+//Poista nykyinen käyttäjä
 router.delete('/poistaomakayttaja', (req, res, next) => {
   let käyttäjänToken = req.body.token
   let käyttäjänSähköposti
@@ -78,6 +79,8 @@ router.delete('/poistaomakayttaja', (req, res, next) => {
     })
 })
 
+
+//Poista käyttäjä ID:n perusteella
 router.delete('/poistakayttajaid', vainAdmin, (req, res, next) => {
   db.query("DELETE FROM käyttäjä WHERE käyttäjä_id=$1;",
     [req.body.käyttäjä_id], (err, result) => {
@@ -88,6 +91,7 @@ router.delete('/poistakayttajaid', vainAdmin, (req, res, next) => {
     })
 })
 
+//Poista käyttäjän tentti
 router.delete('/poistakayttajantentti/:kayttaja_id/:tentti_id', vainAdmin, (req, res, next) => {
   db.query("DELETE FROM kayttajantentti WHERE käyttäjä_id_fk = $2 AND tentti_id_fk = $1;",
     [req.params.kayttaja_id, req.params.tentti_id], (err, result) => {
@@ -98,6 +102,7 @@ router.delete('/poistakayttajantentti/:kayttaja_id/:tentti_id', vainAdmin, (req,
     })
 })
 
+//Poista käyttäjän vastaus
 router.delete('/poistakayttajanvastaus/:kayttaja_id/:vastaus_id', vainAdmin, (req, res, next) => {
   db.query("DELETE FROM vastaus WHERE käyttäjä_id_fk = $2 AND vastaus_id_fk = $1;",
     [req.params.kayttaja_id, req.params.vastaus_id], (err, result) => {

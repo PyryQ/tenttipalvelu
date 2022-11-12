@@ -7,9 +7,6 @@ router.use(bodyParser.json())
 var jwt = require('jsonwebtoken');
 
 const db = require('../db')
-// console.log(token)
-const SALT_ROUNDS = 9
-
 
 
 var middleware = {
@@ -32,7 +29,6 @@ var middleware = {
   }
 
 
-
 router.put('/paivitatenttiteksti', middleware.vainAdmin, (req, res, next) => {
     db.query("UPDATE tentti SET nimi = $2 WHERE tentti_id=$1;", 
     [req.body.tentti_id, req.body.nimi], (err, result) => {
@@ -42,7 +38,6 @@ router.put('/paivitatenttiteksti', middleware.vainAdmin, (req, res, next) => {
       res.send("Tentin päivitys onnistui.")
     })
   })
-
 
 
 //päivitä kysymyksen teksti
@@ -114,8 +109,6 @@ router.put('/paivitaoikeavastaus', middleware.vainAdmin, (req, res, next) => {
 })
 
 
-
-
 //päivitä tentin aloitusaika
 router.put('/paivitatenttialoitusaika', middleware.vainAdmin, (req, res, next) => {
   db.query("UPDATE tentti SET tentin_aloitusaika = $2 WHERE tentti_id=$1 RETURNING tentin_aloitusaika;", 
@@ -137,8 +130,6 @@ router.put('/paivitatenttilopetusaika', middleware.vainAdmin, (req, res, next) =
     res.send(result.rows[0].tentin_lopetusaika)
   })
 })
-
-
 
 
 module.exports = router;

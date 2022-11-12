@@ -24,8 +24,6 @@ const GreenCheckbox = withStyles({
 
 export default function TulostaKysymykset1(props) {
 
-  
-
   //Alustetaan data
   let vainKysymys = props.vainKysymys;
   console.log(props.vainKysymys)
@@ -71,8 +69,6 @@ export default function TulostaKysymykset1(props) {
         <GreenCheckbox disabled className="vastaukset" checked={alkio.oikea_vastaus}/>
         {alkio.vastaus}</label>
       </div>)
-
-      
   }
 
   return (<div>

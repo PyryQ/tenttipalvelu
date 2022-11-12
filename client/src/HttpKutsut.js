@@ -292,14 +292,3 @@ export async function haeVastaukset(kysymys_id) {
     console.log("Kysymyksiä ei onnistuttu hakemaan.")
   }
 }
-
-// export async function haeVastausId(kysymys_id) {
-//   try{
-//     let result = await axios.post(path + "lisaavastaus/", {kysymys_id: kysymys_id})
-//     console.log(result.data)
-//     return(result.data)
-//   }
-//   catch(exception){
-//     console.log("Vastausta ei onnistuttu lisäämään.")
-//   }
-// }

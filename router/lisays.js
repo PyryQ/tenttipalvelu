@@ -6,12 +6,6 @@ var jwt = require('jsonwebtoken');
 
 const db = require('../db')
 const salaisuus = process.env.SECRET || 'sonSALAisuus'
-const SALT_ROUNDS = 9
-
-
-
-
-
 
 var middleware = {
   vainAdmin: function (req, res, next){
@@ -19,7 +13,6 @@ var middleware = {
     let onkoOikeidet = false;
 
     jwt.verify(req.params.token, salaisuus, function(err, decoded) {
-      //voimassaoloaika
       if (decoded.rooli === "admin"){
         onkoOikeidet = true;
       }
@@ -32,14 +25,8 @@ var middleware = {
   }
 }
 
-//router.use(middleware.vainAdmin)
 
-
-
-
-//----------------------------POST------------------------
-
-//Lisää tentti (lisää defaultarvot tietokantaan?)
+//Lisää tentti
 router.post('/lisaatentti/:token', middleware.vainAdmin, (req, res, next) => {
     db.query("INSERT INTO tentti (nimi) values ('Uusi tentti') RETURNING tentti_id;", (err, result) => {
       if (err) {
@@ -49,31 +36,29 @@ router.post('/lisaatentti/:token', middleware.vainAdmin, (req, res, next) => {
     })
   })
   //http://localhost:4000/lisaatentti/TenttiNimi/30/10/2021-01-01 12:00:00/2021-01-01 14:00:00/pisterajat
-  //( to_timestamp )
+ 
   
-  //Lisää kysymys
-  router.post('/lisaakysymys/:tentti_id/:token', middleware.vainAdmin, (req, res, next) => {
-    db.query("INSERT INTO kysymys (tentti_id_fk, kysymys, kysymyspisteet) VALUES ($1, 'Uusi kysymys', 3) RETURNING kysymys_id;", 
-    [req.params.tentti_id], (err, result) => { 
+router.post('/lisaakysymys/:tentti_id/:token', middleware.vainAdmin, (req, res, next) => {
+  db.query("INSERT INTO kysymys (tentti_id_fk, kysymys, kysymyspisteet) VALUES ($1, 'Uusi kysymys', 3) RETURNING kysymys_id;", 
+  [req.params.tentti_id], (err, result) => { 
+    if (err) {
+      return next(err)
+    }
+    return res.send(result.rows[0].kysymys_id)
+  })
+})
+  
+
+router.post('/lisaavastaus/:kysymys_id/:token', middleware.vainAdmin, (req, res, next) => {
+    db.query("INSERT INTO vastaus (kysymys_id_fk, vastaus, oikea_vastaus) VALUES ($1, 'Uusi vastaus', false) RETURNING vastaus_id;", 
+    [req.params.kysymys_id], (err, result) => { 
       if (err) {
         return next(err)
       }
-      return res.send(result.rows[0].kysymys_id)
+      res.send(result.rows[0].vastaus_id)
     })
-  
-  })
-  
-  //Lisää vastaus
-  router.post('/lisaavastaus/:kysymys_id/:token', middleware.vainAdmin, (req, res, next) => {
-      db.query("INSERT INTO vastaus (kysymys_id_fk, vastaus, oikea_vastaus) VALUES ($1, 'Uusi vastaus', false) RETURNING vastaus_id;", 
-      [req.params.kysymys_id], (err, result) => { 
-        if (err) {
-          return next(err)
-        }
-        res.send(result.rows[0].vastaus_id)
-      })
-  
-  })
+})
+
 
 router.post('/lisaakayttajanvastaus/:vastaus_id/:vastaus/:oikea_vastaus/:token', (req, res, next) => {
   
@@ -82,7 +67,7 @@ router.post('/lisaakayttajanvastaus/:vastaus_id/:vastaus/:oikea_vastaus/:token',
     let onkoVastausOikein = (req.params.oikea_vastaus === req.params.vastaus)
     console.log(onkoVastausOikein)
   
-    //Käyttäjän sähköposti tokenista
+    //Verifioidaan käyttäjän sähköposti tokenista
     jwt.verify(req.params.token, salaisuus, function(err, decoded) {
       //voimassaoloaika
       if (err){
@@ -100,22 +85,15 @@ router.post('/lisaakayttajanvastaus/:vastaus_id/:vastaus/:oikea_vastaus/:token',
 
       käyttäjänId = result.rows[0].käyttäjä_id
 
-      //SELECT CASE WHEN EXISTS (SELECT 1 FROM käyttäjänvastaus WHERE käyttäjä_id_fk = $1 AND vastaus_id_fk = $2) THEN 0 ELSE 1 END
-
-
-      //"SELECT COUNT(DISTINCT vastaus_id) FROM käyttäjänvastaus WHERE käyttäjä_id_fk = $1 AND vastaus_id_fk = $2)"
       //Tutkitaan, onko vastaukseen jo vastattu
       db.query("SELECT CASE WHEN EXISTS (SELECT 1 FROM käyttäjänvastaus WHERE käyttäjä_id_fk = $1 AND vastaus_id_fk = $2) THEN 1 ELSE 0 END", 
-      [käyttäjänId, req.params.vastaus_id], (err, result2) => { 
+      [käyttäjänId, req.params.vastaus_id], (err, result2) => {      
 
-        
         if (err) {
           return res.send(null)
         }
-
         else if (result2.rows[0].case === 1){ // Jos vastaava vastaus löytyy, päivitetään se
-          
-          
+                    
           db.query("UPDATE käyttäjänvastaus SET käyttäjän_valinta = $3, vastaus_oikein = $4 WHERE käyttäjä_id_fk = $1 AND vastaus_id_fk = $2", 
           [käyttäjänId, req.params.vastaus_id, req.params.vastaus, onkoVastausOikein], (err, result) => { 
             if (err) {
@@ -137,19 +115,15 @@ router.post('/lisaakayttajanvastaus/:vastaus_id/:vastaus/:oikea_vastaus/:token',
           })
         }
         else {
-          console.log("jokin meni pieleen")
+          console.log("Käyttäjän vastauksen lisääminen ei onnistunut.")
           return res.send(null)
         }
       })
     })
   })
 
-  //Vastauksen tarkistus
 
-  
-  
-
-    //Lisää kysymyksen tulos
+//Lisää kysymyksen tulos
 router.post('/lisaakysymystulos/:kysymys_id/:tulos/:token', middleware.vainAdmin, (req, res, next) => {
 
   let käyttäjänSähköposti
@@ -163,15 +137,14 @@ router.post('/lisaakysymystulos/:kysymys_id/:tulos/:token', middleware.vainAdmin
     }
     käyttäjänSähköposti = decoded.sähköposti
   });
-  
-    
+      
+  //Tarkista käyttäjä
   db.query("SELECT käyttäjä_id FROM käyttäjä WHERE sähköposti = $1", 
     [käyttäjänSähköposti], (err, result) => { 
       if (err) {
         return res.send(false)
       }
       käyttäjänId = result.rows[0].käyttäjä_id
-  
   
       db.query("INSERT INTO käyttäjänkysymystulos (kysymys_id_fk, vastaukset_oikein, käyttäjä_id_fk) VALUES ($1, $2, $3);", 
       [req.params.kysymys_id, req.params.tulos, käyttäjänId], (err, result) => { 

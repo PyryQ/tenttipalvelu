@@ -6,12 +6,7 @@ var router = express.Router();
 router.use(bodyParser.json())
 var jwt = require('jsonwebtoken');
 const salaisuus = process.env.SECRET || 'sonSALAisuus'
-
 const db = require('../db')
-// console.log(token)
-const SALT_ROUNDS = 9
-
-
 
 var middleware = {
     vainAdmin: function (req, res, next){
@@ -33,7 +28,7 @@ var middleware = {
   }
 
 
-
+//Päivitä tentin nimi
 router.put('/paivitatenttiteksti', middleware.vainAdmin, (req, res, next) => {
     db.query("UPDATE tentti SET nimi = $2 WHERE tentti_id=$1;", 
     [req.body.tentti_id, req.body.nimi], (err, result) => {
@@ -44,9 +39,7 @@ router.put('/paivitatenttiteksti', middleware.vainAdmin, (req, res, next) => {
     })
   })
 
-
-
-//päivitä kysymyksen teksti
+//Päivitä kysymyksen teksti
 router.put('/paivitakysymysteksti', middleware.vainAdmin, (req, res, next) => {
     db.query("UPDATE kysymys SET kysymys = $2 WHERE kysymys_id = $1;", 
     [req.body.kysymys_id, req.body.kysymys], (err, result) => { 
@@ -69,7 +62,7 @@ router.put('/paivitavastausteksti', middleware.vainAdmin, (req, res, next) => {
     })
   })
 
-  //Päivitä käyttäjän vastaus
+//Päivitä käyttäjän vastaus
 router.put('/paivitakayttajanvastaus', middleware.vainAdmin, (req, res, next) => {
   
   let käyttäjänSähköposti
@@ -83,6 +76,7 @@ router.put('/paivitakayttajanvastaus', middleware.vainAdmin, (req, res, next) =>
     käyttäjänSähköposti = decoded.sähköposti
   });
 
+  //Tarkista käyttäjän olemassaolo tietokannasta
   db.query("SELECT käyttäjä_id WHERE sähköposti = $1", 
   [käyttäjänSähköposti], (err, result) => { 
       if (err) {
@@ -103,7 +97,7 @@ router.put('/paivitakayttajanvastaus', middleware.vainAdmin, (req, res, next) =>
 })
 
 
-//päivitä oikea vastaus
+//Päivitä oikea vastaus
 router.put('/paivitaoikeavastaus', middleware.vainAdmin, (req, res, next) => {
   db.query("UPDATE vastaus SET oikea_vastaus = $2 WHERE vastaus_id = $1;", 
   [req.body.vastaus_id, req.body.oikein], (err, result) => { 
@@ -115,9 +109,7 @@ router.put('/paivitaoikeavastaus', middleware.vainAdmin, (req, res, next) => {
 })
 
 
-
-
-//päivitä tentin aloitusaika
+//Päivitä tentin aloitusaika
 router.put('/paivitatenttialoitusaika', middleware.vainAdmin, (req, res, next) => {
   db.query("UPDATE tentti SET tentin_aloitusaika = $2 WHERE tentti_id=$1 RETURNING tentin_aloitusaika;", 
   [req.body.tentti_id, req.body.päiväjaaika], (err, result) => {
@@ -128,7 +120,7 @@ router.put('/paivitatenttialoitusaika', middleware.vainAdmin, (req, res, next) =
   })
 })
 
-//päivitä tentin lopetusaika
+//Päivitä tentin lopetusaika
 router.put('/paivitatenttilopetusaika', middleware.vainAdmin, (req, res, next) => {
   db.query("UPDATE tentti SET tentin_lopetusaika = $2 WHERE tentti_id=$1 RETURNING tentin_lopetusaika;", 
   [req.body.tentti_id, req.body.päiväjaaika], (err, result) => {
@@ -138,8 +130,5 @@ router.put('/paivitatenttilopetusaika', middleware.vainAdmin, (req, res, next) =
     res.send(result.rows[0].tentin_lopetusaika)
   })
 })
-
-
-
 
 module.exports = router;

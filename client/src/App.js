@@ -41,7 +41,7 @@ function App() {
 
   const [palautettu, setPalautettu] = useState(false) //Onko kysely palautettu
   const [tenttiValinta, setTenttiValinta] = useState(0) //Mikä tenteistä on valittu
-  const [näkymä, setNäkymä] = useState(4) //Vastaus- vai muokkausnäkymä
+  const [näkymä, setNäkymä] = useState("kirjautumissivu") //Vastaus- vai muokkausnäkymä
   const [käyttäjänToken, setKäyttäjänToken] = useState(null) //Token tietokannasta
   const [kirjauduttuSisään, setKirjauduttuSisään] = useState(false) //Onko kirjauduttu
   const [kieli, setKieli] = useState('fi')
@@ -238,7 +238,7 @@ function App() {
     if (window.confirm(strings.exit)) {
       setKirjauduttuSisään(false)
       setKäyttäjänToken(null)
-      setNäkymä(4)
+      setNäkymä("kirjautumissivu")
       onkoAdminTupla = false
     }
   }
@@ -247,7 +247,7 @@ function App() {
   const käyttäjäpoistettu = () => {
       setKirjauduttuSisään(false)
       setKäyttäjänToken(null)
-      setNäkymä(4)
+      setNäkymä("kirjautumissivu")
       onkoAdminTupla = false
   }
 
@@ -330,24 +330,24 @@ function App() {
               <div>
                 <Button color="inherit"
                   edge="start" className={classes1.menuButton}
-                  onClick={() => setNäkymä(1)}>{strings.exams}</Button>
+                  onClick={() => setNäkymä("etusivu")}>{strings.exams}</Button>
 
                 <Button color="inherit"
-                  onClick={() => setNäkymä(5)}>{strings.user}</Button>
+                  onClick={() => setNäkymä("käyttäjäsivu")}>{strings.user}</Button>
 
                 <Button color="inherit"
-                  onClick={() => setNäkymä(2)}> {strings.editExams} </Button>
+                  onClick={() => setNäkymä("editointisivu")}> {strings.editExams} </Button>
 
                 {käyttäjäOnAdmin() && onkoAdmin ?
                   <Button color="inherit"
-                    onClick={() => setNäkymä(8)}> {strings.users} </Button>
+                    onClick={() => setNäkymä("käyttäjälistasivu")}> {strings.users} </Button>
                   : null}
 
                 {/* <Button 
               onClick={() => setNäkymä(7)}>{strings.dropdemo}</Button> */}
 
                 <Button
-                  onClick={() => setNäkymä(3)}> {strings.chartdemo}</Button>
+                  onClick={() => setNäkymä("kaaviosivu")}> {strings.chartdemo}</Button>
 
                 <Button color="inherit"
                   onClick={() => poistu()}>{strings.signof}</Button>
@@ -356,10 +356,10 @@ function App() {
               : <div>
                 {/*------------------Aloitus, login sekä register*/}
                 <Button color="inherit" edge="start"
-                  onClick={() => setNäkymä(4)}>{strings.login}</Button>
+                  onClick={() => setNäkymä("kirjautumissivu")}>{strings.login}</Button>
 
                 <Button color="inherit" edge="start"
-                  onClick={() => setNäkymä(6)}>{strings.register}</Button>
+                  onClick={() => setNäkymä("rekisteröitymissivu")}>{strings.register}</Button>
 
                 <Button color="inherit"
                   onClick={() => (vaihdaKieli('fi'), setKieli('fi'))}><img className="kieliPainike" src={finland} alt="Finland" /></Button>
@@ -374,7 +374,7 @@ function App() {
 
       <div>
         {/*Painikkeet kyselyn valintaa varten*/}
-        {näkymä === 1 || näkymä === 2 ?
+        {näkymä === "etusivu" || näkymä === "editointisivu" ?
           <div>{state.map((arvo, index) =>
             <BootstrapButton
               key={"kyselypainike" + index}
@@ -388,7 +388,7 @@ function App() {
             <br></br>
             <br></br>
 
-            {näkymä === 1 ? <div> {/*Näkymän mukaan tulostetaan sivu*/}
+            {näkymä === "etusivu" ? <div> {/*Näkymän mukaan tulostetaan sivu*/}
               <Fade right><TulostaKysymykset
                 dispatch={dispatch}
                 kysymys={state[tenttiValinta]}
@@ -399,7 +399,7 @@ function App() {
               <br />
             </div> : null}
 
-            {näkymä === 2 ?
+            {näkymä === "editointisivu" ?
               <Fade right><MuokkaaKysymyksiä
                 dispatch={dispatch}
                 asetaTentti={setTenttiValinta}
@@ -411,7 +411,7 @@ function App() {
 
           : null}
 
-        {näkymä === 3 ?
+        {näkymä === "kaaviosivu" ?
           <div>
             <Fade right>
               {/*<Kaavio/>*/}
@@ -420,20 +420,20 @@ function App() {
             </Fade>
           </div> : null}
 
-        {näkymä === 4 ?
+        {näkymä === "kirjautumissivu" ?
           <Login
             kirjautuminen={kirjauduttu}
             asetaToken={asetaToken} /> : null}
 
-        {näkymä === 5 ?
+        {näkymä === "käyttäjäsivu" ?
           <Käyttäjä
             käyttäjänToken={käyttäjänToken}
             poistuminen={käyttäjäpoistettu} /> : null}
 
-        {näkymä === 8 ?
+        {näkymä === "käyttäjälistasivu" ?
           <Käyttäjät käyttäjänToken={käyttäjänToken} /> : null}
 
-        {näkymä === 6 ?
+        {näkymä === "rekisteröitymissivu" ?
           <LuoKäyttäjä /> : null}
 
 
